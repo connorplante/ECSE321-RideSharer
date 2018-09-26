@@ -1,13 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
-
+package ca.mcgill.ecse321.model;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 42 "model.ump"
-// line 97 "model.ump"
+// line 42 "../../../../rideSharingModel.ump"
 public class Trip
 {
 

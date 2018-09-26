@@ -1,13 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
-
+package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 20 "model.ump"
-// line 79 "model.ump"
+// line 20 "../../../../rideSharingModel.ump"
 public class Driver extends User
 {
 
@@ -23,9 +22,9 @@ public class Driver extends User
   // CONSTRUCTOR
   //------------------------
 
-  public Driver(String aUsername, String aPassword, String aEmail, String aPhone, bool aStatus)
+  public Driver(String aUsername, String aPassword, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
-    super(aUsername, aPassword, aEmail, aPhone, aStatus);
+    super(aUsername, aPassword, aEmail, aPhone, aStatus, aRating, aNumRides);
     trips = new ArrayList<Trip>();
     cars = new ArrayList<Car>();
   }

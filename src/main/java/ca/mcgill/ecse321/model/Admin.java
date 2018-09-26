@@ -1,10 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
+package ca.mcgill.ecse321.model;
 
-
-// line 26 "model.ump"
-// line 85 "model.ump"
+// line 26 "../../../../rideSharingModel.ump"
 public class Admin extends User
 {
 
@@ -16,9 +15,9 @@ public class Admin extends User
   // CONSTRUCTOR
   //------------------------
 
-  public Admin(String aUsername, String aPassword, String aEmail, String aPhone, bool aStatus)
+  public Admin(String aUsername, String aPassword, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
-    super(aUsername, aPassword, aEmail, aPhone, aStatus);
+    super(aUsername, aPassword, aEmail, aPhone, aStatus, aRating, aNumRides);
   }
 
   //------------------------

@@ -1,14 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
+package ca.mcgill.ecse321.model;
 
-
-/**
- * Unable to update umple code due to error at [59,7]
- * Unable to update umple code due to error at [58,7]
- */
-// line 4 "model.ump"
-// line 69 "model.ump"
+// line 4 "../../../../rideSharingModel.ump"
 public class User
 {
 
@@ -21,19 +16,23 @@ public class User
   private String password;
   private String email;
   private String phone;
-  private bool status;
+  private boolean status;
+  private double rating;
+  private int numRides;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public User(String aUsername, String aPassword, String aEmail, String aPhone, bool aStatus)
+  public User(String aUsername, String aPassword, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
     username = aUsername;
     password = aPassword;
     email = aEmail;
     phone = aPhone;
     status = aStatus;
+    rating = aRating;
+    numRides = aNumRides;
   }
 
   //------------------------
@@ -72,10 +71,26 @@ public class User
     return wasSet;
   }
 
-  public boolean setStatus(bool aStatus)
+  public boolean setStatus(boolean aStatus)
   {
     boolean wasSet = false;
     status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setRating(double aRating)
+  {
+    boolean wasSet = false;
+    rating = aRating;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setNumRides(int aNumRides)
+  {
+    boolean wasSet = false;
+    numRides = aNumRides;
     wasSet = true;
     return wasSet;
   }
@@ -100,7 +115,22 @@ public class User
     return phone;
   }
 
-  public bool getStatus()
+  public boolean getStatus()
+  {
+    return status;
+  }
+
+  public double getRating()
+  {
+    return rating;
+  }
+
+  public int getNumRides()
+  {
+    return numRides;
+  }
+  /* Code from template attribute_IsBoolean */
+  public boolean isStatus()
   {
     return status;
   }
@@ -115,15 +145,9 @@ public class User
             "username" + ":" + getUsername()+ "," +
             "password" + ":" + getPassword()+ "," +
             "email" + ":" + getEmail()+ "," +
-            "phone" + ":" + getPhone()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null");
-  }  
-  //------------------------
-  // DEVELOPER CODE - PROVIDED AS-IS
-  //------------------------
-  
-  // line 11 model.ump
-  double rating
-    int numRides
-  
+            "phone" + ":" + getPhone()+ "," +
+            "status" + ":" + getStatus()+ "," +
+            "rating" + ":" + getRating()+ "," +
+            "numRides" + ":" + getNumRides()+ "]";
+  }
 }
