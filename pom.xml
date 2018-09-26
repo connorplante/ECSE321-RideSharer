@@ -19,7 +19,7 @@
     </properties>
 
     <dependencies>
-
+        <!-- These are our dependencies -->
         <!-- Sprint-boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
