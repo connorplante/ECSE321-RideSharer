@@ -14,7 +14,7 @@ public class Trip
   // ENUMERATIONS
   //------------------------
 
-  public enum Status { Completed, Cancelled, Scheduled }
+  public enum Status { Scheduled, Cancelled, Completed }
 
   //------------------------
   // MEMBER VARIABLES
@@ -23,7 +23,9 @@ public class Trip
   //Trip Attributes
   private Date date;
   private Time time;
-  private Status tripStatus;
+  private Status status;
+  private String start;
+  private String end;
 
   //Trip Associations
   private Driver driver;
@@ -35,11 +37,13 @@ public class Trip
   // CONSTRUCTOR
   //------------------------
 
-  public Trip(Date aDate, Time aTime, Status aTripStatus, Driver aDriver, Car aCar)
+  public Trip(Date aDate, Time aTime, Status aStatus, String aStart, String aEnd, Driver aDriver, Car aCar)
   {
     date = aDate;
     time = aTime;
-    tripStatus = aTripStatus;
+    status = aStatus;
+    start = aStart;
+    end = aEnd;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -74,10 +78,26 @@ public class Trip
     return wasSet;
   }
 
-  public boolean setTripStatus(Status aTripStatus)
+  public boolean setStatus(Status aStatus)
   {
     boolean wasSet = false;
-    tripStatus = aTripStatus;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setStart(String aStart)
+  {
+    boolean wasSet = false;
+    start = aStart;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setEnd(String aEnd)
+  {
+    boolean wasSet = false;
+    end = aEnd;
     wasSet = true;
     return wasSet;
   }
@@ -92,9 +112,19 @@ public class Trip
     return time;
   }
 
-  public Status getTripStatus()
+  public Status getStatus()
   {
-    return tripStatus;
+    return status;
+  }
+
+  public String getStart()
+  {
+    return start;
+  }
+
+  public String getEnd()
+  {
+    return end;
   }
   /* Code from template association_GetOne */
   public Driver getDriver()
@@ -398,10 +428,12 @@ public class Trip
 
   public String toString()
   {
-    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+    return super.toString() + "["+
+            "start" + ":" + getStart()+ "," +
+            "end" + ":" + getEnd()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "tripStatus" + "=" + (getTripStatus() != null ? !getTripStatus().equals(this)  ? getTripStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "car = "+(getCar()!=null?Integer.toHexString(System.identityHashCode(getCar())):"null");
   }
