@@ -3,8 +3,8 @@
 
 
 
-// line 58 "model.ump"
-// line 107 "model.ump"
+// line 59 "model.ump"
+// line 108 "model.ump"
 public class PassengerTrip
 {
 

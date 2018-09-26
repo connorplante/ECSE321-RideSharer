@@ -4,7 +4,7 @@
 
 
 // line 26 "model.ump"
-// line 84 "model.ump"
+// line 85 "model.ump"
 public class Admin extends User
 {
 

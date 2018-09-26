@@ -3,8 +3,8 @@
 
 
 
-// line 49 "model.ump"
-// line 101 "model.ump"
+// line 50 "model.ump"
+// line 102 "model.ump"
 public class Leg
 {
 

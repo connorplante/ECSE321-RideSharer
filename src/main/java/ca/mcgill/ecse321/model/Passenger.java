@@ -5,7 +5,7 @@
 import java.util.*;
 
 // line 15 "model.ump"
-// line 73 "model.ump"
+// line 74 "model.ump"
 public class Passenger extends User
 {
 

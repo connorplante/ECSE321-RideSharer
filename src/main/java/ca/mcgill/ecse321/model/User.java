@@ -8,7 +8,7 @@
  * Unable to update umple code due to error at [58,7]
  */
 // line 4 "model.ump"
-// line 68 "model.ump"
+// line 69 "model.ump"
 public class User
 {
 

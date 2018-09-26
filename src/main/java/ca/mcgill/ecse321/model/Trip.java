@@ -7,9 +7,15 @@ import java.sql.Time;
 import java.util.*;
 
 // line 42 "model.ump"
-// line 96 "model.ump"
+// line 97 "model.ump"
 public class Trip
 {
+
+  //------------------------
+  // ENUMERATIONS
+  //------------------------
+
+  public enum Status { Completed, Cancelled, Scheduled }
 
   //------------------------
   // MEMBER VARIABLES
@@ -18,7 +24,7 @@ public class Trip
   //Trip Attributes
   private Date date;
   private Time time;
-  private enum status;
+  private Status tripStatus;
 
   //Trip Associations
   private Driver driver;
@@ -30,11 +36,11 @@ public class Trip
   // CONSTRUCTOR
   //------------------------
 
-  public Trip(Date aDate, Time aTime, enum aStatus, Driver aDriver, Car aCar)
+  public Trip(Date aDate, Time aTime, Status aTripStatus, Driver aDriver, Car aCar)
   {
     date = aDate;
     time = aTime;
-    status = aStatus;
+    tripStatus = aTripStatus;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -69,10 +75,10 @@ public class Trip
     return wasSet;
   }
 
-  public boolean setStatus(enum aStatus)
+  public boolean setTripStatus(Status aTripStatus)
   {
     boolean wasSet = false;
-    status = aStatus;
+    tripStatus = aTripStatus;
     wasSet = true;
     return wasSet;
   }
@@ -87,9 +93,9 @@ public class Trip
     return time;
   }
 
-  public enum getStatus()
+  public Status getTripStatus()
   {
-    return status;
+    return tripStatus;
   }
   /* Code from template association_GetOne */
   public Driver getDriver()
@@ -396,7 +402,7 @@ public class Trip
     return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "tripStatus" + "=" + (getTripStatus() != null ? !getTripStatus().equals(this)  ? getTripStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "car = "+(getCar()!=null?Integer.toHexString(System.identityHashCode(getCar())):"null");
   }

@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.sql.Time;
 
 // line 20 "model.ump"
-// line 78 "model.ump"
+// line 79 "model.ump"
 public class Driver extends User
 {
 
@@ -99,9 +99,9 @@ public class Driver extends User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(Date aDate, Time aTime, enum aStatus, Car aCar)
+  public Trip addTrip(Date aDate, Time aTime, Trip.Status aTripStatus, Car aCar)
   {
-    return new Trip(aDate, aTime, aStatus, this, aCar);
+    return new Trip(aDate, aTime, aTripStatus, this, aCar);
   }
 
   public boolean addTrip(Trip aTrip)
