@@ -183,9 +183,9 @@ public class Car
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(Date aDate, Time aTime, Trip.Status aTripStatus, Driver aDriver)
+  public Trip addTrip(Date aDate, Time aTime, Trip.Status aTripStatus, String aStart, String aEnd, Driver aDriver)
   {
-    return new Trip(aDate, aTime, aTripStatus, aDriver, this);
+    return new Trip(aDate, aTime, aTripStatus, aStart, aEnd, aDriver, this);
   }
 
   public boolean addTrip(Trip aTrip)
