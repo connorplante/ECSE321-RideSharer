@@ -1,12 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
 
 package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 20 "../../../../rideSharingModel.ump"
+// line 22 "../../../../../../../ump/tmp206467/model.ump"
+// line 81 "../../../../../../../ump/tmp206467/model.ump"
 public class Driver extends User
 {
 
@@ -22,9 +23,9 @@ public class Driver extends User
   // CONSTRUCTOR
   //------------------------
 
-  public Driver(String aUsername, String aPassword, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
+  public Driver(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
-    super(aUsername, aPassword, aEmail, aPhone, aStatus, aRating, aNumRides);
+    super(aUsername, aPassword, aFirstName, aLastName, aEmail, aPhone, aStatus, aRating, aNumRides);
     trips = new ArrayList<Trip>();
     cars = new ArrayList<Car>();
   }
@@ -98,9 +99,9 @@ public class Driver extends User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(Date aDate, Time aTime, Trip.Status aTripStatus, String aStart, String aEnd, Car aCar)
+  public Trip addTrip(Date aDate, Time aTime, String aStart, String aEnd, Trip.Status aTripStatus, Car aCar)
   {
-    return new Trip(aDate, aTime, aTripStatus, aStart, aEnd, this, aCar);
+    return new Trip(aDate, aTime, aStart, aEnd, aTripStatus, this, aCar);
   }
 
   public boolean addTrip(Trip aTrip)

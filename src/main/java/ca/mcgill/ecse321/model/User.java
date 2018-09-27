@@ -1,9 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
 
 package ca.mcgill.ecse321.model;
 
-// line 4 "../../../../rideSharingModel.ump"
+// line 4 "../../../../../../../ump/tmp206467/model.ump"
+// line 71 "../../../../../../../ump/tmp206467/model.ump"
 public class User
 {
 
@@ -14,6 +15,8 @@ public class User
   //User Attributes
   private String username;
   private String password;
+  private String firstName;
+  private String lastName;
   private String email;
   private String phone;
   private boolean status;
@@ -24,10 +27,12 @@ public class User
   // CONSTRUCTOR
   //------------------------
 
-  public User(String aUsername, String aPassword, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
+  public User(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
     username = aUsername;
     password = aPassword;
+    firstName = aFirstName;
+    lastName = aLastName;
     email = aEmail;
     phone = aPhone;
     status = aStatus;
@@ -51,6 +56,22 @@ public class User
   {
     boolean wasSet = false;
     password = aPassword;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setFirstName(String aFirstName)
+  {
+    boolean wasSet = false;
+    firstName = aFirstName;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setLastName(String aLastName)
+  {
+    boolean wasSet = false;
+    lastName = aLastName;
     wasSet = true;
     return wasSet;
   }
@@ -105,6 +126,16 @@ public class User
     return password;
   }
 
+  public String getFirstName()
+  {
+    return firstName;
+  }
+
+  public String getLastName()
+  {
+    return lastName;
+  }
+
   public String getEmail()
   {
     return email;
@@ -144,6 +175,8 @@ public class User
     return super.toString() + "["+
             "username" + ":" + getUsername()+ "," +
             "password" + ":" + getPassword()+ "," +
+            "firstName" + ":" + getFirstName()+ "," +
+            "lastName" + ":" + getLastName()+ "," +
             "email" + ":" + getEmail()+ "," +
             "phone" + ":" + getPhone()+ "," +
             "status" + ":" + getStatus()+ "," +

@@ -1,12 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
 
 package ca.mcgill.ecse321.model;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 42 "../../../../rideSharingModel.ump"
+// line 44 "../../../../../../../ump/tmp206467/model.ump"
+// line 97 "../../../../../../../ump/tmp206467/model.ump"
 public class Trip
 {
 
@@ -14,7 +15,7 @@ public class Trip
   // ENUMERATIONS
   //------------------------
 
-  public enum Status { Scheduled, Cancelled, Completed }
+  public enum Status { Scheduled, Completed, Cancelled }
 
   //------------------------
   // MEMBER VARIABLES
@@ -23,9 +24,9 @@ public class Trip
   //Trip Attributes
   private Date date;
   private Time time;
-  private Status status;
   private String start;
   private String end;
+  private Status tripStatus;
 
   //Trip Associations
   private Driver driver;
@@ -37,13 +38,13 @@ public class Trip
   // CONSTRUCTOR
   //------------------------
 
-  public Trip(Date aDate, Time aTime, Status aStatus, String aStart, String aEnd, Driver aDriver, Car aCar)
+  public Trip(Date aDate, Time aTime, String aStart, String aEnd, Status aTripStatus, Driver aDriver, Car aCar)
   {
     date = aDate;
     time = aTime;
-    status = aStatus;
     start = aStart;
     end = aEnd;
+    tripStatus = aTripStatus;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -78,14 +79,6 @@ public class Trip
     return wasSet;
   }
 
-  public boolean setStatus(Status aStatus)
-  {
-    boolean wasSet = false;
-    status = aStatus;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setStart(String aStart)
   {
     boolean wasSet = false;
@@ -102,6 +95,14 @@ public class Trip
     return wasSet;
   }
 
+  public boolean setTripStatus(Status aTripStatus)
+  {
+    boolean wasSet = false;
+    tripStatus = aTripStatus;
+    wasSet = true;
+    return wasSet;
+  }
+
   public Date getDate()
   {
     return date;
@@ -112,11 +113,6 @@ public class Trip
     return time;
   }
 
-  public Status getStatus()
-  {
-    return status;
-  }
-
   public String getStart()
   {
     return start;
@@ -125,6 +121,11 @@ public class Trip
   public String getEnd()
   {
     return end;
+  }
+
+  public Status getTripStatus()
+  {
+    return tripStatus;
   }
   /* Code from template association_GetOne */
   public Driver getDriver()
@@ -433,7 +434,7 @@ public class Trip
             "end" + ":" + getEnd()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "status" + "=" + (getStatus() != null ? !getStatus().equals(this)  ? getStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "tripStatus" + "=" + (getTripStatus() != null ? !getTripStatus().equals(this)  ? getTripStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "car = "+(getCar()!=null?Integer.toHexString(System.identityHashCode(getCar())):"null");
   }
