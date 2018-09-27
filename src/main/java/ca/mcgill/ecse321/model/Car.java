@@ -1,12 +1,13 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
 
 package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 31 "../../../../rideSharingModel.ump"
+// line 33 "../../../../../../../ump/tmp206467/model.ump"
+// line 92 "../../../../../../../ump/tmp206467/model.ump"
 public class Car
 {
 
@@ -183,9 +184,9 @@ public class Car
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(Date aDate, Time aTime, Trip.Status aTripStatus, String aStart, String aEnd, Driver aDriver)
+  public Trip addTrip(Date aDate, Time aTime, String aStart, String aEnd, Trip.Status aTripStatus, Driver aDriver)
   {
-    return new Trip(aDate, aTime, aTripStatus, aStart, aEnd, aDriver, this);
+    return new Trip(aDate, aTime, aStart, aEnd, aTripStatus, aDriver, this);
   }
 
   public boolean addTrip(Trip aTrip)

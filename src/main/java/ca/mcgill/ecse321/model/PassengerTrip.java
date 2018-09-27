@@ -1,9 +1,10 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
 
 package ca.mcgill.ecse321.model;
 
-// line 59 "../../../../rideSharingModel.ump"
+// line 63 "../../../../../../../ump/tmp206467/model.ump"
+// line 108 "../../../../../../../ump/tmp206467/model.ump"
 public class PassengerTrip
 {
 
