@@ -1,0 +1,72 @@
+namespace ca.mcgill.ecse321.model;
+
+class User
+{
+  autounique Integer userID;
+  username;
+  password;
+  firstName;
+  lastName;
+  email;
+  phone;
+  Boolean status;
+  Double rating;
+  Integer numRides;
+}
+
+class Passenger
+{
+  isA User;
+}
+
+class Driver
+{
+  isA User;
+  1 -- * Trip;
+}
+
+class Admin
+{
+  isA User;
+}
+
+class Car
+{
+  1..* -- 1 Driver;
+  autounique Integer carID;
+  make;
+  model;
+  Integer year;
+  Integer numSeats;
+  licencePlate;
+  1 -- * Trip;
+}
+
+class Trip
+{
+  autounique Integer tripID;
+  start;
+  end;
+  Date date;
+  Time time;
+  enum Status { Scheduled, Cancelled, Completed };
+  Status tripStatus;
+}
+
+class Leg
+{
+  autounique Integer legID;
+  start;
+  end;
+  Double price;
+  Integer numSeats;
+  1..* -- 1 Trip;
+}
+
+class PassengerTrip
+{
+  autounique Integer passengerTripID;
+  lazy immutable double price;
+  * -- 1 Passenger;
+  * -- 1 Trip;
+}
