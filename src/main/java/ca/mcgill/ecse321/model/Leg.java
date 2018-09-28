@@ -3,7 +3,16 @@
 
 package ca.mcgill.ecse321.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 // line 56 "../../../../model.ump"
+@Entity
+@Table(name="Legs")
 public class Leg
 {
 
@@ -18,15 +27,26 @@ public class Leg
   //------------------------
 
   //Leg Attributes
+  @Column(name="Start")
   private String start;
+
+  @Column(name="End")
   private String end;
+
+  @Column(name="Price")
   private double price;
+
+  @Column(name="NumSeats")
   private int numSeats;
 
   //Autounique Attributes
+  @Id
+  @Column(name="LegID")
   private int legID;
 
   //Leg Associations
+  @ManyToOne
+  @JoinColumn(name="FK_TripID")
   private Trip trip;
 
   //------------------------
