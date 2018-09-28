@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
 
 // line 33 "../../../../model.ump"
 @Entity
