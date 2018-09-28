@@ -6,7 +6,18 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 // line 45 "../../../../model.ump"
+
+@Entity
+@Table(name = "Trips")
 public class Trip
 {
 
@@ -27,17 +38,29 @@ public class Trip
   //------------------------
 
   //Trip Attributes
+  @Column(name = "Start")
   private String start;
+  @Column(name = "End")
   private String end;
+  @Column(name = "Date")
   private Date date;
+  @Column(name = "Time")
   private Time time;
+  @Column(name = "Status")
   private Status tripStatus;
 
   //Autounique Attributes
+  @Id
+  @Column(name = "TripID")
+  @GeneratedValue
   private int tripID;
 
   //Trip Associations
+  @JoinColumn (name = "FK_UserID")
+  @OneToOne
   private Driver driver;
+  @JoinColumn(name = "FK_CarID")
+  @OneToOne
   private Car car;
   private List<Leg> legs;
   private List<PassengerTrip> passengerTrips;
