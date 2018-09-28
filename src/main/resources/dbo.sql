@@ -1,4 +1,4 @@
-
+DROP DATABASE IF EXISTS dbo;
 
 CREATE DATABASE dbo;
 
@@ -9,6 +9,8 @@ CREATE TABLE `Users` (
   `Username` varchar(45) DEFAULT NULL,
   `Email` varchar(45) DEFAULT NULL,
   `Password` varchar(45) DEFAULT NULL,
+  `FirstName` varchar(45) DEFAULT NULL,
+  `LastName` varchar(45) DEFAULT NULL,
   `Rating` int(11) DEFAULT NULL,
   `numRides` int(11) DEFAULT NULL,
   `Role` int(11) DEFAULT NULL,
@@ -56,15 +58,15 @@ CREATE TABLE `Trips` (
   `TripID` int(11) NOT NULL AUTO_INCREMENT,
   `Date` datetime DEFAULT NULL,
   `Time` int(11) DEFAULT NULL,
+  `Start` varchar(45) DEFAULT NULL,
+  `End` varchar(45) DEFAULT NULL,
   `FK_UserID` int(11) DEFAULT NULL,
   `FK_CarID` int(11) DEFAULT NULL,
   PRIMARY KEY (`TripID`),
   UNIQUE KEY `TripID_UNIQUE` (`TripID`),
   KEY `FK_CarID_idx` (`FK_CarID`),
-  KEY `FK_UserID_idx` (`FK_UserID`)
+  KEY `FK_UserID_idx` (`FK_UserID`) 
 );
-
-
 
 
 
