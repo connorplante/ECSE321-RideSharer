@@ -5,15 +5,15 @@ package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
 
 
 import com.sun.javafx.beans.IDProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.ManyToOne;
 
 // line 33 "../../../../model.ump"
 @Entity
