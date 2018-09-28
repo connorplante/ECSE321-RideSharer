@@ -5,8 +5,19 @@ package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.ManyToOne;
+
+
+import com.sun.javafx.beans.IDProperty;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
 
 // line 33 "../../../../model.ump"
+@Entity
+@Table(name = "Cars")
 public class Car
 {
 
@@ -21,16 +32,25 @@ public class Car
   //------------------------
 
   //Car Attributes
+  @Column(name = "Make")
   private String make;
+  @Column(name = "Model")
   private String model;
+  @Column(name = "Year")
   private int year;
+  @Column(name = "numSeats")
   private int numSeats;
+  @Column(name = "LicencePlate")
   private String licencePlate;
 
   //Autounique Attributes
+  @Id
+  @Column(name = "CarID")
   private int carID;
 
   //Car Associations
+  @ManyToOne
+  @JoinColumn(name = "FK_UserID")
   private Driver driver;
   private List<Trip> trips;
 
