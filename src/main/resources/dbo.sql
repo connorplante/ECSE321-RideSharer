@@ -64,7 +64,7 @@ CREATE TABLE `Trips` (
   `FK_UserID` int(11) DEFAULT NULL,
   `FK_CarID` int(11) DEFAULT NULL,
   PRIMARY KEY (`TripID`),
-  UNIQUE KEY `TripID_UNIQUE` (`TripID`),
+  UNIQUE KEY `TripID_UNIQUE` (`TripID`)
 );
 
 
