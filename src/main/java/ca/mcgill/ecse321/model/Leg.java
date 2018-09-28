@@ -1,12 +1,17 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 
-// line 54 "../../../../../../../ump/tmp206467/model.ump"
-// line 102 "../../../../../../../ump/tmp206467/model.ump"
+// line 56 "../../../../model.ump"
 public class Leg
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextLegID = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -17,6 +22,9 @@ public class Leg
   private String end;
   private double price;
   private int numSeats;
+
+  //Autounique Attributes
+  private int legID;
 
   //Leg Associations
   private Trip trip;
@@ -31,6 +39,7 @@ public class Leg
     end = aEnd;
     price = aPrice;
     numSeats = aNumSeats;
+    legID = nextLegID++;
     boolean didAddTrip = setTrip(aTrip);
     if (!didAddTrip)
     {
@@ -93,6 +102,11 @@ public class Leg
   {
     return numSeats;
   }
+
+  public int getLegID()
+  {
+    return legID;
+  }
   /* Code from template association_GetOne */
   public Trip getTrip()
   {
@@ -143,6 +157,7 @@ public class Leg
   public String toString()
   {
     return super.toString() + "["+
+            "legID" + ":" + getLegID()+ "," +
             "start" + ":" + getStart()+ "," +
             "end" + ":" + getEnd()+ "," +
             "price" + ":" + getPrice()+ "," +

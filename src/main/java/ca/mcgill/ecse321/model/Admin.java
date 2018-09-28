@@ -1,10 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 
-// line 28 "../../../../../../../ump/tmp206467/model.ump"
-// line 87 "../../../../../../../ump/tmp206467/model.ump"
+// line 28 "../../../../model.ump"
 public class Admin extends User
 {
 

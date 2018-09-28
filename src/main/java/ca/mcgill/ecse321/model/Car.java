@@ -1,15 +1,20 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 33 "../../../../../../../ump/tmp206467/model.ump"
-// line 92 "../../../../../../../ump/tmp206467/model.ump"
+// line 33 "../../../../model.ump"
 public class Car
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextCarID = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -21,6 +26,9 @@ public class Car
   private int year;
   private int numSeats;
   private String licencePlate;
+
+  //Autounique Attributes
+  private int carID;
 
   //Car Associations
   private Driver driver;
@@ -37,6 +45,7 @@ public class Car
     year = aYear;
     numSeats = aNumSeats;
     licencePlate = aLicencePlate;
+    carID = nextCarID++;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -113,6 +122,11 @@ public class Car
   {
     return licencePlate;
   }
+
+  public int getCarID()
+  {
+    return carID;
+  }
   /* Code from template association_GetOne */
   public Driver getDriver()
   {
@@ -184,9 +198,9 @@ public class Car
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(Date aDate, Time aTime, String aStart, String aEnd, Trip.Status aTripStatus, Driver aDriver)
+  public Trip addTrip(String aStart, String aEnd, Date aDate, Time aTime, Trip.Status aTripStatus, Driver aDriver)
   {
-    return new Trip(aDate, aTime, aStart, aEnd, aTripStatus, aDriver, this);
+    return new Trip(aStart, aEnd, aDate, aTime, aTripStatus, aDriver, this);
   }
 
   public boolean addTrip(Trip aTrip)
@@ -270,6 +284,7 @@ public class Car
   public String toString()
   {
     return super.toString() + "["+
+            "carID" + ":" + getCarID()+ "," +
             "make" + ":" + getMake()+ "," +
             "model" + ":" + getModel()+ "," +
             "year" + ":" + getYear()+ "," +

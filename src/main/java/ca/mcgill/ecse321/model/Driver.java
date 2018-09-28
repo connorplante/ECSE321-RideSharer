@@ -1,13 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-// line 22 "../../../../../../../ump/tmp206467/model.ump"
-// line 81 "../../../../../../../ump/tmp206467/model.ump"
+// line 22 "../../../../model.ump"
 public class Driver extends User
 {
 
@@ -99,9 +98,9 @@ public class Driver extends User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(Date aDate, Time aTime, String aStart, String aEnd, Trip.Status aTripStatus, Car aCar)
+  public Trip addTrip(String aStart, String aEnd, Date aDate, Time aTime, Trip.Status aTripStatus, Car aCar)
   {
-    return new Trip(aDate, aTime, aStart, aEnd, aTripStatus, this, aCar);
+    return new Trip(aStart, aEnd, aDate, aTime, aTripStatus, this, aCar);
   }
 
   public boolean addTrip(Trip aTrip)

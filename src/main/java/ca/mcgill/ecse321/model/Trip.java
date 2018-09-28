@@ -1,13 +1,12 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
-// line 44 "../../../../../../../ump/tmp206467/model.ump"
-// line 97 "../../../../../../../ump/tmp206467/model.ump"
+// line 45 "../../../../model.ump"
 public class Trip
 {
 
@@ -15,18 +14,27 @@ public class Trip
   // ENUMERATIONS
   //------------------------
 
-  public enum Status { Scheduled, Completed, Cancelled }
+  public enum Status { Scheduled, Cancelled, Completed }
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextTripID = 1;
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Trip Attributes
-  private Date date;
-  private Time time;
   private String start;
   private String end;
+  private Date date;
+  private Time time;
   private Status tripStatus;
+
+  //Autounique Attributes
+  private int tripID;
 
   //Trip Associations
   private Driver driver;
@@ -38,13 +46,14 @@ public class Trip
   // CONSTRUCTOR
   //------------------------
 
-  public Trip(Date aDate, Time aTime, String aStart, String aEnd, Status aTripStatus, Driver aDriver, Car aCar)
+  public Trip(String aStart, String aEnd, Date aDate, Time aTime, Status aTripStatus, Driver aDriver, Car aCar)
   {
-    date = aDate;
-    time = aTime;
     start = aStart;
     end = aEnd;
+    date = aDate;
+    time = aTime;
     tripStatus = aTripStatus;
+    tripID = nextTripID++;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -63,22 +72,6 @@ public class Trip
   // INTERFACE
   //------------------------
 
-  public boolean setDate(Date aDate)
-  {
-    boolean wasSet = false;
-    date = aDate;
-    wasSet = true;
-    return wasSet;
-  }
-
-  public boolean setTime(Time aTime)
-  {
-    boolean wasSet = false;
-    time = aTime;
-    wasSet = true;
-    return wasSet;
-  }
-
   public boolean setStart(String aStart)
   {
     boolean wasSet = false;
@@ -95,22 +88,28 @@ public class Trip
     return wasSet;
   }
 
+  public boolean setDate(Date aDate)
+  {
+    boolean wasSet = false;
+    date = aDate;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setTime(Time aTime)
+  {
+    boolean wasSet = false;
+    time = aTime;
+    wasSet = true;
+    return wasSet;
+  }
+
   public boolean setTripStatus(Status aTripStatus)
   {
     boolean wasSet = false;
     tripStatus = aTripStatus;
     wasSet = true;
     return wasSet;
-  }
-
-  public Date getDate()
-  {
-    return date;
-  }
-
-  public Time getTime()
-  {
-    return time;
   }
 
   public String getStart()
@@ -123,9 +122,24 @@ public class Trip
     return end;
   }
 
+  public Date getDate()
+  {
+    return date;
+  }
+
+  public Time getTime()
+  {
+    return time;
+  }
+
   public Status getTripStatus()
   {
     return tripStatus;
+  }
+
+  public int getTripID()
+  {
+    return tripID;
   }
   /* Code from template association_GetOne */
   public Driver getDriver()
@@ -430,6 +444,7 @@ public class Trip
   public String toString()
   {
     return super.toString() + "["+
+            "tripID" + ":" + getTripID()+ "," +
             "start" + ":" + getStart()+ "," +
             "end" + ":" + getEnd()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +

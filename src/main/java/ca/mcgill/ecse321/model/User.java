@@ -1,12 +1,17 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 
-// line 4 "../../../../../../../ump/tmp206467/model.ump"
-// line 71 "../../../../../../../ump/tmp206467/model.ump"
+// line 3 "../../../../model.ump"
 public class User
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextUserID = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -23,6 +28,9 @@ public class User
   private double rating;
   private int numRides;
 
+  //Autounique Attributes
+  private int userID;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
@@ -38,6 +46,7 @@ public class User
     status = aStatus;
     rating = aRating;
     numRides = aNumRides;
+    userID = nextUserID++;
   }
 
   //------------------------
@@ -160,6 +169,11 @@ public class User
   {
     return numRides;
   }
+
+  public int getUserID()
+  {
+    return userID;
+  }
   /* Code from template attribute_IsBoolean */
   public boolean isStatus()
   {
@@ -173,6 +187,7 @@ public class User
   public String toString()
   {
     return super.toString() + "["+
+            "userID" + ":" + getUserID()+ "," +
             "username" + ":" + getUsername()+ "," +
             "password" + ":" + getPassword()+ "," +
             "firstName" + ":" + getFirstName()+ "," +

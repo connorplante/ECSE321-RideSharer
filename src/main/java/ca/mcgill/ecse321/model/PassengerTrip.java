@@ -1,12 +1,17 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.29.0.4236.7840197ce modeling language!*/
+/*This code was generated using the UMPLE 1.29.0.4181.a593105a9 modeling language!*/
 
 package ca.mcgill.ecse321.model;
 
-// line 63 "../../../../../../../ump/tmp206467/model.ump"
-// line 108 "../../../../../../../ump/tmp206467/model.ump"
+// line 66 "../../../../model.ump"
 public class PassengerTrip
 {
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  private static int nextPassengerTripID = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -14,6 +19,9 @@ public class PassengerTrip
 
   //PassengerTrip Attributes
   private double price;
+
+  //Autounique Attributes
+  private int passengerTripID;
 
   //PassengerTrip Associations
   private Passenger passenger;
@@ -29,6 +37,7 @@ public class PassengerTrip
   public PassengerTrip(Passenger aPassenger, Trip aTrip)
   {
     canSetPrice = true;
+    passengerTripID = nextPassengerTripID++;
     boolean didAddPassenger = setPassenger(aPassenger);
     if (!didAddPassenger)
     {
@@ -58,6 +67,11 @@ public class PassengerTrip
   public double getPrice()
   {
     return price;
+  }
+
+  public int getPassengerTripID()
+  {
+    return passengerTripID;
   }
   /* Code from template association_GetOne */
   public Passenger getPassenger()
@@ -128,6 +142,7 @@ public class PassengerTrip
   public String toString()
   {
     return super.toString() + "["+
+            "passengerTripID" + ":" + getPassengerTripID()+ "," +
             "price" + ":" + getPrice()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "passenger = "+(getPassenger()!=null?Integer.toHexString(System.identityHashCode(getPassenger())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "trip = "+(getTrip()!=null?Integer.toHexString(System.identityHashCode(getTrip())):"null");
