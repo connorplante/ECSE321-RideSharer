@@ -12,9 +12,9 @@ CREATE TABLE `Users` (
   `FirstName` varchar(45) DEFAULT NULL,
   `LastName` varchar(45) DEFAULT NULL,
   `Rating` int(11) DEFAULT NULL,
-  `numRides` int(11) DEFAULT NULL,
+  `numRides` int(11) NOT NULL DEFAULT 0,
   `Role` int(11) DEFAULT NULL,
-  `Status` tinyint(4) DEFAULT NULL,
+  `Status` tinyint(4) NOT NULL DEFAULT 1,
   PRIMARY KEY (`UserID`),
   UNIQUE KEY `UserID_UNIQUE` (`UserID`),
   UNIQUE KEY `Username_UNIQUE` (`Username`)
@@ -45,7 +45,7 @@ CREATE TABLE `Legs` (
 
 
 CREATE TABLE `PassengerTrips` (
-  `PassengerTripID` int(11) NOT NULL AUTO_INCREMENT,
+  `PassengerTripID` int(11) NOT NULL,
   `FK_TripID` int(11) DEFAULT NULL,
   `FK_UserID` int(11) DEFAULT NULL,
   `Price` int(11) DEFAULT NULL,
@@ -60,12 +60,11 @@ CREATE TABLE `Trips` (
   `Time` int(11) DEFAULT NULL,
   `Start` varchar(45) DEFAULT NULL,
   `End` varchar(45) DEFAULT NULL,
+  `Status` varchar(45) DEFAULT 'Scheduled',
   `FK_UserID` int(11) DEFAULT NULL,
   `FK_CarID` int(11) DEFAULT NULL,
   PRIMARY KEY (`TripID`),
   UNIQUE KEY `TripID_UNIQUE` (`TripID`),
-  KEY `FK_CarID_idx` (`FK_CarID`),
-  KEY `FK_UserID_idx` (`FK_UserID`) 
 );
 
 
