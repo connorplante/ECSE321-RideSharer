@@ -3,7 +3,12 @@
 
 package ca.mcgill.ecse321.model;
 
+import javax.persistence.*;
+
 // line 66 "../../../../model.ump"
+
+@Entity
+@Table(name = "PassengerTrips")
 public class PassengerTrip
 {
 
@@ -18,13 +23,21 @@ public class PassengerTrip
   //------------------------
 
   //PassengerTrip Attributes
+  @Column(name = "Price")
   private double price;
 
   //Autounique Attributes
+  @Id
+  @Column(name = "PassengerTripID")
   private int passengerTripID;
 
   //PassengerTrip Associations
+  @ManyToOne
+  @JoinColumn(name = "FK_UserID")
   private Passenger passenger;
+
+  @ManyToOne
+  @JoinColumn(name = "FK_TripID")
   private Trip trip;
 
   //Helper Variables
