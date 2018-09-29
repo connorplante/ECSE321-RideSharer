@@ -21,7 +21,7 @@ public class Passenger extends User
 
   public Passenger(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
-    super(aUsername, aPassword, aFirstName, aLastName, aEmail, aPhone, aStatus, aRating, aNumRides);
+    super(aUsername, aPassword, aFirstName, aLastName, aEmail, aPhone, aStatus, aRating, aNumRides, 1);
     passengerTrips = new ArrayList<PassengerTrip>();
   }
 

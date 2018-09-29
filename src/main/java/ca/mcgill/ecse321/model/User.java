@@ -3,7 +3,14 @@
 
 package ca.mcgill.ecse321.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 // line 3 "../../../../model.ump"
+@Entity
+@Table(name = "Users")
 public class User
 {
 
@@ -18,24 +25,37 @@ public class User
   //------------------------
 
   //User Attributes
+  @Column(name = "Username")
   private String username;
+  @Column(name = "Password")
   private String password;
+  @Column(name = "FirstName")
   private String firstName;
+  @Column(name = "LastName")
   private String lastName;
+  @Column(name = "Email")
   private String email;
+  @Column(name = "PhoneNumber")
   private String phone;
+  @Column(name = "Status")
   private boolean status;
+  @Column(name = "Rating")
   private double rating;
+  @Column(name = "numRides")
   private int numRides;
+  @Column(name = "Role")
+  private int role;
 
   //Autounique Attributes
+  @Id
+  @Column(name = "UserID")
   private int userID;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public User(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
+  public User(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides, int aRole)
   {
     username = aUsername;
     password = aPassword;
@@ -47,6 +67,21 @@ public class User
     rating = aRating;
     numRides = aNumRides;
     userID = nextUserID++;
+    role = aRole;
+  }
+
+  public User(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides){
+    username = aUsername;
+    password = aPassword;
+    firstName = aFirstName;
+    lastName = aLastName;
+    email = aEmail;
+    phone = aPhone;
+    status = aStatus;
+    rating = aRating;
+    numRides = aNumRides;
+    userID = nextUserID++;
+    role = 4;
   }
 
   //------------------------
@@ -125,6 +160,14 @@ public class User
     return wasSet;
   }
 
+  public boolean setRole(int roleNum)
+  {
+    boolean wasSet = false;
+    role = roleNum;
+    wasSet = true;
+    return wasSet;
+  }
+
   public String getUsername()
   {
     return username;
@@ -178,6 +221,10 @@ public class User
   public boolean isStatus()
   {
     return status;
+  }
+
+  public int getRole(){
+    return role;
   }
 
   public void delete()
