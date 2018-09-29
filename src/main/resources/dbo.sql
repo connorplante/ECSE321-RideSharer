@@ -8,6 +8,7 @@ CREATE TABLE `Users` (
   `UserID` int(11) NOT NULL,
   `Username` varchar(45) DEFAULT NULL,
   `Email` varchar(45) DEFAULT NULL,
+  `PhoneNumber` varchar(45) DEFAULT NULL,
   `Password` varchar(45) DEFAULT NULL,
   `FirstName` varchar(45) DEFAULT NULL,
   `LastName` varchar(45) DEFAULT NULL,
