@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ca.mcgill.ecse321</groupId>
-    <artifactId>bare-bones</artifactId>
+    <artifactId>t00-rideshare-app</artifactId>
     <version>1.0.0</version>
 
     <parent>
