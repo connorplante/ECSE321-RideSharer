@@ -12,7 +12,7 @@ CREATE TABLE `Users` (
   `Password` varchar(45) DEFAULT NULL,
   `FirstName` varchar(45) DEFAULT NULL,
   `LastName` varchar(45) DEFAULT NULL,
-  `Rating` int(11) DEFAULT NULL,
+  `Rating` int(11) NOT NULL DEFAULT 0,
   `numRides` int(11) NOT NULL DEFAULT 0,
   `Role` int(11) DEFAULT NULL,
   `Status` tinyint(4) NOT NULL DEFAULT 1,
