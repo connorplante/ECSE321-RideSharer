@@ -6,9 +6,6 @@ import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
-
-import com.sun.javafx.beans.IDProperty;
-
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Entity;
