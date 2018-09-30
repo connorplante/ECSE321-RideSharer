@@ -4,7 +4,13 @@
 package ca.mcgill.ecse321.model;
 import java.util.*;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 // line 17 "../../../../model.ump"
+@Entity(name="Passenger")
+@DiscriminatorValue(value = "1")
 public class Passenger extends User
 {
 
@@ -13,6 +19,7 @@ public class Passenger extends User
   //------------------------
 
   //Passenger Associations
+  @Transient
   private List<PassengerTrip> passengerTrips;
 
   //------------------------

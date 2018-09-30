@@ -6,7 +6,13 @@ import java.util.*;
 import java.sql.Date;
 import java.sql.Time;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Transient;
+
 // line 22 "../../../../model.ump"
+@Entity(name="Driver")
+@DiscriminatorValue(value = "2")
 public class Driver extends User
 {
 
@@ -15,7 +21,9 @@ public class Driver extends User
   //------------------------
 
   //Driver Associations
+  @Transient
   private List<Trip> trips;
+  @Transient
   private List<Car> cars;
 
   //------------------------
