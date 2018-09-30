@@ -3,7 +3,12 @@
 
 package ca.mcgill.ecse321.model;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 // line 28 "../../../../model.ump"
+@Entity(name="Admin")
+@DiscriminatorValue(value = "3")
 public class Admin extends User
 {
 

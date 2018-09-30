@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 // line 45 "../../../../model.ump"
 
@@ -62,7 +63,9 @@ public class Trip
   @JoinColumn(name = "FK_CarID")
   @OneToOne
   private Car car;
+  @Transient
   private List<Leg> legs;
+  @Transient
   private List<PassengerTrip> passengerTrips;
 
   //------------------------

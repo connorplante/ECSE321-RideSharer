@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
@@ -50,6 +51,7 @@ public class Car
   @ManyToOne
   @JoinColumn(name = "FK_UserID")
   private Driver driver;
+  @Transient
   private List<Trip> trips;
 
   //------------------------

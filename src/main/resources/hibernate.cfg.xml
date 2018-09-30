@@ -28,6 +28,13 @@
         1
     </property>
 
+    <mapping class="ca.mcgill.ecse321.model.Admin" />
+    <mapping class="ca.mcgill.ecse321.model.Car" />
+    <mapping class="ca.mcgill.ecse321.model.Driver" />
+    <mapping class="ca.mcgill.ecse321.model.Leg" />
+    <mapping class="ca.mcgill.ecse321.model.Passenger" />
+    <mapping class="ca.mcgill.ecse321.model.PassengerTrip" />
+    <mapping class="ca.mcgill.ecse321.model.Trip" />
     <mapping class="ca.mcgill.ecse321.model.User" />
       
    </session-factory>

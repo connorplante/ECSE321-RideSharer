@@ -7,9 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+
+import org.hibernate.Session;
+import ca.mcgill.ecse321.HibernateUtil;
 
 // line 3 "../../../../model.ump"
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="Role", discriminatorType = DiscriminatorType.INTEGER)
 @Table(name = "Users")
 public class User
 {
@@ -18,7 +28,8 @@ public class User
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextUserID = 1;
+  //private static int nextUserID = 1;
+  private static int nextUserID = getNumNextUserID();
 
   //------------------------
   // MEMBER VARIABLES
@@ -43,7 +54,7 @@ public class User
   private double rating;
   @Column(name = "numRides")
   private int numRides;
-  @Column(name = "Role")
+  @Transient
   private int role;
 
   //Autounique Attributes
@@ -82,6 +93,24 @@ public class User
     numRides = aNumRides;
     userID = nextUserID++;
     role = 4;
+  }
+
+  //------------------------
+  // INSERTED BY DYLAN
+  //------------------------
+  /**
+   * method to get the number of rows in User table
+   * this is to get the max UserID, but if no Users are deleted, it should serve the same purpose
+   * if MAX UserID can be achieved, change the method to do that as it returns the more appropriate result
+   * @return number of rows in table
+   */
+  private static int getNumNextUserID() {
+
+    Session session = HibernateUtil.getSession();
+    int count = 1 + ((Long)session.createQuery("SELECT count(UserID) FROM User").uniqueResult()).intValue();
+    session.close();
+
+    return count;
   }
 
   //------------------------
