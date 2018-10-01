@@ -14,6 +14,10 @@ import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
+import org.hibernate.Session;
+
+import ca.mcgill.ecse321.HibernateUtil;
+
 // line 33 "../../../../model.ump"
 @Entity
 @Table(name = "Cars")
@@ -24,7 +28,7 @@ public class Car
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextCarID = 1;
+  private static int nextCarID = getNumNextCarID();
 
   //------------------------
   // MEMBER VARIABLES
@@ -39,8 +43,10 @@ public class Car
   private int year;
   @Column(name = "numSeats")
   private int numSeats;
-  @Column(name = "LicencePlate")
+  @Column(name = "LicensePlate")
   private String licencePlate;
+  @Column(name = "Status")
+  private boolean status;
 
   //Autounique Attributes
   @Id
@@ -58,6 +64,10 @@ public class Car
   // CONSTRUCTOR
   //------------------------
 
+  public Car(){
+
+  }
+  
   public Car(String aMake, String aModel, int aYear, int aNumSeats, String aLicencePlate, Driver aDriver)
   {
     make = aMake;
@@ -78,6 +88,20 @@ public class Car
   // INTERFACE
   //------------------------
 
+  /**
+   * method to get the number of rows in Car table
+   * this is to get the max CarID, but if no Cars are deleted, it should serve the same purpose
+   * if MAX CarID can be achieved, change the method to do that as it returns the more appropriate result
+   * @return number of rows in table
+   */
+  private static int getNumNextCarID() {
+    Session session = HibernateUtil.getSession();
+    int count = 1 + ((Long)session.createQuery("SELECT count(CarID) FROM Car").uniqueResult()).intValue();
+    session.close();
+
+    return count;
+  }
+  
   public boolean setMake(String aMake)
   {
     boolean wasSet = false;
@@ -110,6 +134,14 @@ public class Car
     return wasSet;
   }
 
+  public boolean setStatus(boolean aStatus)
+  {
+    boolean wasSet = false;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+  
   public boolean setLicencePlate(String aLicencePlate)
   {
     boolean wasSet = false;
@@ -136,6 +168,11 @@ public class Car
   public int getNumSeats()
   {
     return numSeats;
+  }
+  
+  public boolean getStatus()
+  {
+    return status;
   }
 
   public String getLicencePlate()
@@ -311,5 +348,9 @@ public class Car
             "numSeats" + ":" + getNumSeats()+ "," +
             "licencePlate" + ":" + getLicencePlate()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null");
+  }
+  
+  public void initList(){
+    trips = new ArrayList<Trip>();
   }
 }
