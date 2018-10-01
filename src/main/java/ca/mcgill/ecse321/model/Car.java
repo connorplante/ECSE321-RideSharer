@@ -14,6 +14,10 @@ import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
+import org.hibernate.Session;
+
+import ca.mcgill.ecse321.HibernateUtil;
+
 // line 33 "../../../../model.ump"
 @Entity
 @Table(name = "Cars")
