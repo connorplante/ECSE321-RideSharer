@@ -68,25 +68,37 @@ public class UserController {
        return driver;
    }
 
-   /**
-    * STILL IN PROGRESS
-    */
-    @RequestMapping("/updatePassenger")
-    public User updatePassenger (@RequestParam(value="username") String username, String currentPassword,
-    String newPassword) {
+    /**
+     * Resets a users password
+     * returns true if reset was successful
+     * returns false if reset failed
+     * Works for User, Driver, Passenger, Admin
+     * @param username
+     * @param currentPassword
+     * @param newPassword
+     * @return Boolean 
+     */
+    @RequestMapping("/resetPassword")
+    public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
+    @RequestParam(value="newPassword") String newPassword) {
 
         Session session = HibernateUtil.getSession();
+        Boolean ret;
         session.beginTransaction();
 
-        User passenger = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        if (user.getPassword().equals(currentPassword)) {
+            user.setPassword(newPassword);
+            session.saveOrUpdate(user);
+            ret = true;
+        } else {
+            ret = false;
+        }
 
         session.getTransaction().commit();
         session.close();
 
         System.out.println("======> Processed");
-        return passenger;
+        return ret;
     }
-
 }
-
-

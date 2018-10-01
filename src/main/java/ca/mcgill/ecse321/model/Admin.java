@@ -20,6 +20,8 @@ public class Admin extends User
   // CONSTRUCTOR
   //------------------------
 
+  public Admin(){}
+
   public Admin(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
     super(aUsername, aPassword, aFirstName, aLastName, aEmail, aPhone, aStatus, aRating, aNumRides, 3);
