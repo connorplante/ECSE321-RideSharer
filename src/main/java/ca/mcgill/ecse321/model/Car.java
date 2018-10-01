@@ -43,7 +43,7 @@ public class Car
   private int year;
   @Column(name = "numSeats")
   private int numSeats;
-  @Column(name = "LicencePlate")
+  @Column(name = "LicensePlate")
   private String licencePlate;
   @Column(name = "Status")
   private boolean status;
