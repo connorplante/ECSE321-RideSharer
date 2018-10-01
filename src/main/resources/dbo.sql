@@ -1,8 +1,9 @@
 DROP DATABASE IF EXISTS dbo;
+DROP DATABASE IF EXISTS db;
 
-CREATE DATABASE dbo;
+CREATE DATABASE db;
 
-use dbo;
+use db;
 
 CREATE TABLE `Users` (
   `UserID` int(11) NOT NULL,
@@ -28,6 +29,7 @@ CREATE TABLE `Cars` (
   `Year` int(11) DEFAULT NULL,
   `numSeats` int(11) DEFAULT NULL,
   `LicensePlate` varchar(45) DEFAULT NULL,
+  `Status` tinyint(4) NOT NULL DEFAULT 1,
   `FK_UserID` int(11) DEFAULT NULL,
   PRIMARY KEY (`CarID`),
   UNIQUE KEY `CarID_UNIQUE` (`CarID`)
@@ -67,7 +69,6 @@ CREATE TABLE `Trips` (
   PRIMARY KEY (`TripID`),
   UNIQUE KEY `TripID_UNIQUE` (`TripID`)
 );
-
 
 
 
