@@ -5,6 +5,7 @@ package ca.mcgill.ecse321.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -20,7 +21,7 @@ public class Leg
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextLegID = 1;
+  //private static int nextLegID = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -42,6 +43,7 @@ public class Leg
   //Autounique Attributes
   @Id
   @Column(name="LegID")
+  @GeneratedValue
   private int legID;
 
   //Leg Associations
@@ -59,7 +61,7 @@ public class Leg
     end = aEnd;
     price = aPrice;
     numSeats = aNumSeats;
-    legID = nextLegID++;
+    //legID = nextLegID++;
     boolean didAddTrip = setTrip(aTrip);
     if (!didAddTrip)
     {

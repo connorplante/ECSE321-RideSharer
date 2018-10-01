@@ -32,7 +32,7 @@ public class Trip
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextTripID = 1;
+  //private static int nextTripID = 1;
 
   //------------------------
   // MEMBER VARIABLES
@@ -79,7 +79,7 @@ public class Trip
     date = aDate;
     time = aTime;
     tripStatus = aTripStatus;
-    tripID = nextTripID++;
+   // tripID = nextTripID++;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {

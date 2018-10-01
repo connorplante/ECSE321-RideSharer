@@ -9,6 +9,7 @@ import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
@@ -28,7 +29,7 @@ public class Car
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextCarID = getNumNextCarID();
+  //private static int nextCarID = getNumNextCarID();
 
   //------------------------
   // MEMBER VARIABLES
@@ -51,6 +52,7 @@ public class Car
   //Autounique Attributes
   @Id
   @Column(name = "CarID")
+  @GeneratedValue
   private int carID;
 
   //Car Associations
@@ -75,7 +77,7 @@ public class Car
     year = aYear;
     numSeats = aNumSeats;
     licencePlate = aLicencePlate;
-    carID = nextCarID++;
+    //carID = nextCarID++;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
