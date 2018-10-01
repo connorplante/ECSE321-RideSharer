@@ -14,6 +14,8 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 
 import org.hibernate.Session;
+import org.hibernate.annotations.NaturalId;
+
 import ca.mcgill.ecse321.HibernateUtil;
 
 // line 3 "../../../../model.ump"
@@ -36,6 +38,7 @@ public class User
   //------------------------
 
   //User Attributes
+  @NaturalId
   @Column(name = "Username")
   private String username;
   @Column(name = "Password")
@@ -65,6 +68,8 @@ public class User
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  public User(){}
 
   public User(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides, int aRole)
   {

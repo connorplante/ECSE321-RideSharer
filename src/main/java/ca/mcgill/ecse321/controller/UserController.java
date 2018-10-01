@@ -1,10 +1,14 @@
 package ca.mcgill.ecse321.controller;
 
-import ca.mcgill.ecse321.HibernateUtil;
 import org.hibernate.Session;
-import org.springframework.web.bind.annotation.*;
-import ca.mcgill.ecse321.model.Passenger;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.mcgill.ecse321.HibernateUtil;
 import ca.mcgill.ecse321.model.Driver;
+import ca.mcgill.ecse321.model.Passenger;
+import ca.mcgill.ecse321.model.User;
 
 @RestController
 @RequestMapping("/User")
@@ -59,8 +63,29 @@ public class UserController {
        session.getTransaction().commit();
        session.close();
 
+       System.out.println("======> Processed");
+
        return driver;
    }
+
+   /**
+    * STILL IN PROGRESS
+    */
+    @RequestMapping("/updatePassenger")
+    public User updatePassenger (@RequestParam(value="username") String username, String currentPassword,
+    String newPassword) {
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User passenger = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+
+        session.getTransaction().commit();
+        session.close();
+
+        System.out.println("======> Processed");
+        return passenger;
+    }
 
 }
 
