@@ -45,6 +45,8 @@ public class Car
   private int numSeats;
   @Column(name = "LicencePlate")
   private String licencePlate;
+  @Column(name = "Status")
+  private boolean status;
 
   //Autounique Attributes
   @Id
@@ -132,6 +134,14 @@ public class Car
     return wasSet;
   }
 
+  public boolean setStatus(boolean aStatus)
+  {
+    boolean wasSet = false;
+    status = aStatus;
+    wasSet = true;
+    return wasSet;
+  }
+  
   public boolean setLicencePlate(String aLicencePlate)
   {
     boolean wasSet = false;
@@ -158,6 +168,11 @@ public class Car
   public int getNumSeats()
   {
     return numSeats;
+  }
+  
+  public int getStatus()
+  {
+    return status;
   }
 
   public String getLicencePlate()
