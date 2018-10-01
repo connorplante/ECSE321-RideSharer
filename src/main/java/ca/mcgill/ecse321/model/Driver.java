@@ -30,7 +30,8 @@ public class Driver extends User
   // CONSTRUCTOR
   //------------------------
 
-  public Driver(){}
+  public Driver(){
+  }
 
   public Driver(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
@@ -280,6 +281,11 @@ public class Driver extends User
       aCar.delete();
     }
     super.delete();
+  }
+ 
+  public void initArrayLists(){
+    cars = new ArrayList<Car>();
+    trips = new ArrayList<Trip>();
   }
 
 }
