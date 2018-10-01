@@ -170,7 +170,7 @@ public class Car
     return numSeats;
   }
   
-  public int getStatus()
+  public boolean getStatus()
   {
     return status;
   }
