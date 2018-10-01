@@ -26,6 +26,8 @@ public class Passenger extends User
   // CONSTRUCTOR
   //------------------------
 
+  public Passenger(){}
+
   public Passenger(String aUsername, String aPassword, String aFirstName, String aLastName, String aEmail, String aPhone, boolean aStatus, double aRating, int aNumRides)
   {
     super(aUsername, aPassword, aFirstName, aLastName, aEmail, aPhone, aStatus, aRating, aNumRides, 1);
