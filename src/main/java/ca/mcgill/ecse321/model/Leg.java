@@ -3,6 +3,11 @@
 
 package ca.mcgill.ecse321.model;
 
+import org.hibernate.Session;
+import org.hibernate.annotations.NaturalId;
+
+import ca.mcgill.ecse321.HibernateUtil;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -20,7 +25,9 @@ public class Leg
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextLegID = 1;
+ // private static int nextLegID = 1;
+  private static int nextLegID = getNumNextLegID();
+
 
   //------------------------
   // MEMBER VARIABLES
@@ -29,13 +36,10 @@ public class Leg
   //Leg Attributes
   @Column(name="Start")
   private String start;
-
   @Column(name="End")
   private String end;
-
   @Column(name="Price")
   private double price;
-
   @Column(name="NumSeats")
   private int numSeats;
 
@@ -60,13 +64,21 @@ public class Leg
     price = aPrice;
     numSeats = aNumSeats;
     legID = nextLegID++;
-    boolean didAddTrip = setTrip(aTrip);
-    if (!didAddTrip)
-    {
-      throw new RuntimeException("Unable to create leg due to trip");
-    }
+    trip = aTrip;
+    // boolean didAddTrip = setTrip(aTrip);
+    // if (!didAddTrip)
+    // {
+    //   throw new RuntimeException("Unable to create leg due to trip");
+    // }
   }
+  private static int getNumNextLegID() {
 
+    Session session = HibernateUtil.getSession();
+    int count = 1 + ((Long)session.createQuery("SELECT count(LegID) FROM Leg").uniqueResult()).intValue();
+    session.close();
+
+    return count;
+  }
   //------------------------
   // INTERFACE
   //------------------------
