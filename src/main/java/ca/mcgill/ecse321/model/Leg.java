@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -43,7 +44,7 @@ public class Leg
   //Autounique Attributes
   @Id
   @Column(name="LegID")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int legID;
 
   //Leg Associations

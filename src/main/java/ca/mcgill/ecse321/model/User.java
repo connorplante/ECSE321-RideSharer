@@ -6,6 +6,7 @@ package ca.mcgill.ecse321.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -64,7 +65,7 @@ public class User
   //Autounique Attributes
   @Id
   @Column(name = "UserID")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int userID;
 
   //------------------------

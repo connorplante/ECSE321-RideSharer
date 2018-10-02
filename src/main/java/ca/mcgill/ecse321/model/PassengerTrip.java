@@ -29,7 +29,7 @@ public class PassengerTrip
   //Autounique Attributes
   @Id
   @Column(name = "PassengerTripID")
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int passengerTripID;
 
   //PassengerTrip Associations
