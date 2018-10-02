@@ -6,6 +6,11 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
+import org.hibernate.Session;
+import org.hibernate.annotations.NaturalId;
+
+import ca.mcgill.ecse321.HibernateUtil;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,28 +37,29 @@ public class Trip
   // STATIC VARIABLES
   //------------------------
 
-  private static int nextTripID = 1;
+  //private static int nextTripID = 1;
+  private static int nextTripID = getNumNextTripID();
+
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Trip Attributes
-  @Column(name = "Start")
-  private String start;
-  @Column(name = "End")
-  private String end;
   @Column(name = "Date")
   private Date date;
   @Column(name = "Time")
   private Time time;
+  @Column(name = "Start")
+  private String start;
+  @Column(name = "End")
+  private String end;
   @Column(name = "Status")
   private Status tripStatus;
 
   //Autounique Attributes
   @Id
   @Column(name = "TripID")
-  @GeneratedValue
   private int tripID;
 
   //Trip Associations
@@ -71,7 +77,7 @@ public class Trip
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
+  public Trip(){}
   public Trip(String aStart, String aEnd, Date aDate, Time aTime, Status aTripStatus, Driver aDriver, Car aCar)
   {
     start = aStart;
@@ -80,18 +86,30 @@ public class Trip
     time = aTime;
     tripStatus = aTripStatus;
     tripID = nextTripID++;
-    boolean didAddDriver = setDriver(aDriver);
-    if (!didAddDriver)
-    {
-      throw new RuntimeException("Unable to create trip due to driver");
-    }
-    boolean didAddCar = setCar(aCar);
-    if (!didAddCar)
-    {
-      throw new RuntimeException("Unable to create trip due to car");
-    }
+    driver = aDriver;
+    car = aCar;
+    System.out.println("TRIP ID: " + tripID);
+    System.out.println("Driver Name: " + driver.getUsername());
+    // boolean didAddDriver = setDriver(aDriver);
+    // if (!didAddDriver)
+    // {
+    //   throw new RuntimeException("Unable to create trip due to driver");
+    // }
+    // boolean didAddCar = setCar(aCar);
+    // if (!didAddCar)
+    // {
+    //   throw new RuntimeException("Unable to create trip due to car");
+    // }
     legs = new ArrayList<Leg>();
     passengerTrips = new ArrayList<PassengerTrip>();
+  }
+  private static int getNumNextTripID() {
+
+    Session session = HibernateUtil.getSession();
+    int count = 1 + ((Long)session.createQuery("SELECT count(TripID) FROM Trip").uniqueResult()).intValue();
+    session.close();
+
+    return count;
   }
 
   //------------------------
