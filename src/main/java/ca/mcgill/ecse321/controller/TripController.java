@@ -113,41 +113,51 @@ public class TripController {
 
     }
 
+    /**
+     * Method that takes in a start and end and returns a list of trip IDs
+     * @param start
+     * @param end
+     * @return List of Trip IDs
+     */
     @RequestMapping("/findTrip")
-    public List<Trip> findTrip(@RequestParam(value="start") String start, @RequestParam(value="end") String end) {
+    public List<Integer> findTrip(@RequestParam(value="start") String start, @RequestParam(value="end") String end) {
         // Initialize return list
         List<Integer> foundTripIDs = new ArrayList<Integer>();
-        List<Trip> foundTrips = null;
 
         // Initialize queries that will be made to find trip with given start and end
-        String queryhStart = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE Start = :start";
-        String queryEndAndFK_TripID = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE End = :end AND FK_tripID = :sameTrip AND LegID > :futureLeg";
+        String queryStart = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE Start = :start";
+        String queryEndAndFK_TripID = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE End = :end AND FK_tripID = :sameTrip AND LegID >= :futureLeg";
+        String queryFK_TripID = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :fk_tripid";
 
         // Begin Session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make first query
-        SQLQuery query = session.createSQLQuery(queryhStart);
-        query.setParameter("start", start);
+        SQLQuery queryFindLegs = session.createSQLQuery(queryStart);
+        queryFindLegs.setParameter("start", start);
 
-        // contains a list of all the row information from the query
-        List<Object[]> startLegs = query.list();
+        // startLegs will contain a list of the row information
+        List<Object[]> startLegs = queryFindLegs.list();
 
-        // Print out all legs with Start start
-        for (Object[] leg : startLegs) {
-            query = session.createSQLQuery(queryEndAndFK_TripID);
-            query.setParameter("end", end);
-            query.setParameter("sameTrip", leg[5]);
-            query.setParameter("futureLeg", leg[0]);
-            foundTripIDs.add((Integer)leg[5]);
+        // Iterate through each leg, the information is stored in the list like this:
+        // leg[0] | leg[1] | leg[2] | leg[3] | leg[4]   | leg[5] 
+        // LegID  | Start  | End    | Price  | NumSeats | FK_TripID
+        for (Object[] startLeg : startLegs) {
+            queryFindLegs = session.createSQLQuery(queryEndAndFK_TripID);
+            queryFindLegs.setParameter("end", end).setParameter("sameTrip", startLeg[5]).setParameter("futureLeg", startLeg[0]);
+            List<Object[]> endLegs = queryFindLegs.list();
+            
+            // If this list is not null, then a suitable end leg was found
+            if (!endLegs.isEmpty()) {
+                foundTripIDs.add((Integer)startLeg[5]);
+            }
         }
 
-        for (Integer id : foundTripIDs) {
-            System.out.println(id);
-        }
+        session.getTransaction().commit();
+        session.close();
 
-        return foundTrips;
+        return foundTripIDs;
     }
 
 
