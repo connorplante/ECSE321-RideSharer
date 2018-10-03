@@ -1,13 +1,15 @@
 package ca.mcgill.ecse321.controller;
 
 import ca.mcgill.ecse321.HibernateUtil;
+
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.*;
 
 import java.sql.Date;
 import java.sql.Time;
-
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -110,6 +112,44 @@ public class TripController {
     
 
     }
+
+    @RequestMapping("/findTrip")
+    public List<Trip> findTrip(@RequestParam(value="start") String start, @RequestParam(value="end") String end) {
+        // Initialize return list
+        List<Integer> foundTripIDs = new ArrayList<Integer>();
+        List<Trip> foundTrips = null;
+
+        // Initialize queries that will be made to find trip with given start and end
+        String queryhStart = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE Start = :start";
+        String queryEndAndFK_TripID = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE End = :end AND FK_tripID = :sameTrip AND LegID > :futureLeg";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make first query
+        SQLQuery query = session.createSQLQuery(queryhStart);
+        query.setParameter("start", start);
+
+        // contains a list of all the row information from the query
+        List<Object[]> startLegs = query.list();
+
+        // Print out all legs with Start start
+        for (Object[] leg : startLegs) {
+            query = session.createSQLQuery(queryEndAndFK_TripID);
+            query.setParameter("end", end);
+            query.setParameter("sameTrip", leg[5]);
+            query.setParameter("futureLeg", leg[0]);
+            foundTripIDs.add((Integer)leg[5]);
+        }
+
+        for (Integer id : foundTripIDs) {
+            System.out.println(id);
+        }
+
+        return foundTrips;
+    }
+
 
 }
 
