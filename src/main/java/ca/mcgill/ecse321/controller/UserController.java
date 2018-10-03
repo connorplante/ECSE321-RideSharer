@@ -1,9 +1,7 @@
 package ca.mcgill.ecse321.controller;
 
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,11 +39,12 @@ public class UserController {
             tx = session.beginTransaction();
             session.saveOrUpdate(passenger);
             tx.commit();
-        } catch (ConstraintViolationException e) {
+        } catch (javax.persistence.PersistenceException e) {
             if (tx != null) {
                 tx.rollback();
-                throw e;
             }
+            System.out.println("This username is taken! Please choose another username");
+            return null;
         } finally {
             session.close();
         }
