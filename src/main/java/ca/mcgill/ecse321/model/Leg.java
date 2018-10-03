@@ -56,6 +56,15 @@ public class Leg
   //------------------------
   // CONSTRUCTOR
   //------------------------
+public Leg(int LegID, String aStart, String aEnd, double aPrice, int aNumSeats, Trip aTrip){
+  start = aStart;
+    end = aEnd;
+    price = aPrice;
+    numSeats = aNumSeats;
+    legID = LegID;
+    trip = aTrip;
+
+};
 
   public Leg(String aStart, String aEnd, double aPrice, int aNumSeats, Trip aTrip)
   {
@@ -82,6 +91,13 @@ public class Leg
   //------------------------
   // INTERFACE
   //------------------------
+
+  public boolean setID(int id){
+    boolean wasSet = false;
+    legID = id;
+    wasSet = true;
+    return wasSet;
+  }
 
   public boolean setStart(String aStart)
   {
