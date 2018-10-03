@@ -14,6 +14,7 @@ import ca.mcgill.ecse321.HibernateUtil;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -37,10 +38,6 @@ public class Trip
   // STATIC VARIABLES
   //------------------------
 
-  //private static int nextTripID = 1;
-  private static int nextTripID = getNumNextTripID();
-
-
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -60,6 +57,7 @@ public class Trip
   //Autounique Attributes
   @Id
   @Column(name = "TripID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int tripID;
 
   //Trip Associations
@@ -85,19 +83,8 @@ public class Trip
     date = aDate;
     time = aTime;
     tripStatus = aTripStatus;
-    tripID = nextTripID++;
     driver = aDriver;
     car = aCar;
-    // boolean didAddDriver = setDriver(aDriver);
-    // if (!didAddDriver)
-    // {
-    //   throw new RuntimeException("Unable to create trip due to driver");
-    // }
-    // boolean didAddCar = setCar(aCar);
-    // if (!didAddCar)
-    // {
-    //   throw new RuntimeException("Unable to create trip due to car");
-    // }
     legs = new ArrayList<Leg>();
     passengerTrips = new ArrayList<PassengerTrip>();
   }

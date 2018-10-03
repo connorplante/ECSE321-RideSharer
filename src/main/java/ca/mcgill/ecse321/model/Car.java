@@ -9,6 +9,8 @@ import java.sql.Time;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
@@ -23,12 +25,6 @@ import ca.mcgill.ecse321.HibernateUtil;
 @Table(name = "Cars")
 public class Car
 {
-
-  //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  private static int nextCarID = getNumNextCarID();
 
   //------------------------
   // MEMBER VARIABLES
@@ -51,6 +47,7 @@ public class Car
   //Autounique Attributes
   @Id
   @Column(name = "CarID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int carID;
 
   //Car Associations
@@ -75,7 +72,6 @@ public class Car
     year = aYear;
     numSeats = aNumSeats;
     licencePlate = aLicencePlate;
-    carID = nextCarID++;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -87,20 +83,6 @@ public class Car
   //------------------------
   // INTERFACE
   //------------------------
-
-  /**
-   * method to get the number of rows in Car table
-   * this is to get the max CarID, but if no Cars are deleted, it should serve the same purpose
-   * if MAX CarID can be achieved, change the method to do that as it returns the more appropriate result
-   * @return number of rows in table
-   */
-  private static int getNumNextCarID() {
-    Session session = HibernateUtil.getSession();
-    int count = 1 + ((Long)session.createQuery("SELECT count(CarID) FROM Car").uniqueResult()).intValue();
-    session.close();
-
-    return count;
-  }
   
   public boolean setMake(String aMake)
   {

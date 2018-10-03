@@ -10,6 +10,8 @@ import ca.mcgill.ecse321.HibernateUtil;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -24,10 +26,6 @@ public class Leg
   //------------------------
   // STATIC VARIABLES
   //------------------------
-
- // private static int nextLegID = 1;
-  private static int nextLegID = getNumNextLegID();
-
 
   //------------------------
   // MEMBER VARIABLES
@@ -46,6 +44,7 @@ public class Leg
   //Autounique Attributes
   @Id
   @Column(name="LegID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int legID;
 
   //Leg Associations
@@ -72,13 +71,7 @@ public Leg(int LegID, String aStart, String aEnd, double aPrice, int aNumSeats, 
     end = aEnd;
     price = aPrice;
     numSeats = aNumSeats;
-    legID = nextLegID++;
     trip = aTrip;
-    // boolean didAddTrip = setTrip(aTrip);
-    // if (!didAddTrip)
-    // {
-    //   throw new RuntimeException("Unable to create leg due to trip");
-    // }
   }
   private static int getNumNextLegID() {
 

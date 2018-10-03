@@ -6,7 +6,7 @@ CREATE DATABASE db;
 use db;
 
 CREATE TABLE `Users` (
-  `UserID` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL AUTO_INCREMENT,
   `Username` varchar(45) DEFAULT NULL,
   `Email` varchar(45) DEFAULT NULL,
   `PhoneNumber` varchar(45) DEFAULT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE `Users` (
 );
 
 CREATE TABLE `Cars` (
-  `CarID` int(11) NOT NULL,
+  `CarID` int(11) NOT NULL AUTO_INCREMENT,
   `Make` varchar(45) DEFAULT NULL,
   `Model` varchar(45) DEFAULT NULL,
   `Year` int(11) DEFAULT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `Cars` (
 );
 
 CREATE TABLE `Legs` (
-  `LegID` int(11) NOT NULL,
+  `LegID` int(11) NOT NULL AUTO_INCREMENT,
   `Start` varchar(45) DEFAULT NULL,
   `End` varchar(45) DEFAULT NULL,
   `Price` int(11) DEFAULT NULL,
@@ -48,7 +48,7 @@ CREATE TABLE `Legs` (
 
 
 CREATE TABLE `PassengerTrips` (
-  `PassengerTripID` int(11) NOT NULL,
+  `PassengerTripID` int(11) NOT NULL AUTO_INCREMENT,
   `FK_TripID` int(11) DEFAULT NULL,
   `FK_UserID` int(11) DEFAULT NULL,
   `Price` int(11) DEFAULT NULL,

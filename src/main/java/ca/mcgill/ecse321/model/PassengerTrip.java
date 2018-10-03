@@ -17,11 +17,9 @@ public class PassengerTrip
 {
 
   //------------------------
+
   // STATIC VARIABLES
   //------------------------
-
-  //private static int nextPassengerTripID = 1;
-  private static int nextPassengerTripID = getNumNextTripID();
 
   //------------------------
   // MEMBER VARIABLES
@@ -33,6 +31,7 @@ public class PassengerTrip
   //Autounique Attributes
   @Id
   @Column(name = "PassengerTripID")
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int passengerTripID;
   @ManyToOne
   @JoinColumn(name = "FK_TripID")
@@ -57,17 +56,6 @@ public class PassengerTrip
     canSetPrice = true;
     passenger= aPassenger;
     trip=aTrip;
-    passengerTripID = nextPassengerTripID++;
-    // boolean didAddPassenger = setPassenger(aPassenger);
-    // if (!didAddPassenger)
-    // {
-    //   throw new RuntimeException("Unable to create passengerTrip due to passenger");
-    // }
-    // boolean didAddTrip = setTrip(aTrip);
-    // if (!didAddTrip)
-    // {
-    //   throw new RuntimeException("Unable to create passengerTrip due to trip");
-    // }
   }
 
   private static int getNumNextTripID() {
