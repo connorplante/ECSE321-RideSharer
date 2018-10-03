@@ -136,4 +136,48 @@ public class UserController {
 
         return ret;
     }
+    /**
+     * Updates user rating
+     * Returns true if update was successful
+     * Returns false it failed
+     * 
+     * @param username
+     * @param rating
+     * @return Boolean
+     */
+    @RequestMapping("/updateRating")
+    public Boolean updateRating (@RequestParam(value="username") String username, @RequestParam(value="rating") int rating) { //username or passenger object
+
+        Session session = HibernateUtil.getSession();
+        Boolean ret;
+        session.beginTransaction();
+
+        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        if(rating<=5 && rating>=0) {
+
+            double pastAvgRating = user.getRating();
+
+            if(pastAvgRating==0) {
+                user.setRating(rating);
+            }
+            
+            else {
+                int numRides = user.getNumRides();
+                double newAvgRating = pastAvgRating + ((rating-pastAvgRating)/numRides);
+                user.setRating(newAvgRating);
+                session.saveOrUpdate(user);
+                ret = true;
+            }   
+            
+        
+        }
+        else {
+            ret=false;
+        }
+
+        session.getTransaction().commit();
+        session.close();
+
+        return ret;
+    }
 }
