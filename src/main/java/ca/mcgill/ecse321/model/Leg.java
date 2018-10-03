@@ -19,12 +19,6 @@ public class Leg
 {
 
   //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  //private static int nextLegID = 1;
-
-  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -62,7 +56,6 @@ public class Leg
     end = aEnd;
     price = aPrice;
     numSeats = aNumSeats;
-    //legID = nextLegID++;
     boolean didAddTrip = setTrip(aTrip);
     if (!didAddTrip)
     {

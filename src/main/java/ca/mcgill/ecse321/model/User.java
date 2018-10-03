@@ -29,13 +29,6 @@ public class User
 {
 
   //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  //private static int nextUserID = 1;
-  //private static int nextUserID = getNumNextUserID();
-
-  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -85,7 +78,6 @@ public class User
     status = aStatus;
     rating = aRating;
     numRides = aNumRides;
-    //userID = nextUserID++;
     role = aRole;
   }
 
@@ -99,27 +91,8 @@ public class User
     status = aStatus;
     rating = aRating;
     numRides = aNumRides;
-   // userID = nextUserID++;
     role = 4;
   }
-
-  //------------------------
-  // INSERTED BY DYLAN
-  //------------------------
-  /**
-   * method to get the number of rows in User table
-   * this is to get the max UserID, but if no Users are deleted, it should serve the same purpose
-   * if MAX UserID can be achieved, change the method to do that as it returns the more appropriate result
-   * @return number of rows in table
-   */
-  // private static int getNumNextUserID() {
-
-  //   Session session = HibernateUtil.getSession();
-  //   int count = 1 + ((Long)session.createQuery("SELECT count(UserID) FROM User").uniqueResult()).intValue();
-  //   session.close();
-
-  //   return count;
-  // }
 
   //------------------------
   // INTERFACE

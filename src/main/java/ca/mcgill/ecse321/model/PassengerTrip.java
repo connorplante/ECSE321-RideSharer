@@ -13,12 +13,6 @@ public class PassengerTrip
 {
 
   //------------------------
-  // STATIC VARIABLES
-  //------------------------
-
-  //private static int nextPassengerTripID = 1;
-
-  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
@@ -51,7 +45,6 @@ public class PassengerTrip
   public PassengerTrip(Passenger aPassenger, Trip aTrip)
   {
     canSetPrice = true;
-    //passengerTripID = nextPassengerTripID++;
     boolean didAddPassenger = setPassenger(aPassenger);
     if (!didAddPassenger)
     {
