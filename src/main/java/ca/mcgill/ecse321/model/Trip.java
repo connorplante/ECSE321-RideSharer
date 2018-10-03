@@ -88,8 +88,6 @@ public class Trip
     tripID = nextTripID++;
     driver = aDriver;
     car = aCar;
-    System.out.println("TRIP ID: " + tripID);
-    System.out.println("Driver Name: " + driver.getUsername());
     // boolean didAddDriver = setDriver(aDriver);
     // if (!didAddDriver)
     // {
@@ -210,6 +208,7 @@ public class Trip
 
   public int numberOfLegs()
   {
+    
     int number = legs.size();
     return number;
   }
@@ -313,6 +312,7 @@ public class Trip
 
   public boolean addLeg(Leg aLeg)
   {
+    
     boolean wasAdded = false;
     if (legs.contains(aLeg)) { return false; }
     Trip existingTrip = aLeg.getTrip();
