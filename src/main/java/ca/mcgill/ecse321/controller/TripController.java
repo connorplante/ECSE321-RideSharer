@@ -159,6 +159,14 @@ public class TripController {
         return foundTripIDs;
     }
 
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (price)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param price
+     * @return Boolean 
+     */
     @RequestMapping("/filterPrice")
     public boolean filterPrice(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
     @RequestParam(value="price") int price) {
@@ -194,7 +202,7 @@ public class TripController {
                 break;
             }
         }
-        
+
         fitsCriteria = price >= effectivePrice;
         return fitsCriteria;
     }
