@@ -4,6 +4,10 @@
 package ca.mcgill.ecse321.model;
 
 import javax.persistence.*;
+import org.hibernate.Session;
+import org.hibernate.annotations.NaturalId;
+
+import ca.mcgill.ecse321.HibernateUtil;
 
 // line 66 "../../../../model.ump"
 
@@ -13,29 +17,34 @@ public class PassengerTrip
 {
 
   //------------------------
+
+  // STATIC VARIABLES
+  //------------------------
+
+  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //PassengerTrip Attributes
-  @Column(name = "Price")
-  private double price;
+ 
 
   //Autounique Attributes
   @Id
   @Column(name = "PassengerTripID")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int passengerTripID;
-
+  @ManyToOne
+  @JoinColumn(name = "FK_TripID")
+  private Trip trip;
   //PassengerTrip Associations
   @ManyToOne
   @JoinColumn(name = "FK_UserID")
   private Passenger passenger;
-
-  @ManyToOne
-  @JoinColumn(name = "FK_TripID")
-  private Trip trip;
+  @Column(name = "Price")
+  private double price;
 
   //Helper Variables
+  @Transient
   private boolean canSetPrice;
 
   //------------------------
@@ -45,16 +54,17 @@ public class PassengerTrip
   public PassengerTrip(Passenger aPassenger, Trip aTrip)
   {
     canSetPrice = true;
-    boolean didAddPassenger = setPassenger(aPassenger);
-    if (!didAddPassenger)
-    {
-      throw new RuntimeException("Unable to create passengerTrip due to passenger");
-    }
-    boolean didAddTrip = setTrip(aTrip);
-    if (!didAddTrip)
-    {
-      throw new RuntimeException("Unable to create passengerTrip due to trip");
-    }
+    passenger= aPassenger;
+    trip=aTrip;
+  }
+
+  private static int getNumNextTripID() {
+
+    Session session = HibernateUtil.getSession();
+    int count = 1 + ((Long)session.createQuery("SELECT count(PassengerTripID) FROM PassengerTrip").uniqueResult()).intValue();
+    session.close();
+
+    return count;
   }
 
   //------------------------

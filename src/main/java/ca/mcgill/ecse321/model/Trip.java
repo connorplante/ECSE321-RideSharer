@@ -6,6 +6,11 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.*;
 
+import org.hibernate.Session;
+import org.hibernate.annotations.NaturalId;
+
+import ca.mcgill.ecse321.HibernateUtil;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,18 +35,22 @@ public class Trip
   public enum Status { Scheduled, Cancelled, Completed }
 
   //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Trip Attributes
-  @Column(name = "Start")
-  private String start;
-  @Column(name = "End")
-  private String end;
   @Column(name = "Date")
   private Date date;
   @Column(name = "Time")
   private Time time;
+  @Column(name = "Start")
+  private String start;
+  @Column(name = "End")
+  private String end;
   @Column(name = "Status")
   private Status tripStatus;
 
@@ -66,7 +75,7 @@ public class Trip
   //------------------------
   // CONSTRUCTOR
   //------------------------
-
+  public Trip(){}
   public Trip(String aStart, String aEnd, Date aDate, Time aTime, Status aTripStatus, Driver aDriver, Car aCar)
   {
     start = aStart;
@@ -74,18 +83,18 @@ public class Trip
     date = aDate;
     time = aTime;
     tripStatus = aTripStatus;
-    boolean didAddDriver = setDriver(aDriver);
-    if (!didAddDriver)
-    {
-      throw new RuntimeException("Unable to create trip due to driver");
-    }
-    boolean didAddCar = setCar(aCar);
-    if (!didAddCar)
-    {
-      throw new RuntimeException("Unable to create trip due to car");
-    }
+    driver = aDriver;
+    car = aCar;
     legs = new ArrayList<Leg>();
     passengerTrips = new ArrayList<PassengerTrip>();
+  }
+  private static int getNumNextTripID() {
+
+    Session session = HibernateUtil.getSession();
+    int count = 1 + ((Long)session.createQuery("SELECT count(TripID) FROM Trip").uniqueResult()).intValue();
+    session.close();
+
+    return count;
   }
 
   //------------------------
@@ -186,6 +195,7 @@ public class Trip
 
   public int numberOfLegs()
   {
+    
     int number = legs.size();
     return number;
   }
@@ -289,6 +299,7 @@ public class Trip
 
   public boolean addLeg(Leg aLeg)
   {
+    
     boolean wasAdded = false;
     if (legs.contains(aLeg)) { return false; }
     Trip existingTrip = aLeg.getTrip();
