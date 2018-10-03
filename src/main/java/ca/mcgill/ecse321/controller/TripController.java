@@ -23,9 +23,8 @@ import ca.mcgill.ecse321.model.Trip.Status;
 public class TripController {
 
 
-    public TripController(){
+    public TripController(){}
 
-    }
     @RequestMapping("/createTrip")
     public Trip createTrip(@RequestParam(value="start")String start, @RequestParam(value="end")String end, 
     @RequestParam(value="date")Date date, @RequestParam(value="time")int time,
@@ -160,6 +159,51 @@ public class TripController {
         return foundTripIDs;
     }
 
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (price)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param price
+     * @return Boolean 
+     */
+    @RequestMapping("/filterPrice")
+    public boolean filterPrice(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="price") int price) {
+        boolean fitsCriteria = false;
+        int effectivePrice = 0;
 
+        // Get legs corresponding to Trip ID
+        String queryLegs = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :tripId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs
+        SQLQuery queryGetLegs = session.createSQLQuery(queryLegs);
+        queryGetLegs.setParameter("tripId", tripId);
+        
+        // tripLegs contains the legs of the trips
+        // Legs are stored as such in the array:
+        // leg[0] | leg[1] | leg[2] | leg[3] | leg[4]   | leg[5] 
+        // LegID  | Start  | End    | Price  | NumSeats | FK_TripID
+        List<Object[]> tripLegs = queryGetLegs.list();
+
+        // iterate through tripLegs to add prices
+        // assumes valid tripId, start, end
+        for (Object[] tripLeg : tripLegs) {
+            if (((String)tripLeg[1]).equals(start)) {
+                effectivePrice += (Integer)tripLeg[3];
+            } else if (effectivePrice != 0) {
+                effectivePrice += (Integer)tripLeg[3];
+            } 
+            if (((String)tripLeg[2]).equals(end)) {
+                break;
+            }
+        }
+
+        fitsCriteria = price >= effectivePrice;
+        return fitsCriteria;
+    }
 }
-
