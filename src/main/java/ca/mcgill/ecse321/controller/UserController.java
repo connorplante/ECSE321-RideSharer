@@ -159,6 +159,7 @@ public class UserController {
 
             if(pastAvgRating==0) {
                 user.setRating(rating);
+                ret = true;
             }
             
             else {
