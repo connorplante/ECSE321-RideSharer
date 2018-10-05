@@ -109,7 +109,7 @@ public class Driver extends User
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Trip addTrip(String aStart, String aEnd, Date aDate, Time aTime, Trip.Status aTripStatus, Car aCar)
+  public Trip addTrip(String aStart, String aEnd, Date aDate, int aTime, Trip.Status aTripStatus, Car aCar)
   {
     return new Trip(aStart, aEnd, aDate, aTime, aTripStatus, this, aCar);
   }
