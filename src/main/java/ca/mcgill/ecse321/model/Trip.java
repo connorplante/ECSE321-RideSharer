@@ -46,7 +46,7 @@ public class Trip
   @Column(name = "Date")
   private Date date;
   @Column(name = "Time")
-  private Time time;
+  private int time;
   @Column(name = "Start")
   private String start;
   @Column(name = "End")
@@ -76,7 +76,7 @@ public class Trip
   // CONSTRUCTOR
   //------------------------
   public Trip(){}
-  public Trip(String aStart, String aEnd, Date aDate, Time aTime, Status aTripStatus, Driver aDriver, Car aCar)
+  public Trip(String aStart, String aEnd, Date aDate, int aTime, Status aTripStatus, Driver aDriver, Car aCar)
   {
     start = aStart;
     end = aEnd;
@@ -125,7 +125,7 @@ public class Trip
     return wasSet;
   }
 
-  public boolean setTime(Time aTime)
+  public boolean setTime(int aTime)
   {
     boolean wasSet = false;
     time = aTime;
@@ -156,7 +156,7 @@ public class Trip
     return date;
   }
 
-  public Time getTime()
+  public int getTime()
   {
     return time;
   }
@@ -479,7 +479,7 @@ public class Trip
             "start" + ":" + getStart()+ "," +
             "end" + ":" + getEnd()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            //"  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "tripStatus" + "=" + (getTripStatus() != null ? !getTripStatus().equals(this)  ? getTripStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "car = "+(getCar()!=null?Integer.toHexString(System.identityHashCode(getCar())):"null");
