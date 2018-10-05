@@ -98,24 +98,61 @@ public class TripController {
      */
     @RequestMapping("/cancelTrip")
     public Trip cancelTrip(@RequestParam(value="tripID")int tripID){
+        
+        //Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+    
+        //Access trip object from db
+        Trip trip = (Trip) session.load(Trip.class, tripID);
+        
+        //create query
+        String string ="UPDATE Trips SET Status= :status WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        //Set status of trip to "1" represeting 'Cancelled'
+        query1.setParameter("status", (1));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        
+        //close session
+        session.getTransaction().commit();
+        session.close();
+
+        return trip;
+
+    }
+ 
+  /**
+     * Method to complete a Trip 
+     * Use the url /Trip/completeTrip
+     * @param tripID
+     * @return Trip trip
+     */
+    @RequestMapping("/completeTrip")
+    public Trip completeTrip(@RequestParam(value="tripID")int tripID){
     
         //Begin Session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        //Access Trip object from the database 
-        Trip trip = (Trip) session.load(Trip.class, tripID);
+         //Access trip object from db
+         Trip trip = (Trip) session.load(Trip.class, tripID);
+    
+        //create query
+        String string ="UPDATE Trips SET Status= :status WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        //Set status of trip to "2" represeting 'Completed'
+        query1.setParameter("status", (2));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
         
-        //Set the status of trip to cancelled
-        trip.setTripStatus(Status.Cancelled);
-            
-        //Save updates to database and close session
-        session.saveOrUpdate(trip);
+        //close session
         session.getTransaction().commit();
         session.close();
-      
-        //Return Trip
+
         return trip;
+
     }
 /**
      * Method to Create a Leg
