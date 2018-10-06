@@ -148,7 +148,7 @@ public class UserController {
      * @param lastName
      * @param email
      * @param phoneNumber
-     * @return User
+     * @return String
      */
     @RequestMapping("/updateUserInfo")
     public String updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
@@ -171,6 +171,42 @@ public class UserController {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPhone(phoneNumber);
+
+        try{
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return "Cannot make changes to user!";
+        }
+
+        session.close();
+        return user.toString();
+    } 
+
+    /**
+     * Removes a user by changing their status
+     * Returns the user's String representation with their new status
+     * 
+     * @param username
+     * @return String
+     */
+    @RequestMapping("/removeUser")
+    public String removeUser (@RequestParam(value="username") String username) {
+        
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user;
+
+        try{
+            user = (User) session.byNaturalId(User.class).using("username", username).load();
+        }catch(Exception e){
+            session.close();
+            return "User does not exist!";
+        }
+
+        user.setStatus(false);
 
         try{
             session.saveOrUpdate(user);
