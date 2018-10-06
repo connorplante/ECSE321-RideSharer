@@ -7,19 +7,16 @@ import org.hibernate.Session;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.*;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.model.*;
-import ca.mcgill.ecse321.model.Trip.Status;
 
 @RestController
 @RequestMapping("/Passenger")
+@SuppressWarnings( {"deprecation", "rawtypes", "unchecked"} )
 public class PassengerController {
 
     public PassengerController(){}
