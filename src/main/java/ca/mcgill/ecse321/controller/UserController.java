@@ -236,7 +236,20 @@ public class UserController {
         Boolean ret;
         session.beginTransaction();
 
-        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        User user;
+        
+        try{
+            user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
+
+        //only drivers and passengers have ratings, so if user is admin return false
+        if(user.getRole() == 3){
+            return false;
+        }
+
         if(rating<=5 && rating>=0) {
 
             double pastAvgRating = user.getRating();
@@ -250,7 +263,12 @@ public class UserController {
                 int numRides = user.getNumRides();
                 double newAvgRating = pastAvgRating + ((rating-pastAvgRating)/numRides);
                 user.setRating(newAvgRating);
-                session.saveOrUpdate(user);
+                try{
+                    session.saveOrUpdate(user);
+                }catch(Exception e){
+                    session.close();
+                    return false;
+                }
                 ret = true;
             }   
             
@@ -260,7 +278,13 @@ public class UserController {
             ret=false;
         }
 
-        session.getTransaction().commit();
+        try{
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
+
         session.close();
 
         return ret;
