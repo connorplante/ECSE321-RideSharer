@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.controller;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import ca.mcgill.ecse321.model.User;
 @RestController
 @RequestMapping("/User")
 public class UserController {
+
+    Session session = HibernateUtil.getSession();
 
     /**
      * Method to create a user of type Passenger
@@ -33,7 +36,7 @@ public class UserController {
     @RequestParam(value="phoneNumber") String phoneNumber) throws Exception {
 
         Passenger passenger =  new Passenger(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -45,8 +48,6 @@ public class UserController {
             }
             System.out.println("This username is taken! Please choose another username");
             return null;
-        } finally {
-            session.close();
         }
 
         return passenger;
@@ -69,11 +70,11 @@ public class UserController {
     @RequestParam(value="phoneNumber") String phoneNumber) {
 
        Driver driver =  new Driver(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
-       Session session = HibernateUtil.getSession();
+       Session session = this.session;
        session.beginTransaction();
        session.saveOrUpdate(driver);
        session.getTransaction().commit();
-       session.close();
+       
 
        return driver;
     }
@@ -95,11 +96,11 @@ public class UserController {
     @RequestParam(value="phoneNumber") String phoneNumber) {
 
         Admin admin =  new Admin(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         session.beginTransaction();
         session.saveOrUpdate(admin);
         session.getTransaction().commit();
-        session.close();
+        
 
         return admin;
     }
@@ -118,7 +119,7 @@ public class UserController {
     public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
     @RequestParam(value="newPassword") String newPassword) {
 
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         Boolean ret;
         session.beginTransaction();
 
@@ -132,7 +133,7 @@ public class UserController {
         }
 
         session.getTransaction().commit();
-        session.close();
+        
 
         return ret;
     }
@@ -148,7 +149,7 @@ public class UserController {
     @RequestMapping("/updateRating")
     public Boolean updateRating (@RequestParam(value="username") String username, @RequestParam(value="rating") int rating) { //username or passenger object
 
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         Boolean ret;
         session.beginTransaction();
 
@@ -177,8 +178,12 @@ public class UserController {
         }
 
         session.getTransaction().commit();
-        session.close();
+        
 
         return ret;
+    }
+
+    public void changeSession(Session change) {
+        this.session = change;
     }
 }
