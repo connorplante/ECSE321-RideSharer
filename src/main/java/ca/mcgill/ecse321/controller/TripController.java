@@ -9,6 +9,8 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.model.*;
 import ca.mcgill.ecse321.model.Trip.Status;
@@ -195,7 +197,9 @@ public class TripController {
                                     @RequestParam(value="price", required = false) Integer price,
                                     @RequestParam(value="make", required = false) String make,
                                     @RequestParam(value="model", required = false) String model,
-                                    @RequestParam(value="year", required = false) Integer year)
+                                    @RequestParam(value="year", required = false) Integer year,
+                                    @RequestParam(value="lowDate", required = false) java.sql.Date lowDate,
+                                    @RequestParam(value="highDate", required = false) java.sql.Date highDate)
         {
         // Initialize return list
         List<Integer> tripIDs = new ArrayList<Integer>();
@@ -234,7 +238,6 @@ public class TripController {
         session.getTransaction().commit();
         session.close();
 
-        System.out.println(tripIDs);
         List<Integer> foundFailCriteria = new ArrayList<Integer>();
 
         // filter by price
@@ -280,7 +283,16 @@ public class TripController {
             tripIDs.removeAll(foundFailCriteria);
         }
 
-        System.out.println(tripIDs);
+        // filter by date
+        foundFailCriteria.clear();
+        if (lowDate != null && highDate != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterDate(foundTripID, start, end, lowDate, highDate)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
 
         return tripIDs;
     }
@@ -488,6 +500,42 @@ public class TripController {
 
         // Check if make of car matches make given by user
         fitsCriteria = (year <= carYear);
+
+        return fitsCriteria;
+    }
+
+    @RequestMapping("/filterDate")
+    public boolean filterDate(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="lowDate") java.sql.Date lowDate, @RequestParam(value="highDate") java.sql.Date highDate) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        boolean fitsCriteria = false;
+
+        // Get start and end Date corresponding to Trip ID
+        String queryDate = "SELECT Date FROM Trips WHERE TripID = :tripId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetDate = session.createSQLQuery(queryDate);
+        queryGetDate.setParameter("tripId", tripId);
+        List<java.sql.Timestamp> dates = queryGetDate.list();
+        if (dates.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        java.sql.Timestamp tripDate = dates.get(0); // holds date of the given trip
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+        String strTripDate = tripDate.toString();
+        String strLowDate = lowDate.toString();
+
+        // Check if tripDate is in between lowDate and HighDate
+        fitsCriteria = ((tripDate.compareTo(lowDate) >= 0 && tripDate.compareTo(highDate) <= 0) || strTripDate.substring(0, 10).equals(strLowDate));
 
         return fitsCriteria;
     }
