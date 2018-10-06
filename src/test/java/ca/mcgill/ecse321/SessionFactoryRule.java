@@ -27,7 +27,6 @@ public class SessionFactoryRule implements MethodRule {
             public void evaluate() throws Throwable {
                 sessionFactory = createSessionFactory();
                 createSession();
-                beginTransaction();
 
                 try {
                     statement.evaluate();
