@@ -190,9 +190,15 @@ public class TripController {
      * @return List of Trip IDs
      */
     @RequestMapping("/findTrip")
-    public List<Integer> findTrip(@RequestParam(value="start") String start, @RequestParam(value="end") String end) {
+    public List<Integer> findTrip(  @RequestParam(value="start") String start, 
+                                    @RequestParam(value="end") String end,
+                                    @RequestParam(value="price", required = false) Integer price,
+                                    @RequestParam(value="make", required = false) String make,
+                                    @RequestParam(value="model", required = false) String model,
+                                    @RequestParam(value="year", required = false) Integer year)
+        {
         // Initialize return list
-        List<Integer> foundTripIDs = new ArrayList<Integer>();
+        List<Integer> tripIDs = new ArrayList<Integer>();
 
         // Initialize queries that will be made to find trip with given start and end
         String queryStart = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE Start = :start";
@@ -220,14 +226,63 @@ public class TripController {
             
             // If this list is not null, then a suitable end leg was found
             if (!endLegs.isEmpty()) {
-                foundTripIDs.add((Integer)startLeg[5]);
+                tripIDs.add((Integer)startLeg[5]);
             }
         }
 
+        // Close session
         session.getTransaction().commit();
         session.close();
 
-        return foundTripIDs;
+        System.out.println(tripIDs);
+        List<Integer> foundFailCriteria = new ArrayList<Integer>();
+
+        // filter by price
+        if (price != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterPrice(foundTripID, start, end, price)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by make
+        foundFailCriteria.clear();
+        if (make != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterMake(foundTripID, start, end, make)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by model
+        foundFailCriteria.clear();
+        if (model != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterModel(foundTripID, start, end, model)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by year
+        foundFailCriteria.clear();
+        if (model != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterYear(foundTripID, start, end, year)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        System.out.println(tripIDs);
+
+        return tripIDs;
     }
 
     /**
@@ -260,6 +315,10 @@ public class TripController {
         // leg[0] | leg[1] | leg[2] | leg[3] | leg[4]   | leg[5] 
         // LegID  | Start  | End    | Price  | NumSeats | FK_TripID
         List<Object[]> tripLegs = queryGetLegs.list();
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
 
         // iterate through tripLegs to add prices
         // assumes valid tripId, start, end
@@ -319,6 +378,10 @@ public class TripController {
         }
         String carMake = makes.get(0);
 
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
         // Check if make of car matches make given by user
         fitsCriteria = make.equalsIgnoreCase(carMake);
 
@@ -365,6 +428,10 @@ public class TripController {
             return false;
         }
         String carModel = models.get(0);
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
 
         System.out.println(carModel);
 
@@ -414,6 +481,10 @@ public class TripController {
             return false;
         }
         int carYear = years.get(0);
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
 
         // Check if make of car matches make given by user
         fitsCriteria = (year <= carYear);
