@@ -24,29 +24,44 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/createCar")
-    public static Car createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
+    public static String createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate, @RequestParam(value="userID") String driverUsername){
        
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        Driver driver = (Driver) session.byNaturalId(User.class).using("username", driverUsername).load();
+        Driver driver;
+        try{
+            driver = (Driver) session.byNaturalId(User.class).using("username", driverUsername).load();
+        }catch(Exception i){
+            session.close();
+            return "Driver does not exist!";
+        }
 
+        
+        //the association between driver and car is handled by the datadase, so these are reset
         try{
             driver.getCars();
         }catch(NullPointerException n){
             driver.initArrayLists();
         }
 
-        Car car = new Car(make, model, year, numSeats, licencePlate, driver);
-        driver.addCar(car);
-        
-        session.save(car);
-        session.getTransaction().commit();
+        Car car;
+
+        try{
+            car = new Car(make, model, year, numSeats, licencePlate, driver);
+            driver.addCar(car);
+            session.save(car);
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return "Could not create car!";
+        }
+
         session.close();
         
-        return car;
+        return car.toString();
     }
 
     /**
@@ -61,29 +76,41 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/updateCar")
-    public static Car updateCar(@RequestParam(value="carID") int carID, @RequestParam(value="make") String make, @RequestParam(value="model") String model,
+    public static String updateCar(@RequestParam(value="carID") int carID, @RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate){
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        Car car = (Car) session.load(Car.class, carID);
+        Car car;
+        try{
+            car = (Car) session.load(Car.class, carID);
+        }catch(Exception e){
+            session.close();
+            return "Car does not exist!";
+        }
 
+        // Since these associations are handled by the database, reset them
         Driver driver = car.getDriver();
         driver.initArrayLists();
         
-
         car.setMake(make);
         car.setModel(model);
         car.setNumSeats(year);
         car.setNumSeats(numSeats);
         car.setLicencePlate(licencePlate);
 
-        session.getTransaction().commit();
+        try{
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return "Cannot make these changes!";
+        }
+
         session.close();
 
-        return car;
+        return car.toString();
     }
 
      /**
@@ -93,19 +120,26 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/removeCar")
-    public static Car removeCar(@RequestParam(value="carID") int carID){
+    public static String removeCar(@RequestParam(value="carID") int carID){
         
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        Car car = (Car) session.load(Car.class, carID);
+        Car car;
+        
+        try{
+            car = (Car) session.load(Car.class, carID);
+        }catch(Exception e){
+            session.close();
+            return "Car does not exist!";
+        }
 
         car.setStatus(false);
 
         session.getTransaction().commit();
         session.close();
 
-        return car;
+        return car.toString();
     }
 
 }
