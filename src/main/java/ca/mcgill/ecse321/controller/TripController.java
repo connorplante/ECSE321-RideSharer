@@ -6,18 +6,17 @@ import org.hibernate.Session;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.*;
 import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
 import org.springframework.web.bind.annotation.RestController;
-import ca.mcgill.ecse321.model.*;
 import ca.mcgill.ecse321.model.Trip.Status;
 import ca.mcgill.ecse321.controller.InvalidInputException;
 
 @RestController
 @RequestMapping("/Trip")
+@SuppressWarnings( {"deprecation", "rawtypes", "unchecked"} )
 public class TripController {
 
     public TripController(){}
