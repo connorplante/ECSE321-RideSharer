@@ -37,7 +37,7 @@ public class PassengerController {
 
     @RequestMapping("/confirmBook")
     public PassengerTrip confirmBook(@RequestParam(value="tripID")int tripID,@RequestParam(value="username")
-    String username,@RequestParam(value="pointA")String pointA,@RequestParam(value="pointB")String pointB) {
+    String username,@RequestParam(value="pointA")String pointA,@RequestParam(value="pointB")String pointB) throws InvalidInputException{
         
         //Begin session
         Session session = HibernateUtil.getSession();
