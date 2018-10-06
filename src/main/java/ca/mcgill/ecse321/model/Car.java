@@ -72,6 +72,7 @@ public class Car
     year = aYear;
     numSeats = aNumSeats;
     licencePlate = aLicencePlate;
+    status = true;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -329,7 +330,7 @@ public class Car
             "year" + ":" + getYear()+ "," +
             "numSeats" + ":" + getNumSeats()+ "," +
             "licencePlate" + ":" + getLicencePlate()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null");
+            "  " + "driverUserName = "+ this.getDriver().getUsername() + "]";
   }
   
   public void initList(){
