@@ -14,6 +14,7 @@ public class CarController {
 
     /**
      * Method to create a car and add to database
+     * Returns the String representation of the car created
      * Use the url /Car/createCar
      * @param make
      * @param model
@@ -66,6 +67,7 @@ public class CarController {
 
     /**
      * Method to updates the fields of a car object
+     * Returns the string representation of the car to be updated with its new values
      * Use the url /Car/updateCar
      * @param car
      * @param make
@@ -115,6 +117,7 @@ public class CarController {
 
      /**
      * Method to remove a car by updating the status to inactive
+     * Returns the car removed with its status set to false
      * Use the url /Car/removeCar
      * @param carID
      * @return Car car
@@ -139,7 +142,7 @@ public class CarController {
         session.getTransaction().commit();
         session.close();
 
-        return car.toString();
+        return car.toString() + " removed";
     }
 
 }
