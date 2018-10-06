@@ -286,7 +286,7 @@ public class TripController {
      * @param make
      * @return Boolean 
      */
-    @RequestMapping("/filterCar")
+    @RequestMapping("/filterMake")
     public boolean filterMake(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
     @RequestParam(value="make") String make) {
         boolean fitsCriteria = false;
@@ -320,7 +320,103 @@ public class TripController {
         String carMake = makes.get(0);
 
         // Check if make of car matches make given by user
-            fitsCriteria = make.equalsIgnoreCase(carMake);
+        fitsCriteria = make.equalsIgnoreCase(carMake);
+
+        return fitsCriteria;
+    }
+
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (model)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param model
+     * @return Boolean 
+     */
+    @RequestMapping("/filterModel")
+    public boolean filterModel(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="model") String model) {
+        boolean fitsCriteria = false;
+
+        // Get legs corresponding to Trip ID
+        String queryTrip = "SELECT FK_CarID FROM Trips WHERE TripID = :tripId";
+        String queryModel = "SELECT Model FROM Cars WHERE CarID = :carId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetCarId = session.createSQLQuery(queryTrip);
+        queryGetCarId.setParameter("tripId", tripId);
+        List<Integer> cars = queryGetCarId.list();
+        if (cars.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carId = cars.get(0); // holds carId of thr given trip
+
+        // Make query on Car, gets Make of Car
+        SQLQuery queryGetModel = session.createSQLQuery(queryModel);
+        queryGetModel.setParameter("carId", carId);
+        List<String> models = queryGetModel.list();
+        if (models.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        String carModel = models.get(0);
+
+        System.out.println(carModel);
+
+        // Check if make of car matches make given by user
+        fitsCriteria = model.equalsIgnoreCase(carModel);
+
+        return fitsCriteria;
+    }
+
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (model)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param model
+     * @return Boolean 
+     */
+    @RequestMapping("/filterYear")
+    public boolean filterYear(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="year") int year) {
+        boolean fitsCriteria = false;
+
+        // Get legs corresponding to Trip ID
+        String queryTrip = "SELECT FK_CarID FROM Trips WHERE TripID = :tripId";
+        String queryYear = "SELECT Year FROM Cars WHERE CarID = :carId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetCarId = session.createSQLQuery(queryTrip);
+        queryGetCarId.setParameter("tripId", tripId);
+        List<Integer> cars = queryGetCarId.list();
+        if (cars.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carId = cars.get(0); // holds carId of thr given trip
+
+        // Make query on Car, gets Make of Car
+        SQLQuery queryGetYear = session.createSQLQuery(queryYear);
+        queryGetYear.setParameter("carId", carId);
+        List<Integer> years = queryGetYear.list();
+        if (years.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carYear = years.get(0);
+
+        // Check if make of car matches make given by user
+        fitsCriteria = (year <= carYear);
 
         return fitsCriteria;
     }
