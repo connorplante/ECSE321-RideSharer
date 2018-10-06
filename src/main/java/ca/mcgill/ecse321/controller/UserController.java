@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.controller;
 
+import javax.xml.ws.RequestWrapper;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -136,6 +138,52 @@ public class UserController {
 
         return ret;
     }
+
+    /**
+     * Updates a user's information (not including password or username)
+     * Returns the user's String representation with their new information
+     * 
+     * @param username
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param phoneNumber
+     * @return User
+     */
+    @RequestMapping("/updateUserInfo")
+    public String updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
+    @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
+    @RequestParam(value="phoneNumber") String phoneNumber){
+        
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user;
+
+        try{
+            user = (User) session.byNaturalId(User.class).using("username", username).load();
+        }catch(Exception e){
+            session.close();
+            return "User does not exist!";
+        }
+
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhone(phoneNumber);
+
+        try{
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return "Cannot make changes to user!";
+        }
+
+        session.close();
+        return user.toString();
+    } 
+
     /**
      * Updates user rating
      * Returns true if update was successful
