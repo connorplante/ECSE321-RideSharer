@@ -44,31 +44,23 @@ public class UserTest {
 
         session.save(tUser);
 
-        User tUser2 = new User();
-        tUser2.setUsername("tUsername2");
-
-        session.save(tUser2);
-
         sf.commit();
 
         //  Act
-        User returnedUser = (User) session.byNaturalId(User.class).using("username", username).load();
-        User returnedUser2 = (User) session.byNaturalId(User.class).using("username", "tUsername2").load();
+        User returnedUser = tUserController.getUserByBusername(username);
+
         //  Assert
         assertNotNull(returnedUser);
-        assertEquals(returnedUser.getUserID(), 1);
-        assertEquals(returnedUser2.getUserID(), 2);
-        assertEquals(returnedUser.getUsername(), username);
-        assertEquals(returnedUser.getEmail(), email);
-        assertEquals(returnedUser.getFirstName(), firstName);
-        assertEquals(returnedUser.getLastName(), lastName);
+        assertEquals(1, returnedUser.getUserID());
+        assertEquals(username, returnedUser.getUsername());
+        assertEquals(email, returnedUser.getEmail());
+        assertEquals(firstName, returnedUser.getFirstName());
+        assertEquals(lastName, returnedUser.getLastName());
     }
 
     @Test
     public void createDriverTest() {
         //  Arrange 
-        Session session = sf.getSession();
-
         String username = "tUsername";
         String email = "test@test.com";
         String firstName = "tFirstName";
@@ -76,11 +68,69 @@ public class UserTest {
         String password = "p";
         String phone = "1";
 
-        Driver driver = tUserController.createDriver(username, password, firstName, lastName, email, phone);
-        User reUser = (User) session.byNaturalId(User.class).using("username", username).load();;
 
+        //  Act
+        tUserController.createDriver(username, password, firstName, lastName, email, phone);
+        User reUser = tUserController.getUserByBusername(username);
+        
+        //  Assert
         assertNotNull(reUser);
+        assertEquals(1, reUser.getUserID());
+        assertEquals(username, reUser.getUsername());
+        assertEquals(email, reUser.getEmail());
+        assertEquals(firstName, reUser.getFirstName());
+        assertEquals(lastName, reUser.getLastName());
+        assertEquals(2, reUser.getRole());
+    }
 
+    @Test
+    public void createPassengerTest() throws Exception {
+        //  Arrange 
+        String username = "tUsername";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+        String password = "p";
+        String phone = "1";
+
+
+        //  Act
+        tUserController.createPassenger(username, password, firstName, lastName, email, phone);
+        User reUser = tUserController.getUserByBusername(username);
+        
+        //  Assert
+        assertNotNull(reUser);
+        assertEquals(1, reUser.getUserID());
+        assertEquals(username, reUser.getUsername());
+        assertEquals(email, reUser.getEmail());
+        assertEquals(firstName, reUser.getFirstName());
+        assertEquals(lastName, reUser.getLastName());
+        assertEquals(1, reUser.getRole());
+    }
+
+    @Test
+    public void createAdminTest() {
+        //  Arrange 
+        String username = "tUsername";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+        String password = "p";
+        String phone = "1";
+
+
+        //  Act
+        tUserController.createAdmin(username, password, firstName, lastName, email, phone);
+        User reUser = tUserController.getUserByBusername(username);
+        
+        //  Assert
+        assertNotNull(reUser);
+        assertEquals(1, reUser.getUserID());
+        assertEquals(username, reUser.getUsername());
+        assertEquals(email, reUser.getEmail());
+        assertEquals(firstName, reUser.getFirstName());
+        assertEquals(lastName, reUser.getLastName());
+        assertEquals(3, reUser.getRole());
     }
 
 }

@@ -5,8 +5,6 @@ package ca.mcgill.ecse321.model;
 
 import javax.persistence.*;
 import org.hibernate.Session;
-import org.hibernate.annotations.NaturalId;
-
 import ca.mcgill.ecse321.HibernateUtil;
 
 // line 66 "../../../../model.ump"

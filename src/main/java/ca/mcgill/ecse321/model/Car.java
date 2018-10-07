@@ -4,7 +4,6 @@
 package ca.mcgill.ecse321.model;
 import java.util.*;
 import java.sql.Date;
-import java.sql.Time;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -16,9 +15,6 @@ import javax.persistence.Transient;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 
-import org.hibernate.Session;
-
-import ca.mcgill.ecse321.HibernateUtil;
 
 // line 33 "../../../../model.ump"
 @Entity
@@ -72,6 +68,7 @@ public class Car
     year = aYear;
     numSeats = aNumSeats;
     licencePlate = aLicencePlate;
+    status = true;
     boolean didAddDriver = setDriver(aDriver);
     if (!didAddDriver)
     {
@@ -329,7 +326,7 @@ public class Car
             "year" + ":" + getYear()+ "," +
             "numSeats" + ":" + getNumSeats()+ "," +
             "licencePlate" + ":" + getLicencePlate()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null");
+            "  " + "driverUserName = "+ this.getDriver().getUsername() + "]";
   }
   
   public void initList(){
