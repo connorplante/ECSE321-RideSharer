@@ -4,4 +4,5 @@ services:
   - mysql
 
 before_install:
+  - cp src/main/resources/travis.hibernate.cfg.xml src/main/resources/hibernate.cfg.xml
   - mysql -u root -h localhost < src/main/resources/dbo.sql
