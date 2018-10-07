@@ -222,8 +222,10 @@ public class UserController {
         user.setStatus(false);
 
         //Commit and close session
-        session.getTransaction().commit();
-        }catch(Exception e){
+        
+        try {
+            session.getTransaction().commit();
+        } catch(Exception e) {
             session.getTransaction().rollback();
             return "Cannot make changes to user!";
         }
