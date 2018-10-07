@@ -194,7 +194,6 @@ public class UserController {
             return "Cannot make changes to user!";
         }
 
-        session.close();
         return user.toString();
     } 
 
@@ -232,8 +231,6 @@ public class UserController {
             session.close();
             return "Cannot make changes to user!";
         }
-
-        session.close();
         return user.toString();
     } 
 
@@ -305,12 +302,10 @@ public class UserController {
             return false;
         }
 
-        session.close();
-
         return ret;
     }
 
-    public User getUserByBusername(String username) {
+    public User getUserByUsername(String username) {
         return (User) session.byNaturalId( User.class ).using( "username", username ).load();
     }
 
