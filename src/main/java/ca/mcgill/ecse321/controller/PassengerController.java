@@ -120,7 +120,7 @@ public class PassengerController {
         //Close session
         session1.close();
 
-        //Update the number of rides for a Passenger upon booking the trip
+        //Open new session, update the number of rides for a Passenger upon booking the trip
         Session session2 = HibernateUtil.getSession();
         session2.beginTransaction();
         String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
