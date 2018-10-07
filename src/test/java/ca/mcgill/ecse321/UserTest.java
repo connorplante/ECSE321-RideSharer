@@ -47,7 +47,7 @@ public class UserTest {
         sf.commit();
 
         //  Act
-        User returnedUser = tUserController.getUserByBusername(username);
+        User returnedUser = tUserController.getUserByUsername(username);
 
         //  Assert
         assertNotNull(returnedUser);
@@ -71,7 +71,7 @@ public class UserTest {
 
         //  Act
         tUserController.createDriver(username, password, firstName, lastName, email, phone);
-        User reUser = tUserController.getUserByBusername(username);
+        User reUser = tUserController.getUserByUsername(username);
         
         //  Assert
         assertNotNull(reUser);
@@ -96,7 +96,7 @@ public class UserTest {
 
         //  Act
         tUserController.createPassenger(username, password, firstName, lastName, email, phone);
-        User reUser = tUserController.getUserByBusername(username);
+        User reUser = tUserController.getUserByUsername(username);
         
         //  Assert
         assertNotNull(reUser);
@@ -121,7 +121,7 @@ public class UserTest {
 
         //  Act
         tUserController.createAdmin(username, password, firstName, lastName, email, phone);
-        User reUser = tUserController.getUserByBusername(username);
+        User reUser = tUserController.getUserByUsername(username);
         
         //  Assert
         assertNotNull(reUser);
@@ -131,6 +131,75 @@ public class UserTest {
         assertEquals(firstName, reUser.getFirstName());
         assertEquals(lastName, reUser.getLastName());
         assertEquals(3, reUser.getRole());
+    }
+
+    @Test
+    public void resetPasswordTest() {
+        //  Arrange
+        Session session = sf.getSession();
+
+        sf.beginTransaction();
+
+        String username = "tUsername";
+        String currentP = "cp";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+
+        User tUser = new User();
+        tUser.setUsername(username);
+        tUser.setPassword(currentP);
+        tUser.setEmail(email);
+        tUser.setFirstName(firstName);
+        tUser.setLastName(lastName);
+
+        session.save(tUser);
+
+        sf.commit();
+
+        String newP = "np";
+
+        //  Act
+        boolean flag = tUserController.resetPassword(username, currentP, newP);
+        User reUser = tUserController.getUserByUsername(username);
+
+        //  Assert
+        assertTrue(flag);
+        assertEquals(newP, reUser.getPassword());
+    }
+
+    @Test
+    public void removeUserTest() {
+        //  Arrange
+        Session session = sf.getSession();
+
+        sf.beginTransaction();
+
+        String username = "tUsername";
+        String currentP = "cp";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+
+        User tUser = new User();
+        tUser.setUsername(username);
+        tUser.setPassword(currentP);
+        tUser.setEmail(email);
+        tUser.setFirstName(firstName);
+        tUser.setLastName(lastName);
+        tUser.setStatus(true);
+
+        session.save(tUser);
+
+        sf.commit();
+
+        //  Act
+        String result = tUserController.removeUser(username);
+        User removed = tUserController.getUserByUsername(username);
+
+        //  Assert
+        assertFalse(removed.getStatus());
+        assertEquals(removed.toString(), result);
     }
 
 }
