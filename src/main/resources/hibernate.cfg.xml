@@ -17,11 +17,11 @@
     </property>
     
     <property name = "hibernate.connection.username">
-        huser
+        root
     </property>
     
     <property name = "hibernate.connection.password">
-        hpassword
+        
     </property>
 
     <property name="connection.pool_size">
