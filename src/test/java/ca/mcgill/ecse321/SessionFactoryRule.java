@@ -27,7 +27,6 @@ public class SessionFactoryRule implements MethodRule {
             public void evaluate() throws Throwable {
                 sessionFactory = createSessionFactory();
                 createSession();
-                beginTransaction();
 
                 try {
                     statement.evaluate();
@@ -41,11 +40,6 @@ public class SessionFactoryRule implements MethodRule {
     private void shutdown() {
         try {
             try {
-                try {
-                    transaction.rollback();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
                 session.close();
             } catch (Exception e) {
                 e.printStackTrace();
