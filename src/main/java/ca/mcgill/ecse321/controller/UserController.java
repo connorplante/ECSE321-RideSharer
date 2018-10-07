@@ -183,6 +183,10 @@ public class UserController {
         return ret;
     }
 
+    public User getUserByBusername(String username) {
+        return (User) session.byNaturalId( User.class ).using( "username", username ).load();
+    }
+
     public void changeSession(Session change) {
         this.session = change;
     }
