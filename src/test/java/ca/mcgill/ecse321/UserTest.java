@@ -202,4 +202,78 @@ public class UserTest {
         assertEquals(removed.toString(), result);
     }
 
+    @Test
+    public void updateRatingTest() {
+        //  Arrange
+        Session session = sf.getSession();
+
+        sf.beginTransaction();
+
+        String username = "tUsername";
+        String currentP = "cp";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+
+        User tUser = new User();
+        tUser.setUsername(username);
+        tUser.setPassword(currentP);
+        tUser.setEmail(email);
+        tUser.setFirstName(firstName);
+        tUser.setLastName(lastName);
+        tUser.setStatus(true);
+
+        session.save(tUser);
+
+        sf.commit();
+
+        //  Act
+        boolean flag = tUserController.updateRating(username, 4);
+        User reUser = tUserController.getUserByUsername(username);
+
+        //  Assert
+        assertTrue(flag);
+        assertEquals(4.0, reUser.getRating(), 0);
+    }
+
+    @Test 
+    public void updateUserInfoTest() {
+        //  Arrange
+        Session session = sf.getSession();
+
+        sf.beginTransaction();
+
+        String username = "tUsername";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+
+        User tUser = new User();
+        tUser.setUsername(username);
+        tUser.setEmail(email);
+        tUser.setFirstName(firstName);
+        tUser.setLastName(lastName);
+        tUser.setStatus(true);
+
+        session.save(tUser);
+
+        sf.commit();
+
+        String newFirst = "f";
+        String newLast = "l";
+        String newEmail = "e";
+        String newPhone = "p";
+
+        //  Act
+        String result = tUserController.updateUserInfo(username, newFirst, newLast, newEmail, newPhone);
+        User reUser = tUserController.getUserByUsername(username);
+
+        //  Assert
+        assertEquals(reUser.toString(), result);
+        assertEquals(newFirst, reUser.getFirstName());
+        assertEquals(newLast, reUser.getLastName());
+        assertEquals(newEmail, reUser.getEmail());
+        assertEquals(newPhone, reUser.getPhone());
+    }
+
 }

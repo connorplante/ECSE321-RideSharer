@@ -127,7 +127,7 @@ public class UserController {
 
         //Find user by username in database
         try{
-            user = (User) session.byNaturalId(User.class).using("username", username).load();
+            user = getUserByUsername(username);
         }catch(Exception e){
             session.close();
             return false;
@@ -165,32 +165,30 @@ public class UserController {
     @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
     @RequestParam(value="phoneNumber") String phoneNumber){
         
-        //Begin session
-        Session session = HibernateUtil.getSession();
+        //Begin transaction
         session.beginTransaction();
 
         User user;
 
         //find user by username in database
         try{
-            user = (User) session.byNaturalId(User.class).using("username", username).load();
+            user = getUserByUsername(username);
+            //update fields of the user information
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setEmail(email);
+            user.setPhone(phoneNumber);
         }catch(Exception e){
-            session.close();
+            session.getTransaction().rollback();
             return "User does not exist!";
         }
-
-        //update fields of the user information
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPhone(phoneNumber);
 
         //Save and close session
         try{
             session.saveOrUpdate(user);
             session.getTransaction().commit();
         }catch(Exception e){
-            session.close();
+            session.getTransaction().rollback();
             return "Cannot make changes to user!";
         }
 
@@ -208,16 +206,16 @@ public class UserController {
     public String removeUser (@RequestParam(value="username") String username) {
         
         //Begin session
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         session.beginTransaction();
 
         User user;
 
         //Find user by username in database
         try{
-            user = (User) session.byNaturalId(User.class).using("username", username).load();
+            user = getUserByUsername(username);
         }catch(Exception e){
-            session.close();
+            session.getTransaction().rollback();
             return "User does not exist!";
         }
         //Change user status to remove their profile
@@ -228,7 +226,7 @@ public class UserController {
             session.saveOrUpdate(user);
             session.getTransaction().commit();
         }catch(Exception e){
-            session.close();
+            session.getTransaction().rollback();
             return "Cannot make changes to user!";
         }
         return user.toString();
@@ -253,9 +251,9 @@ public class UserController {
         
         //Find user by username in database
         try{
-            user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+            user = getUserByUsername(username);
         }catch(Exception e){
-            session.close();
+            session.getTransaction().rollback();
             return false;
         }
 
@@ -282,7 +280,7 @@ public class UserController {
                 try{
                     session.saveOrUpdate(user);
                 }catch(Exception e){
-                    session.close();
+                    session.getTransaction().rollback();
                     return false;
                 }
                 ret = true;
@@ -298,7 +296,7 @@ public class UserController {
         try{
             session.getTransaction().commit();
         }catch(Exception e){
-            session.close();
+            session.getTransaction().rollback();
             return false;
         }
 
