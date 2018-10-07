@@ -2,3 +2,6 @@ language: java
 
 services:
   - mysql
+
+before_install:
+  - mysql -u root -h localhost < src/main/resources/dbo.sql
