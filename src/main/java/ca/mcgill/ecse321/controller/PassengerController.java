@@ -33,9 +33,11 @@ public class PassengerController {
      */
 
     @RequestMapping("/confirmBook")
-    public PassengerTrip confirmBook(@RequestParam(value="tripID")int tripID,@RequestParam(value="username")
+    public String confirmBook(@RequestParam(value="tripID")int tripID,@RequestParam(value="username")
     String username,@RequestParam(value="pointA")String pointA,@RequestParam(value="pointB")String pointB) throws InvalidInputException{
         
+        String error = "";
+
         //Begin session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
@@ -83,9 +85,15 @@ public class PassengerController {
         //Add the required legs to an array passengerLegs, total the price
         for(int i = 0; i < allLegs.size(); i++) {
             if (allLegs.get(i).getLegID() >= startId && allLegs.get(i).getLegID() <= endId) {
+                if(allLegs.get(i).getNumSeats() == 0) {
+                    error = "There are no available seats for this trip";
+                }
                 passengerLegs.add(allLegs.get(i));
                 totalPricePassenger = totalPricePassenger + allLegs.get(i).getPrice();
             }
+        }
+        if (error.length() > 0) {
+            throw new InvalidInputException(error.trim());
         }
         //Set the price of the of the PassengerTrip to calculated total
         passengerTrip.setPrice(totalPricePassenger);
@@ -112,7 +120,18 @@ public class PassengerController {
         //Close session
         session1.close();
 
-        return passengerTrip;
+        //Update the number of rides for a Passenger upon booking the trip
+        Session session2 = HibernateUtil.getSession();
+        session2.beginTransaction();
+        String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
+        SQLQuery query2 = session2.createSQLQuery(string1);
+        query2.setParameter("rides", passenger.getNumRides()+1);
+        query2.setParameter("id", passenger.getUserID());
+        query2.executeUpdate();
+        session2.getTransaction().commit();
+        session2.close();
+
+        return passengerTrip.toString();
     }
 }
 

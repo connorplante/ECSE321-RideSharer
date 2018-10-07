@@ -49,6 +49,8 @@ public class PassengerTrip
   // CONSTRUCTOR
   //------------------------
 
+  public PassengerTrip() {}
+
   public PassengerTrip(Passenger aPassenger, Trip aTrip)
   {
     canSetPrice = true;
