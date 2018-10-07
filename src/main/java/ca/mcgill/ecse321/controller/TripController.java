@@ -38,7 +38,7 @@ public class TripController {
      */
     
     @RequestMapping("/createTrip")
-    public Trip createTrip(@RequestParam(value="start")String start, @RequestParam(value="end")String end, 
+    public String createTrip(@RequestParam(value="start")String start, @RequestParam(value="end")String end, 
     @RequestParam(value="date")Date date, @RequestParam(value="time")int time,
     @RequestParam(value="username") String username, @RequestParam(value="carID")int carID, int numSeats, @RequestParam List<String> stops, @RequestParam List<Double> prices) throws InvalidInputException{
 
@@ -88,8 +88,9 @@ public class TripController {
                 }
             }  
         
+        String finalTrip = trip.toString();
         //Return the created trip
-        return trip;
+        return finalTrip;
     }
     /**
      * Method to cancel a Trip 
@@ -98,11 +99,12 @@ public class TripController {
      * @return Trip trip
      */
     @RequestMapping("/cancelTrip")
-    public Trip cancelTrip(@RequestParam(value="tripID")int tripID){
+    public Boolean cancelTrip(@RequestParam(value="tripID")int tripID){
         
         //Begin Session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
+        Boolean ret = false;
     
         //Access trip object from db
         Trip trip = (Trip) session.load(Trip.class, tripID);
@@ -116,11 +118,18 @@ public class TripController {
         query1.setParameter("id", tripID);
         query1.executeUpdate();
         
+        //check valid tripID 
+        if(tripID != 0){
+            ret = true;
+        }
+        else{
+            ret = false;
+        }
         //close session
         session.getTransaction().commit();
         session.close();
 
-        return trip;
+        return ret;
 
     }
  
@@ -131,15 +140,17 @@ public class TripController {
      * @return Trip trip
      */
     @RequestMapping("/completeTrip")
-    public Trip completeTrip(@RequestParam(value="tripID")int tripID){
+    public Boolean completeTrip(@RequestParam(value="tripID")int tripID, @RequestParam(value="username") String username){
     
         //Begin Session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
+        Boolean ret = false;
 
-         //Access trip object from db
+         //Access trip and driver object from db
          Trip trip = (Trip) session.load(Trip.class, tripID);
-    
+         
+         Driver driver = (Driver) session.byNaturalId( User.class ).using( "username", username ).load();
         //create query
         String string ="UPDATE Trips SET Status= :status WHERE TripID = :id";
         SQLQuery query1 = session.createSQLQuery(string);
@@ -148,11 +159,31 @@ public class TripController {
         query1.setParameter("id", tripID);
         query1.executeUpdate();
         
+         //check valid trip ID
+         if(tripID != 0){
+            ret = true;
+        }
+        else{
+            ret = false;
+        }
         //close session
         session.getTransaction().commit();
         session.close();
 
-        return trip;
+        //Update the number of rides for a Driver upon booking the trip 
+        Session session1 = HibernateUtil.getSession();
+        session1.beginTransaction();
+        String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
+        SQLQuery query2 = session1.createSQLQuery(string1);
+        query2.setParameter("rides", driver.getNumRides()+1);
+        query2.setParameter("id", driver.getUserID());
+        query2.executeUpdate();
+        session1.getTransaction().commit();
+        session1.close();
+
+        
+
+        return ret;
 
     }
 /**

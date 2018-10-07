@@ -473,13 +473,13 @@ public class Trip
   public String toString()
   {
     return super.toString() + "["+
-            "tripID" + ":" + getTripID()+ "," +
-            "start" + ":" + getStart()+ "," +
-            "end" + ":" + getEnd()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "date" + "=" + (getDate() != null ? !getDate().equals(this)  ? getDate().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            //"  " + "time" + "=" + (getTime() != null ? !getTime().equals(this)  ? getTime().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "tripStatus" + "=" + (getTripStatus() != null ? !getTripStatus().equals(this)  ? getTripStatus().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
-            "  " + "driver = "+(getDriver()!=null?Integer.toHexString(System.identityHashCode(getDriver())):"null") + System.getProperties().getProperty("line.separator") +
-            "  " + "car = "+(getCar()!=null?Integer.toHexString(System.identityHashCode(getCar())):"null");
+    "Trip ID" + ": " + getTripID()+ ", " +
+    "Start" + ": " + getStart()+ ", " +
+    "End" + ": " + getEnd() + ", " + 
+    "Date" + ": " + getDate() + ", " + 
+    "Time" + ": " + getTime() + ", " +
+    "Status" + ": " + getTripStatus() + ", " +
+    "Driver ID: "+ getDriver().getUserID() + ", " +
+    "Car ID: " + getCar().getCarID() + " ]";
   }
 }
