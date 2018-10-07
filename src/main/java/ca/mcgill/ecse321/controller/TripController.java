@@ -180,9 +180,7 @@ public class TripController {
         query2.executeUpdate();
         session1.getTransaction().commit();
         session1.close();
-
-        
-
+	    
         return ret;
 
     }
