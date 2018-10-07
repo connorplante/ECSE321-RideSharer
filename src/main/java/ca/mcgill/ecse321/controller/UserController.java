@@ -224,14 +224,9 @@ public class UserController {
         //Change user status to remove their profile
         user.setStatus(false);
 
-        //Save and close session
-        try{
-            session.saveOrUpdate(user);
+        //Commit and close session
             session.getTransaction().commit();
-        }catch(Exception e){
             session.close();
-            return "Cannot make changes to user!";
-        }
 
         session.close();
         return user.toString();
