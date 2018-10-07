@@ -4,7 +4,6 @@
 package ca.mcgill.ecse321.model;
 
 import org.hibernate.Session;
-import org.hibernate.annotations.NaturalId;
 
 import ca.mcgill.ecse321.HibernateUtil;
 

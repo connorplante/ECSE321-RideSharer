@@ -3,11 +3,9 @@
 
 package ca.mcgill.ecse321.model;
 import java.sql.Date;
-import java.sql.Time;
 import java.util.*;
 
 import org.hibernate.Session;
-import org.hibernate.annotations.NaturalId;
 
 import ca.mcgill.ecse321.HibernateUtil;
 

@@ -6,16 +6,17 @@ import org.hibernate.Session;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.*;
 import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
+
 import org.springframework.web.bind.annotation.RestController;
-import ca.mcgill.ecse321.model.*;
 import ca.mcgill.ecse321.model.Trip.Status;
 import ca.mcgill.ecse321.controller.InvalidInputException;
 
 @RestController
 @RequestMapping("/Trip")
+@SuppressWarnings( {"deprecation", "rawtypes", "unchecked"} )
 public class TripController {
 
     public TripController(){}
@@ -190,9 +191,17 @@ public class TripController {
      * @return List of Trip IDs
      */
     @RequestMapping("/findTrip")
-    public List<Integer> findTrip(@RequestParam(value="start") String start, @RequestParam(value="end") String end) {
+    public List<Integer> findTrip(  @RequestParam(value="start") String start, 
+                                    @RequestParam(value="end") String end,
+                                    @RequestParam(value="price", required = false) Integer price,
+                                    @RequestParam(value="make", required = false) String make,
+                                    @RequestParam(value="model", required = false) String model,
+                                    @RequestParam(value="year", required = false) Integer year,
+                                    @RequestParam(value="lowDate", required = false) java.sql.Date lowDate,
+                                    @RequestParam(value="highDate", required = false) java.sql.Date highDate)
+        {
         // Initialize return list
-        List<Integer> foundTripIDs = new ArrayList<Integer>();
+        List<Integer> tripIDs = new ArrayList<Integer>();
 
         // Initialize queries that will be made to find trip with given start and end
         String queryStart = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE Start = :start";
@@ -220,14 +229,71 @@ public class TripController {
             
             // If this list is not null, then a suitable end leg was found
             if (!endLegs.isEmpty()) {
-                foundTripIDs.add((Integer)startLeg[5]);
+                tripIDs.add((Integer)startLeg[5]);
             }
         }
 
+        // Close session
         session.getTransaction().commit();
         session.close();
 
-        return foundTripIDs;
+        List<Integer> foundFailCriteria = new ArrayList<Integer>();
+
+        // filter by price
+        if (price != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterPrice(foundTripID, start, end, price)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by make
+        foundFailCriteria.clear();
+        if (make != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterMake(foundTripID, start, end, make)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by model
+        foundFailCriteria.clear();
+        if (model != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterModel(foundTripID, start, end, model)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by year
+        foundFailCriteria.clear();
+        if (model != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterYear(foundTripID, start, end, year)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        // filter by date
+        foundFailCriteria.clear();
+        if (lowDate != null && highDate != null) {
+            for (Integer foundTripID : tripIDs) {
+                if (!filterDate(foundTripID, start, end, lowDate, highDate)) {
+                    foundFailCriteria.add(foundTripID);
+                } 
+            }
+            tripIDs.removeAll(foundFailCriteria);
+        }
+
+        return tripIDs;
     }
 
     /**
@@ -261,6 +327,10 @@ public class TripController {
         // LegID  | Start  | End    | Price  | NumSeats | FK_TripID
         List<Object[]> tripLegs = queryGetLegs.list();
 
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
         // iterate through tripLegs to add prices
         // assumes valid tripId, start, end
         for (Object[] tripLeg : tripLegs) {
@@ -275,6 +345,197 @@ public class TripController {
         }
 
         fitsCriteria = price >= effectivePrice;
+        return fitsCriteria;
+    }
+
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (make)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param make
+     * @return Boolean 
+     */
+    @RequestMapping("/filterMake")
+    public boolean filterMake(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="make") String make) {
+        boolean fitsCriteria = false;
+
+        // Get legs corresponding to Trip ID
+        String queryTrip = "SELECT FK_CarID FROM Trips WHERE TripID = :tripId";
+        String queryMake = "SELECT Make FROM Cars WHERE CarID = :carId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetCarId = session.createSQLQuery(queryTrip);
+        queryGetCarId.setParameter("tripId", tripId);
+        List<Integer> cars = queryGetCarId.list();
+        if (cars.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carId = cars.get(0); // holds carId of thr given trip
+
+        // Make query on Car, gets Make of Car
+        SQLQuery queryGetMake = session.createSQLQuery(queryMake);
+        queryGetMake.setParameter("carId", carId);
+        List<String> makes = queryGetMake.list();
+        if (makes.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        String carMake = makes.get(0);
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+        // Check if make of car matches make given by user
+        fitsCriteria = make.equalsIgnoreCase(carMake);
+
+        return fitsCriteria;
+    }
+
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (model)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param model
+     * @return Boolean 
+     */
+    @RequestMapping("/filterModel")
+    public boolean filterModel(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="model") String model) {
+        boolean fitsCriteria = false;
+
+        // Get legs corresponding to Trip ID
+        String queryTrip = "SELECT FK_CarID FROM Trips WHERE TripID = :tripId";
+        String queryModel = "SELECT Model FROM Cars WHERE CarID = :carId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetCarId = session.createSQLQuery(queryTrip);
+        queryGetCarId.setParameter("tripId", tripId);
+        List<Integer> cars = queryGetCarId.list();
+        if (cars.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carId = cars.get(0); // holds carId of thr given trip
+
+        // Make query on Car, gets Make of Car
+        SQLQuery queryGetModel = session.createSQLQuery(queryModel);
+        queryGetModel.setParameter("carId", carId);
+        List<String> models = queryGetModel.list();
+        if (models.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        String carModel = models.get(0);
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+        System.out.println(carModel);
+
+        // Check if make of car matches make given by user
+        fitsCriteria = model.equalsIgnoreCase(carModel);
+
+        return fitsCriteria;
+    }
+
+    /**
+     * method to check if a Trip (given tripID, start, end) satisfies the criteria (model)
+     * @param tripId
+     * @param start
+     * @param end
+     * @param model
+     * @return Boolean 
+     */
+    @RequestMapping("/filterYear")
+    public boolean filterYear(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="year") int year) {
+        boolean fitsCriteria = false;
+
+        // Get legs corresponding to Trip ID
+        String queryTrip = "SELECT FK_CarID FROM Trips WHERE TripID = :tripId";
+        String queryYear = "SELECT Year FROM Cars WHERE CarID = :carId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetCarId = session.createSQLQuery(queryTrip);
+        queryGetCarId.setParameter("tripId", tripId);
+        List<Integer> cars = queryGetCarId.list();
+        if (cars.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carId = cars.get(0); // holds carId of thr given trip
+
+        // Make query on Car, gets Make of Car
+        SQLQuery queryGetYear = session.createSQLQuery(queryYear);
+        queryGetYear.setParameter("carId", carId);
+        List<Integer> years = queryGetYear.list();
+        if (years.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        int carYear = years.get(0);
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+        // Check if make of car matches make given by user
+        fitsCriteria = (year <= carYear);
+
+        return fitsCriteria;
+    }
+
+    @RequestMapping("/filterDate")
+    public boolean filterDate(@RequestParam(value="tripId") int tripId, @RequestParam(value="start") String start, @RequestParam(value="end") String end, 
+    @RequestParam(value="lowDate") java.sql.Date lowDate, @RequestParam(value="highDate") java.sql.Date highDate) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        boolean fitsCriteria = false;
+
+        // Get start and end Date corresponding to Trip ID
+        String queryDate = "SELECT Date FROM Trips WHERE TripID = :tripId";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on legs, gets CarId
+        SQLQuery queryGetDate = session.createSQLQuery(queryDate);
+        queryGetDate.setParameter("tripId", tripId);
+        List<java.sql.Timestamp> dates = queryGetDate.list();
+        if (dates.size() != 1) {
+            System.out.println("Oops! Something went wrong");
+            return false;
+        }
+        java.sql.Timestamp tripDate = dates.get(0); // holds date of the given trip
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+        String strTripDate = tripDate.toString();
+        String strLowDate = lowDate.toString();
+
+        // Check if tripDate is in between lowDate and HighDate
+        fitsCriteria = ((tripDate.compareTo(lowDate) >= 0 && tripDate.compareTo(highDate) <= 0) || strTripDate.substring(0, 10).equals(strLowDate));
+
         return fitsCriteria;
     }
 }

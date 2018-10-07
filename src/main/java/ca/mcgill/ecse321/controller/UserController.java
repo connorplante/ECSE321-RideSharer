@@ -123,7 +123,17 @@ public class UserController {
         Boolean ret;
         session.beginTransaction();
 
-        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        User user; 
+
+        //Find user by username in database
+        try{
+            user = (User) session.byNaturalId(User.class).using("username", username).load();
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
+
+        //Update password to the new one if entered current password is correct
         if (user.getPassword().equals(currentPassword)) {
             user.setPassword(newPassword);
             session.saveOrUpdate(user);
@@ -132,11 +142,101 @@ public class UserController {
             ret = false;
         }
 
+        //Save and close session
         session.getTransaction().commit();
         
 
         return ret;
     }
+
+    /**
+     * Updates a user's information (not including password or username)
+     * Returns the user's String representation with their new information
+     * 
+     * @param username
+     * @param firstName
+     * @param lastName
+     * @param email
+     * @param phoneNumber
+     * @return String
+     */
+    @RequestMapping("/updateUserInfo")
+    public String updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
+    @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
+    @RequestParam(value="phoneNumber") String phoneNumber){
+        
+        //Begin session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user;
+
+        //find user by username in database
+        try{
+            user = (User) session.byNaturalId(User.class).using("username", username).load();
+        }catch(Exception e){
+            session.close();
+            return "User does not exist!";
+        }
+
+        //update fields of the user information
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setPhone(phoneNumber);
+
+        //Save and close session
+        try{
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return "Cannot make changes to user!";
+        }
+
+        session.close();
+        return user.toString();
+    } 
+
+    /**
+     * Removes a user by changing their status
+     * Returns the user's String representation with their new status
+     * 
+     * @param username
+     * @return String
+     */
+    @RequestMapping("/removeUser")
+    public String removeUser (@RequestParam(value="username") String username) {
+        
+        //Begin session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user;
+
+        //Find user by username in database
+        try{
+            user = (User) session.byNaturalId(User.class).using("username", username).load();
+        }catch(Exception e){
+            session.close();
+            return "User does not exist!";
+        }
+        //Change user status to remove their profile
+        user.setStatus(false);
+
+        //Save and close session
+        try{
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return "Cannot make changes to user!";
+        }
+
+        session.close();
+        return user.toString();
+    } 
+
     /**
      * Updates user rating
      * Returns true if update was successful
@@ -152,33 +252,60 @@ public class UserController {
         Session session = this.session;
         Boolean ret;
         session.beginTransaction();
+        User user;
+        
+        //Find user by username in database
+        try{
+            user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
 
-        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        //only drivers and passengers have ratings, so if user is admin return false
+        if(user.getRole() == 3){
+            return false;
+        }
+
         if(rating<=5 && rating>=0) {
 
             double pastAvgRating = user.getRating();
+            int numRides = user.getNumRides();
 
-            if(pastAvgRating==0) {
+            //if it is the user's first ride, set this rating to global rating
+            if(pastAvgRating==0 || numRides==0) {
                 user.setRating(rating);
                 ret = true;
             }
             
+            //update the average rating considering past ratings and number of rides
             else {
-                int numRides = user.getNumRides();
                 double newAvgRating = pastAvgRating + ((rating-pastAvgRating)/numRides);
                 user.setRating(newAvgRating);
-                session.saveOrUpdate(user);
+                try{
+                    session.saveOrUpdate(user);
+                }catch(Exception e){
+                    session.close();
+                    return false;
+                }
                 ret = true;
             }   
-            
-        
         }
+
+        //if rating is not between 0 and 5, update fails
         else {
             ret=false;
         }
 
-        session.getTransaction().commit();
-        
+        //save and close the session
+        try{
+            session.getTransaction().commit();
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
+
+        session.close();
 
         return ret;
     }

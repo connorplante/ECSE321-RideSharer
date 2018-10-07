@@ -15,10 +15,8 @@ import javax.persistence.InheritanceType;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 
-import org.hibernate.Session;
 import org.hibernate.annotations.NaturalId;
 
-import ca.mcgill.ecse321.HibernateUtil;
 
 // line 3 "../../../../model.ump"
 @Entity
