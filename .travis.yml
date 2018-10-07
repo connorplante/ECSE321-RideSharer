@@ -4,8 +4,4 @@ services:
   - mysql
 
 before_install:
-  - mysql -root -e "CREATE USER 'huser'@'127.0.0.1' IDENTIFIED BY 'hpassword';"
-  - mysql -root -e "GRANT ALL PRIVILEGES ON *.* TO 'huser'@'127.0.0.1' WITH GRANT OPTION; FLUSH PRIVILEGES;"
-  - mysql_upgrade -u huser -phpassword
-  - service mysql restart
-  - mysql -u huser -phpassword -h 127.0.0.1 < src/main/resources/dbo.sql
+  - mysql -u root -h localhost < src/main/resources/dbo.sql
