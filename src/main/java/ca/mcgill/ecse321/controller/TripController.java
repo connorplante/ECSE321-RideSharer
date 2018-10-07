@@ -169,7 +169,7 @@ public class TripController {
         session.getTransaction().commit();
 
         //Update the number of rides for a Driver upon booking the trip 
-        Session session1 = HibernateUtil.getSession();
+        Session session1 = this.session;
         session1.beginTransaction();
         String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
         SQLQuery query2 = session1.createSQLQuery(string1);
