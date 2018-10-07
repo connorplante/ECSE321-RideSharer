@@ -27,7 +27,7 @@ public class CarController {
     @RequestMapping("/createCar")
     public static String createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
-    String licencePlate, @RequestParam(value="userID") String driverUsername){
+    String licencePlate, @RequestParam(value="username") String driverUsername){
        
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
