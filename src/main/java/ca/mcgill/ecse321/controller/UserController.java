@@ -118,11 +118,22 @@ public class UserController {
     public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
     @RequestParam(value="newPassword") String newPassword) {
 
+        //Initialize and begin session
         Session session = HibernateUtil.getSession();
         Boolean ret;
         session.beginTransaction();
 
-        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        User user; 
+
+        //Find user by username in database
+        try{
+            user = (User) session.byNaturalId(User.class).using("username", username).load();
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
+
+        //Update password to the new one if entered current password is correct
         if (user.getPassword().equals(currentPassword)) {
             user.setPassword(newPassword);
             session.saveOrUpdate(user);
@@ -131,6 +142,7 @@ public class UserController {
             ret = false;
         }
 
+        //Save and close session
         session.getTransaction().commit();
         session.close();
 
@@ -153,11 +165,13 @@ public class UserController {
     @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
     @RequestParam(value="phoneNumber") String phoneNumber){
         
+        //Begin session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         User user;
 
+        //find user by username in database
         try{
             user = (User) session.byNaturalId(User.class).using("username", username).load();
         }catch(Exception e){
@@ -165,11 +179,13 @@ public class UserController {
             return "User does not exist!";
         }
 
+        //update fields of the user information
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
         user.setPhone(phoneNumber);
 
+        //Save and close session
         try{
             session.saveOrUpdate(user);
             session.getTransaction().commit();
@@ -192,20 +208,23 @@ public class UserController {
     @RequestMapping("/removeUser")
     public String removeUser (@RequestParam(value="username") String username) {
         
+        //Begin session
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         User user;
 
+        //Find user by username in database
         try{
             user = (User) session.byNaturalId(User.class).using("username", username).load();
         }catch(Exception e){
             session.close();
             return "User does not exist!";
         }
-
+        //Change user status to remove their profile
         user.setStatus(false);
 
+        //Save and close session
         try{
             session.saveOrUpdate(user);
             session.getTransaction().commit();
@@ -229,13 +248,14 @@ public class UserController {
      */
     @RequestMapping("/updateRating")
     public Boolean updateRating (@RequestParam(value="username") String username, @RequestParam(value="rating") int rating) { //username or passenger object
-
+        
+        //Begin session
         Session session = HibernateUtil.getSession();
         Boolean ret;
         session.beginTransaction();
-
         User user;
         
+        //Find user by username in database
         try{
             user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
         }catch(Exception e){
@@ -251,14 +271,16 @@ public class UserController {
         if(rating<=5 && rating>=0) {
 
             double pastAvgRating = user.getRating();
+            int numRides = user.getNumRides();
 
-            if(pastAvgRating==0) {
+            //if it is the user's first ride, set this rating to global rating
+            if(pastAvgRating==0 || numRides==0) {
                 user.setRating(rating);
                 ret = true;
             }
             
+            //update the average rating considering past ratings and number of rides
             else {
-                int numRides = user.getNumRides();
                 double newAvgRating = pastAvgRating + ((rating-pastAvgRating)/numRides);
                 user.setRating(newAvgRating);
                 try{
@@ -269,13 +291,14 @@ public class UserController {
                 }
                 ret = true;
             }   
-            
-        
         }
+
+        //if rating is not between 0 and 5, update fails
         else {
             ret=false;
         }
 
+        //save and close the session
         try{
             session.getTransaction().commit();
         }catch(Exception e){
