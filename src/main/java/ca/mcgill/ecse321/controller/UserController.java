@@ -222,6 +222,7 @@ public class UserController {
         user.setStatus(false);
 
         //Commit and close session
+        try{
         session.getTransaction().commit();
         }catch(Exception e){
             session.getTransaction().rollback();
