@@ -169,14 +169,14 @@ public class TripController {
         session.getTransaction().commit();
 
         //Update the number of rides for a Driver upon booking the trip 
-        Session session1 = this.session;
-        session1.beginTransaction();
+        session = this.session;
+        session.beginTransaction();
         String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
-        SQLQuery query2 = session1.createSQLQuery(string1);
+        SQLQuery query2 = session.createSQLQuery(string1);
         query2.setParameter("rides", driver.getNumRides()+1);
         query2.setParameter("id", driver.getUserID());
         query2.executeUpdate();
-        session1.getTransaction().commit();
+        session.getTransaction().commit();
 	    
         return ret;
 
