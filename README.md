@@ -1,6 +1,6 @@
 # RideSharer Application Guide, Group 16
 ## Background
-###### This app is written in Java.  The RESTful API uses SpringBoot, and the database used is MySQL.  Hibernate is used to map the Java classes to the database.  All builds must be done with Maven.  Travis CI is monitoring the builds, and the unit tests ensure that the functionality is correct.
+###### This app is written in Java.  The RESTful API uses SpringBoot, and the database used is MySQL.  Hibernate is used to map the Java classes to the database.  All builds must be done with Maven.  Travis CI is monitoring the builds, and the unit tests ensure that the functionality is correct.  To see more information about Travis CI, please see the home page of the t00 Wiki.
 ## Before running the application
 ###### Before running the application, please ensure that you have done the following:
 ###### &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1. Install Maven, SpringBoot, mySQL, and Hibernate
