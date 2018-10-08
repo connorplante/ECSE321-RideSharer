@@ -176,7 +176,7 @@ echo "Passenger 1 looks for a trip stating in Kingston and ending in Ottawa"
 open "http://localhost:8080/Trip/findTrip?start=Kingston&end=Ottawa"
 sleep 3s
 
-open "http://localhost:8080/Passenger/confirmBook?tripID=1&username=P_USERNAME1&pointA=Kingston&pointB=Montreal"
+open "http://localhost:8080/Passenger/confirmBook?tripID=1&username=P_USERNAME&pointA=Kingston&pointB=Montreal"
 echo "Passenger 1 is now booked on the legs for Kingston to Ottawa and Ottawa to Montreal of trip with tripID: 1"
 sleep 3s
 
@@ -217,7 +217,7 @@ open "http://localhost:8080/Trip/findTrip?start=Montreal&end=Sherbrooke"
 sleep 3s
 
 echo "Passenger 1 looks if trip with tripID: 4 is less than their maximum price of 15$"
-open "http://localhost:8080/Trip/filterPrice?tripID=4&start=Montreal&end=Sherbrooke&price=15"
+open "http://localhost:8080/Trip/filterPrice?tripId=4&start=Montreal&end=Sherbrooke&price=15"
 sleep 3s
 
 open "http://localhost:8080/Passenger/confirmBook?tripID=3&username=P_USERNAME1&pointA=Montreal&pointB=Sherbrooke"
@@ -234,13 +234,13 @@ sleep 3s
 echo "Now completing a trip"
 sleep 1s
 
-open "http://localhost:8080/Trip/completeTrip?tripID=2"
+open "http://localhost:8080/Trip/completeTrip?tripID=2&username=D_USERNAME3"
 echo "The trip with tripID: 2 now has status: Completed"
 sleep 3s
 
 echo "Now rating passengers"
 
-open "http://localhost:8080/User/updateRating?username=P_USERNAME1&rating=3"
+open "http://localhost:8080/User/updateRating?username=P_USERNAME&rating=3"
 echo "The new rating by Driver 1 is computed for Passenger 1"
 sleep 3s
 

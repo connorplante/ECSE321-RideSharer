@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.Car;
 import ca.mcgill.ecse321.model.Driver;
 import ca.mcgill.ecse321.model.User;
-
+import org.hibernate.Hibernate;
+import org.hibernate.Transaction;
 
 @RestController
 @RequestMapping("/Car")
@@ -33,7 +34,7 @@ public class CarController {
     String licencePlate, @RequestParam(value="username") String driverUsername){
        
         Session session = this.session;
-        Transaction tx = null;
+        session.beginTransaction();
 
         Driver driver;
         try{
@@ -97,7 +98,7 @@ public class CarController {
         
         car.setMake(make);
         car.setModel(model);
-        car.setNumSeats(year);
+        car.setYear(year);
         car.setNumSeats(numSeats);
         car.setLicencePlate(licencePlate);
 
@@ -135,7 +136,16 @@ public class CarController {
 
         session.getTransaction().commit();
 
-        return car.toString() + " removed";
+        return car.toString();
+    }
+
+    public void changeSession(Session change) {
+        this.session = change;
+    }
+
+
+    public Car getCarByID(int id){
+        return (Car) session.load(Car.class, id);
     }
 
 }
