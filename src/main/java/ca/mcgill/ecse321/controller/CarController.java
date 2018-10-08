@@ -6,11 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.Car;
 import ca.mcgill.ecse321.model.Driver;
 import ca.mcgill.ecse321.model.User;
-
+import org.hibernate.Hibernate;
+import org.hibernate.Transaction;
 
 @RestController
 @RequestMapping("/Car")
 public class CarController {
+
+    Session session = HibernateUtil.getSession();
 
     /**
      * Method to create a car and add to database
@@ -143,6 +146,15 @@ public class CarController {
         session.close();
 
         return car.toString() + " removed";
+    }
+
+    public void changeSession(Session change) {
+        this.session = change;
+    }
+
+
+    public Car getCarByID(int id){
+        return (Car) session.load(Car.class, id);
     }
 
 }
