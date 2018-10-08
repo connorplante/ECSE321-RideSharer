@@ -298,7 +298,6 @@ public class UserController {
             session.getTransaction().rollback();
             return false;
         }
-
         return ret;
     }
 
