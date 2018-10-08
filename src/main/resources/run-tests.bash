@@ -127,19 +127,19 @@ sleep 3s
 echo "Now creating cars"
 sleep 0.5s
 
-open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&userID=D_USERNAME1"
+open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&username=D_USERNAME1"
 echo "Driver 1 now has car with carID: 1"
 sleep 3s
 
-open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&userID=D_USERNAME1"
+open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&username=D_USERNAME1"
 echo "Driver 1 now has car with carID: 2"
 sleep 3s
 
-open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&userID=D_USERNAME2"
+open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&username=D_USERNAME2"
 echo "Driver 2 now has car with carID: 3"
 sleep 3s
 
-open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&userID=D_USERNAME3"
+open "http://localhost:8080/Car/createCar?make=MAKE&model=MODEL&year=2010&numSeats=4&licencePlate=LICENCEPLATE&username=D_USERNAME3"
 echo "Driver 3 now has car with carID: 4"
 sleep 3s
 
