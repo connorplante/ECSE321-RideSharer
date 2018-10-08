@@ -42,7 +42,7 @@ public class TripController {
     @RequestMapping("/createTrip")
     public String createTrip(@RequestParam(value="start")String start, @RequestParam(value="end")String end, 
     @RequestParam(value="date")Date date, @RequestParam(value="time")int time,
-    @RequestParam(value="username") String username, @RequestParam(value="carID")int carID, int numSeats, @RequestParam List<String> stops, @RequestParam List<Double> prices) throws InvalidInputException{
+    @RequestParam(value="username") String username, @RequestParam(value="carID")int carID, int numSeats, @RequestParam List<String> stops, @RequestParam List<Integer> prices) throws InvalidInputException{
 
         String error = "";
         
@@ -80,7 +80,7 @@ public class TripController {
         //List trough all stops inputted by user and create a leg corresponding to the start, end, price, numSeats, and trip
             for (String stop: stops){
                 if ( counter < sizePriceList){
-                double price = prices.get(counter);
+                int price = prices.get(counter);
                 String pointA = stops.get(counter);
                 String pointB = stops.get(counter+1);
                 Leg leg = createLeg(pointA, pointB, price, numSeats, trip);
@@ -192,7 +192,7 @@ public class TripController {
      * @return Leg leg
      */
 
-    public Leg createLeg(String pointA, String pointB, Double price, int numSeats, Trip trip){
+    public Leg createLeg(String pointA, String pointB, int price, int numSeats, Trip trip){
         
         //Begin Session
         Session session = this.session;
@@ -358,9 +358,9 @@ public class TripController {
         // assumes valid tripId, start, end
         for (Object[] tripLeg : tripLegs) {
             if (((String)tripLeg[1]).equals(start)) {
-                effectivePrice += (Integer)tripLeg[3];
+                effectivePrice += (int)tripLeg[3];
             } else if (effectivePrice != 0) {
-                effectivePrice += (Integer)tripLeg[3];
+                effectivePrice += (int)tripLeg[3];
             } 
             if (((String)tripLeg[2]).equals(end)) {
                 break;

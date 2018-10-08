@@ -289,7 +289,7 @@ public class Trip
     return 1;
   }
   /* Code from template association_AddMandatoryManyToOne */
-  public Leg addLeg(String aStart, String aEnd, double aPrice, int aNumSeats)
+  public Leg addLeg(String aStart, String aEnd, int aPrice, int aNumSeats)
   {
     Leg aNewLeg = new Leg(aStart, aEnd, aPrice, aNumSeats, this);
     return aNewLeg;

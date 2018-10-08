@@ -60,9 +60,9 @@ public class TripTest {
         stops.add(start);
         stops.add("tStop");
         stops.add(end);
-        List<Double> prices = new ArrayList<Double>();
-        prices.add(14.0);
-        prices.add(19.0);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+        prices.add(19);
 
         //  Act
         String result = tTripController.createTrip(start, end, date, time, username, carID, numSeats, stops, prices);
@@ -194,7 +194,7 @@ public class TripTest {
         sf.commit();
 
         //  Act 
-        Leg tLeg = tTripController.createLeg(start, end, 14.0, 6, tTrip);
+        Leg tLeg = tTripController.createLeg(start, end, 14, 6, tTrip);
         Leg reLeg = (Leg) session.load(Leg.class, 1);
 
         //  Assert
@@ -226,9 +226,9 @@ public class TripTest {
         stops.add(start);
         stops.add("tStop");
         stops.add(end);
-        List<Double> prices = new ArrayList<Double>();
-        prices.add(14.0);
-        prices.add(19.0);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+        prices.add(19);
 
         sf.commit();
 
@@ -240,5 +240,123 @@ public class TripTest {
         assertNotNull(tripIDs);
         assertEquals(1, tripIDs.size());
         assertEquals(1, (int) tripIDs.get(0));
+    }
+
+    @Test
+    public void filterPriceTest() throws InvalidInputException {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
+    
+        session.save(tDriver);
+
+        Car tCar = new Car("tMake", "tModel", 2000, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(0);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add(end);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+
+        sf.commit();
+
+        //  Act
+        tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
+        boolean resultT = tTripController.filterPrice(1, start, end, 14);
+        boolean resultF = tTripController.filterPrice(1, start, end, 10);
+
+        //  Assert
+        assertTrue(resultT);
+        assertFalse(resultF);
+    }
+
+    @Test
+    public void filterMakeTest() throws InvalidInputException {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
+    
+        session.save(tDriver);
+
+        String make = "tMake";
+
+        Car tCar = new Car(make, "tModel", 2000, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(0);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add(end);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+
+        sf.commit();
+
+        //  Act
+        tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
+        boolean resultT = tTripController.filterMake(1, start, end, make);
+        boolean resultF = tTripController.filterMake(1, start, end, "b");
+
+        //  Assert
+        assertTrue(resultT);
+        assertFalse(resultF);
+    }
+
+    @Test
+    public void filterModelTest() throws InvalidInputException {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
+    
+        session.save(tDriver);
+
+        String make = "tMake";
+        String model = "tModel";
+        Car tCar = new Car(make, model, 2000, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(0);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add(end);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+
+        sf.commit();
+
+        //  Act
+        tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
+        boolean resultT = tTripController.filterModel(1, start, end, model);
+        boolean resultF = tTripController.filterModel(1, start, end, "b");
+
+        //  Assert
+        assertTrue(resultT);
+        assertFalse(resultF);
     }
 }

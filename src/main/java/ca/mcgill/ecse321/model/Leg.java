@@ -36,7 +36,7 @@ public class Leg
   @Column(name="End")
   private String end;
   @Column(name="Price")
-  private double price;
+  private int price;
   @Column(name="NumSeats")
   private int numSeats;
 
@@ -54,7 +54,7 @@ public class Leg
   //------------------------
   // CONSTRUCTOR
   //------------------------
-public Leg(int LegID, String aStart, String aEnd, double aPrice, int aNumSeats, Trip aTrip){
+public Leg(int LegID, String aStart, String aEnd, int aPrice, int aNumSeats, Trip aTrip){
   start = aStart;
     end = aEnd;
     price = aPrice;
@@ -64,7 +64,7 @@ public Leg(int LegID, String aStart, String aEnd, double aPrice, int aNumSeats, 
 
 };
 
-  public Leg(String aStart, String aEnd, double aPrice, int aNumSeats, Trip aTrip)
+  public Leg(String aStart, String aEnd, int aPrice, int aNumSeats, Trip aTrip)
   {
     start = aStart;
     end = aEnd;
@@ -107,7 +107,7 @@ public Leg(int LegID, String aStart, String aEnd, double aPrice, int aNumSeats, 
     return wasSet;
   }
 
-  public boolean setPrice(double aPrice)
+  public boolean setPrice(int aPrice)
   {
     boolean wasSet = false;
     price = aPrice;
@@ -133,7 +133,7 @@ public Leg(int LegID, String aStart, String aEnd, double aPrice, int aNumSeats, 
     return end;
   }
 
-  public double getPrice()
+  public int getPrice()
   {
     return price;
   }
