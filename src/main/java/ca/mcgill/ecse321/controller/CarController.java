@@ -28,12 +28,12 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/createCar")
-    public static String createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
+    public String createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate, @RequestParam(value="userID") String driverUsername){
        
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = this.session;
+        Transaction tx = null;
 
         Driver driver;
         try{
@@ -81,12 +81,12 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/updateCar")
-    public static String updateCar(@RequestParam(value="carID") int carID, @RequestParam(value="make") String make, @RequestParam(value="model") String model,
+    public String updateCar(@RequestParam(value="carID") int carID, @RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate){
 
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = this.session;
+        Transaction tx = null;
 
         Car car;
         try{
@@ -126,10 +126,10 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/removeCar")
-    public static String removeCar(@RequestParam(value="carID") int carID){
+    public String removeCar(@RequestParam(value="carID") int carID){
         
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = this.session;
+        Transaction tx = null;
 
         Car car;
         
@@ -145,7 +145,7 @@ public class CarController {
         session.getTransaction().commit();
         session.close();
 
-        return car.toString() + " removed";
+        return car.toString();
     }
 
     public void changeSession(Session change) {
