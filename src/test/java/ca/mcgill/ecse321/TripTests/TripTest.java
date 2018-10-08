@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.junit.Before;
 import org.junit.Rule;
@@ -72,7 +73,6 @@ public class TripTest {
         assertEquals(result, tTrip.toString());
     }
 
-    //  Need Fix
     @Test
     public void cancelTripTest() {
         //  Arrange 
@@ -108,14 +108,15 @@ public class TripTest {
 
         //  Act
         Boolean flag = tTripController.cancelTrip(1);
-        Trip reTrip = tTripController.getTripByID(1);
+        String queryTrip = "SELECT TripID FROM Trips WHERE Status = 1";
+        SQLQuery query = session.createSQLQuery(queryTrip);
+
 
         //  Assert
         assertTrue(flag);
-        assertEquals(Status.Cancelled, reTrip.getTripStatus());
+        assertEquals(1, query.list().get(0));
     }
 
-    // Need Fix
     @Test
     public void completeTripTest() {
         //  Arrange 
@@ -151,12 +152,93 @@ public class TripTest {
 
         //  Act
         Boolean flag = tTripController.completeTrip(1, username);
-        Trip reTrip = tTripController.getTripByID(1);
+        String queryTrip = "SELECT TripID FROM Trips WHERE Status = 2";
+        SQLQuery query = session.createSQLQuery(queryTrip);
 
         //  Assert
         assertTrue(flag);
-        assertEquals(Status.Completed, reTrip.getTripStatus());
+        assertEquals(1, query.list().get(0));
     }
 
+    @Test 
+    public void createLegTest() {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
     
+        session.save(tDriver);
+
+        Car tCar = new Car("tMake", "tModel", 2000, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(0);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add("tStop");
+        stops.add(end);
+        List<Double> prices = new ArrayList<Double>();
+        prices.add(14.0);
+        prices.add(19.0);
+        Trip tTrip = new Trip(start, end, date, time, Status.Scheduled, tDriver, tCar);
+
+        session.save(tTrip);
+
+        sf.commit();
+
+        //  Act 
+        Leg tLeg = tTripController.createLeg(start, end, 14.0, 6, tTrip);
+        Leg reLeg = (Leg) session.load(Leg.class, 1);
+
+        //  Assert
+        assertNotNull(reLeg);
+        assertEquals(tLeg.getPrice(), reLeg.getPrice(), 0);
+    }
+
+    @Test
+    public void findTripTest() throws InvalidInputException {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
+    
+        session.save(tDriver);
+
+        Car tCar = new Car("tMake", "tModel", 2000, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(0);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add("tStop");
+        stops.add(end);
+        List<Double> prices = new ArrayList<Double>();
+        prices.add(14.0);
+        prices.add(19.0);
+
+        sf.commit();
+
+        //  Act
+        tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
+        List<Integer> tripIDs = tTripController.findTrip(start, end, null, null, null, null, null, null);
+
+        //  Assert
+        assertNotNull(tripIDs);
+        assertEquals(1, tripIDs.size());
+        assertEquals(1, (int) tripIDs.get(0));
+    }
 }
