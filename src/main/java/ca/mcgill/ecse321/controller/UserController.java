@@ -250,9 +250,9 @@ public class UserController {
         User user;
         
         //Find user by username in database
-        try{
+        try {
             user = getUserByUsername(username);
-        }catch(Exception e){
+        } catch(Exception e) {
             session.getTransaction().rollback();
             return false;
         }
@@ -262,40 +262,39 @@ public class UserController {
             return false;
         }
 
-        if(rating<=5 && rating>=0) {
+        if (rating <= 5 && rating >= 0) {
 
             double pastAvgRating = user.getRating();
+            double newAvgRating;
             int numRides = user.getNumRides();
 
             //if it is the user's first ride, set this rating to global rating
-            if(pastAvgRating==0 || numRides==0) {
+            if(pastAvgRating == 0 || numRides == 0) {
                 user.setRating(rating);
+                user.setNumRides(++numRides);
+                newAvgRating = rating;
                 ret = true;
-            }
-            
-            //update the average rating considering past ratings and number of rides
-            else {
-                double newAvgRating = pastAvgRating + ((rating-pastAvgRating)/numRides);
+            } else { //update the average rating considering past ratings and number of rides
+                newAvgRating = (pastAvgRating*numRides + rating)/(++numRides);
                 user.setRating(newAvgRating);
-                try{
+                user.setNumRides(numRides);
+                try { 
                     session.saveOrUpdate(user);
-                }catch(Exception e){
+                } catch(Exception e) {
                     session.getTransaction().rollback();
                     return false;
                 }
                 ret = true;
+                System.out.println(newAvgRating);
             }   
-        }
-
-        //if rating is not between 0 and 5, update fails
-        else {
-            ret=false;
+        } else {
+            ret = false;
         }
 
         //save and close the session
-        try{
+        try {
             session.getTransaction().commit();
-        }catch(Exception e){
+        } catch(Exception e) {
             session.getTransaction().rollback();
             return false;
         }
