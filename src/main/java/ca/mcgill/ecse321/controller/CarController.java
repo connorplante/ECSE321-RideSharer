@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.controller;
 
 import ca.mcgill.ecse321.HibernateUtil;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.Car;
 import ca.mcgill.ecse321.model.Driver;
@@ -11,6 +12,8 @@ import ca.mcgill.ecse321.model.User;
 @RestController
 @RequestMapping("/Car")
 public class CarController {
+    
+    Session session = HibernateUtil.getSession();
 
     /**
      * Method to create a car and add to database
@@ -25,18 +28,17 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/createCar")
-    public static String createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
+    public String createCar(@RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate, @RequestParam(value="username") String driverUsername){
        
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+        Session session = this.session;
+        Transaction tx = null;
 
         Driver driver;
         try{
             driver = (Driver) session.byNaturalId(User.class).using("username", driverUsername).load();
         }catch(Exception i){
-            session.close();
             return "Driver does not exist!";
         }
 
@@ -56,11 +58,8 @@ public class CarController {
             session.save(car);
             session.getTransaction().commit();
         }catch(Exception e){
-            session.close();
             return "Could not create car!";
         }
-
-        session.close();
         
         return car.toString();
     }
@@ -78,18 +77,17 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/updateCar")
-    public static String updateCar(@RequestParam(value="carID") int carID, @RequestParam(value="make") String make, @RequestParam(value="model") String model,
+    public String updateCar(@RequestParam(value="carID") int carID, @RequestParam(value="make") String make, @RequestParam(value="model") String model,
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate){
 
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         session.beginTransaction();
 
         Car car;
         try{
             car = (Car) session.load(Car.class, carID);
         }catch(Exception e){
-            session.close();
             return "Car does not exist!";
         }
 
@@ -106,11 +104,8 @@ public class CarController {
         try{
             session.getTransaction().commit();
         }catch(Exception e){
-            session.close();
             return "Cannot make these changes!";
         }
-
-        session.close();
 
         return car.toString();
     }
@@ -123,9 +118,9 @@ public class CarController {
      * @return Car car
      */
     @RequestMapping("/removeCar")
-    public static String removeCar(@RequestParam(value="carID") int carID){
+    public String removeCar(@RequestParam(value="carID") int carID){
         
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         session.beginTransaction();
 
         Car car;
@@ -133,14 +128,12 @@ public class CarController {
         try{
             car = (Car) session.load(Car.class, carID);
         }catch(Exception e){
-            session.close();
             return "Car does not exist!";
         }
 
         car.setStatus(false);
 
         session.getTransaction().commit();
-        session.close();
 
         return car.toString() + " removed";
     }
