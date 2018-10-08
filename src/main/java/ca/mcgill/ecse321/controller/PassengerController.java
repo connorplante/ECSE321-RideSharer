@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 @SuppressWarnings( {"deprecation", "rawtypes", "unchecked"} )
 public class PassengerController {
 
+    Session session = HibernateUtil.getSession();
+
     public PassengerController(){}
 
 
@@ -39,7 +41,7 @@ public class PassengerController {
         String error = "";
 
         //Begin session
-        Session session = HibernateUtil.getSession();
+        Session session = this.session;
         session.beginTransaction();
 
        //Load specified trip and passenger in SQL tables into new objects using tripID and username
@@ -101,35 +103,30 @@ public class PassengerController {
         //Save and close session
         session.save(passengerTrip);
         session.getTransaction().commit();
-        session.close();
 
         //Open new session
-        Session session1 = HibernateUtil.getSession();
+        session = this.session;
 
         //Generate query to update number of seats available on each leg of trip
         for (Leg pl : passengerLegs) {
-            session1.beginTransaction();
+            session.beginTransaction();
             String string ="UPDATE Legs SET NumSeats= :seats WHERE LegID = :id";
-            SQLQuery query1 = session1.createSQLQuery(string);
+            SQLQuery query1 = session.createSQLQuery(string);
             query1.setParameter("seats", (pl.getNumSeats()-1));
             query1.setParameter("id", pl.getLegID());
             query1.executeUpdate();
-            session1.getTransaction().commit();
+            session.getTransaction().commit();
         }
 
-        //Close session
-        session1.close();
-
         //Open new session, update the number of rides for a Passenger upon booking the trip
-        Session session2 = HibernateUtil.getSession();
-        session2.beginTransaction();
+        session = this.session;
+        session.beginTransaction();
         String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
-        SQLQuery query2 = session2.createSQLQuery(string1);
+        SQLQuery query2 = session.createSQLQuery(string1);
         query2.setParameter("rides", passenger.getNumRides()+1);
         query2.setParameter("id", passenger.getUserID());
         query2.executeUpdate();
-        session2.getTransaction().commit();
-        session2.close();
+        session.getTransaction().commit();
 
         return passengerTrip.toString();
     }
