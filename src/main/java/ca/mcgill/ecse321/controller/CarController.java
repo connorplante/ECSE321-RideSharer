@@ -33,9 +33,11 @@ public class CarController {
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate, @RequestParam(value="username") String driverUsername){
        
+        // Get session and begin transaction
         Session session = this.session;
         session.beginTransaction();
 
+        // If the driver exists in the database, get the driver
         Driver driver;
         try{
             driver = (Driver) session.byNaturalId(User.class).using("username", driverUsername).load();
@@ -44,15 +46,15 @@ public class CarController {
         }
 
         
-        //the association between driver and car is handled by the datadase, so these are reset
+        // The association between driver and car is handled by the datadase, so these are reset to avoid null pointers
         try{
             driver.getCars();
         }catch(NullPointerException n){
             driver.initArrayLists();
         }
 
+        // Try to make a new car and put it into the database, catch error if it does not work
         Car car;
-
         try{
             car = new Car(make, model, year, numSeats, licencePlate, driver);
             driver.addCar(car);
@@ -68,6 +70,7 @@ public class CarController {
     /**
      * Method to updates the fields of a car object
      * Returns the string representation of the car to be updated with its new values
+     * The only field in Car that cannot be updated is the Driver, as a Car belongs to a Driver
      * Use the url /Car/updateCar
      * @param car
      * @param make
@@ -82,9 +85,11 @@ public class CarController {
     @RequestParam(value="year") int year, @RequestParam(name="numSeats") int numSeats, @RequestParam(name="licencePlate")
     String licencePlate){
 
+        // Get the session and start the transaction
         Session session = this.session;
         session.beginTransaction();
 
+        // Try to get the car from the database, catch the error if it does not exist
         Car car;
         try{
             car = (Car) session.load(Car.class, carID);
@@ -92,16 +97,18 @@ public class CarController {
             return "Car does not exist!";
         }
 
-        // Since these associations are handled by the database, reset them
+        // Since these associations are handled by the database, reset them to avoid null pointers
         Driver driver = car.getDriver();
         driver.initArrayLists();
         
+        // Update the car's fields with the new information
         car.setMake(make);
         car.setModel(model);
         car.setYear(year);
         car.setNumSeats(numSeats);
         car.setLicencePlate(licencePlate);
 
+        // Try to save the new information to the database, catch the error if not
         try{
             session.getTransaction().commit();
         }catch(Exception e){
@@ -113,7 +120,7 @@ public class CarController {
 
      /**
      * Method to remove a car by updating the status to inactive
-     * Returns the car removed with its status set to false
+     * Returns the string representation of the Car removed with its status set to false
      * Use the url /Car/removeCar
      * @param carID
      * @return Car car
@@ -121,29 +128,42 @@ public class CarController {
     @RequestMapping("/removeCar")
     public String removeCar(@RequestParam(value="carID") int carID){
         
+        // Get the session and begin the transaction
         Session session = this.session;
         session.beginTransaction();
 
+        // Try to load the car from the database, catch the error if it does not exist
         Car car;
-        
         try{
             car = (Car) session.load(Car.class, carID);
         }catch(Exception e){
             return "Car does not exist!";
         }
 
+        // Set the car's status to inactive
         car.setStatus(false);
 
+        // Commit changes to database
         session.getTransaction().commit();
 
         return car.toString();
     }
 
+    /**
+     * Changes the session to the one passed
+     * 
+     * @param change
+     */
     public void changeSession(Session change) {
         this.session = change;
     }
 
-
+     /**
+      * Returns the Car with the ID passed
+      *
+      * @param id
+      * @return
+      */
     public Car getCarByID(int id){
         return (Car) session.load(Car.class, id);
     }
