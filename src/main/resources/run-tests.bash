@@ -220,7 +220,7 @@ echo "Passenger 1 looks if trip with tripID: 4 is less than their maximum price 
 open "http://localhost:8080/Trip/filterPrice?tripId=4&start=Montreal&end=Sherbrooke&price=15"
 sleep 3s
 
-open "http://localhost:8080/Passenger/confirmBook?tripID=3&username=P_USERNAME1&pointA=Montreal&pointB=Sherbrooke"
+open "http://localhost:8080/Passenger/confirmBook?tripID=3&username=P_USERNAME&pointA=Montreal&pointB=Sherbrooke"
 echo "Passenger 1 is now booked on the leg from Montreal to Sherbrooke for the trip with tripID: 4"
 sleep 3s
 
