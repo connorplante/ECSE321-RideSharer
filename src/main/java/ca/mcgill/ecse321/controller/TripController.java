@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -42,7 +43,7 @@ public class TripController {
     @RequestMapping("/createTrip")
     public String createTrip(@RequestParam(value="start")String start, @RequestParam(value="end")String end, 
     @RequestParam(value="date")Date date, @RequestParam(value="time")int time,
-    @RequestParam(value="username") String username, @RequestParam(value="carID")int carID, int numSeats, @RequestParam List<String> stops, @RequestParam List<Double> prices) throws InvalidInputException{
+    @RequestParam(value="username") String username, @RequestParam(value="carID")int carID, int numSeats, @RequestParam List<String> stops, @RequestParam List<Integer> prices) throws InvalidInputException{
 
         String error = "";
         
@@ -80,7 +81,7 @@ public class TripController {
         //List trough all stops inputted by user and create a leg corresponding to the start, end, price, numSeats, and trip
             for (String stop: stops){
                 if ( counter < sizePriceList){
-                double price = prices.get(counter);
+                int price = prices.get(counter);
                 String pointA = stops.get(counter);
                 String pointB = stops.get(counter+1);
                 Leg leg = createLeg(pointA, pointB, price, numSeats, trip);
@@ -108,7 +109,7 @@ public class TripController {
         Boolean ret = false;
     
         //Access trip object from db
-        Trip trip = (Trip) session.load(Trip.class, tripID);
+        Trip trip = getTripByID(tripID);
         
         //create query
         String string ="UPDATE Trips SET Status= :status WHERE TripID = :id";
@@ -130,7 +131,6 @@ public class TripController {
         session.getTransaction().commit();
 
         return ret;
-
     }
  
   /**
@@ -148,7 +148,7 @@ public class TripController {
         Boolean ret = false;
 
          //Access trip and driver object from db
-         Trip trip = (Trip) session.load(Trip.class, tripID);
+         Trip trip = getTripByID(tripID);
          
          Driver driver = (Driver) session.byNaturalId( User.class ).using( "username", username ).load();
         //create query
@@ -193,7 +193,7 @@ public class TripController {
      * @return Leg leg
      */
 
-    public Leg createLeg(String pointA, String pointB, Double price, int numSeats, Trip trip){
+    public Leg createLeg(String pointA, String pointB, int price, int numSeats, Trip trip){
         
         //Begin Session
         Session session = this.session;
@@ -359,9 +359,9 @@ public class TripController {
         // assumes valid tripId, start, end
         for (Object[] tripLeg : tripLegs) {
             if (((String)tripLeg[1]).equals(start)) {
-                effectivePrice += (Integer)tripLeg[3];
+                effectivePrice += (int)tripLeg[3];
             } else if (effectivePrice != 0) {
-                effectivePrice += (Integer)tripLeg[3];
+                effectivePrice += (int)tripLeg[3];
             } 
             if (((String)tripLeg[2]).equals(end)) {
                 break;
@@ -540,12 +540,12 @@ public class TripController {
         // Make query on legs, gets CarId
         SQLQuery queryGetDate = session.createSQLQuery(queryDate);
         queryGetDate.setParameter("tripId", tripId);
-        List<java.sql.Timestamp> dates = queryGetDate.list();
+        List<java.sql.Date> dates = queryGetDate.list();
         if (dates.size() != 1) {
             System.out.println("Oops! Something went wrong");
             return false;
         }
-        java.sql.Timestamp tripDate = dates.get(0); // holds date of the given trip
+        java.sql.Date tripDate = dates.get(0); // holds date of the given trip
 
         // Close the session
         session.getTransaction().commit();
@@ -557,5 +557,13 @@ public class TripController {
         fitsCriteria = ((tripDate.compareTo(lowDate) >= 0 && tripDate.compareTo(highDate) <= 0) || strTripDate.substring(0, 10).equals(strLowDate));
 
         return fitsCriteria;
+    }
+
+    public Trip getTripByID(int tripID) {
+        return (Trip) session.load(Trip.class, tripID);
+    }
+
+    public void changeSession(Session change) {
+        this.session = change;
     }
 }

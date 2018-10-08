@@ -1,6 +1,7 @@
-package ca.mcgill.ecse321;
+package ca.mcgill.ecse321.UserTests;
 import org.junit.Test;
 
+import ca.mcgill.ecse321.SessionFactoryRule;
 import ca.mcgill.ecse321.controller.UserController;
 import ca.mcgill.ecse321.model.*;
 
