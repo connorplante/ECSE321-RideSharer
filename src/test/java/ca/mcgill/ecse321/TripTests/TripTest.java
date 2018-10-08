@@ -394,7 +394,7 @@ public class TripTest {
         //  Act
         tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
         boolean resultT = tTripController.filterYear(1, start, end, year);
-        boolean resultF = tTripController.filterYear(1, start, end, 1999);
+        boolean resultF = tTripController.filterYear(1, start, end, 2001);
 
         //  Assert
         assertTrue(resultT);
