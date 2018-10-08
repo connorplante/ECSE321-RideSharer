@@ -359,4 +359,86 @@ public class TripTest {
         assertTrue(resultT);
         assertFalse(resultF);
     }
+
+    @Test
+    public void filterYearTest() throws InvalidInputException {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
+    
+        session.save(tDriver);
+
+        String make = "tMake";
+        String model = "tModel";
+        int year = 2000;
+        Car tCar = new Car(make, model, year, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(0);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add(end);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+
+        sf.commit();
+
+        //  Act
+        tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
+        boolean resultT = tTripController.filterYear(1, start, end, year);
+        boolean resultF = tTripController.filterYear(1, start, end, 1999);
+
+        //  Assert
+        assertTrue(resultT);
+        assertFalse(resultF);
+    }
+
+    @Test
+    public void filterDateTest() throws InvalidInputException {
+        //  Arrange
+        Session session = sf.getSession();
+        sf.beginTransaction();
+
+        String username = "tDriver";
+
+        Driver tDriver = new Driver(username, "tPassword", "tFirstName", "tLastName", "tEmail", "tPhone", true, 0, 0);
+    
+        session.save(tDriver);
+
+        String make = "tMake";
+        String model = "tModel";
+        int year = 2000;
+        Car tCar = new Car(make, model, year, 6, "tPlate", tDriver);
+
+        session.save(tCar);
+
+        String start = "tStart";
+        String end = "tEnd";
+        Date date = new Date(2018, 5, 11);
+        int time = 1;
+        List<String> stops = new ArrayList<String>();
+        stops.add(start);
+        stops.add(end);
+        List<Integer> prices = new ArrayList<Integer>();
+        prices.add(14);
+
+        sf.commit();
+
+        //  Act
+        tTripController.createTrip(start, end, date, time, username, 1, 4, stops, prices);
+        boolean resultT = tTripController.filterDate(1, start, end, date, date);
+        boolean resultF = tTripController.filterDate(1, start, end, new Date(1999-8-13), new Date(1999-8-5));
+
+        //  Assert
+        assertTrue(resultT);
+        assertFalse(resultF);
+    }
 }

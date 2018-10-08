@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.springframework.web.bind.annotation.*;
 import ca.mcgill.ecse321.model.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -539,12 +540,12 @@ public class TripController {
         // Make query on legs, gets CarId
         SQLQuery queryGetDate = session.createSQLQuery(queryDate);
         queryGetDate.setParameter("tripId", tripId);
-        List<java.sql.Timestamp> dates = queryGetDate.list();
+        List<java.sql.Date> dates = queryGetDate.list();
         if (dates.size() != 1) {
             System.out.println("Oops! Something went wrong");
             return false;
         }
-        java.sql.Timestamp tripDate = dates.get(0); // holds date of the given trip
+        java.sql.Date tripDate = dates.get(0); // holds date of the given trip
 
         // Close the session
         session.getTransaction().commit();
