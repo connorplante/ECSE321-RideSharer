@@ -3,10 +3,6 @@
 "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
    <session-factory>
-
-   <property name = "hibernate.show_sql">
-        false
-    </property>
    
     <property name = "hibernate.dialect">
         org.hibernate.dialect.MySQLDialect

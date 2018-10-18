@@ -466,8 +466,6 @@ public class TripController {
         // Close the session
         session.getTransaction().commit();
 
-        System.out.println(carModel);
-
         // Check if make of car matches make given by user
         fitsCriteria = model.equalsIgnoreCase(carModel);
 
