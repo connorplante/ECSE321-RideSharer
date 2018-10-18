@@ -4,6 +4,10 @@
 <hibernate-configuration>
    <session-factory>
 
+    <property name="hibernate.generate_statistics">
+        false
+    </property>
+
    <property name = "hibernate.show_sql">
         false
     </property>
