@@ -3,13 +3,7 @@ language: java
 services:
   - mysql
 
-git:
-  quiet: true
-
 before_install:
   - cp backend/src/main/resources/travis.hibernate.cfg.xml backend/src/main/resources/hibernate.cfg.xml
   - mysql -u root -h localhost < backend/src/main/resources/dbo.sql
-
-script:
   - cd backend
-  - mvn -q test
