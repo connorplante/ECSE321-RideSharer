@@ -41,7 +41,7 @@ public class PassengerController {
         String error = "";
 
         //Begin session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
        //Load specified trip and passenger in SQL tables into new objects using tripID and username
@@ -95,6 +95,7 @@ public class PassengerController {
             }
         }
         if (error.length() > 0) {
+            session.close();
             throw new InvalidInputException(error.trim());
         }
         //Set the price of the of the PassengerTrip to calculated total
@@ -103,9 +104,10 @@ public class PassengerController {
         //Save and close session
         session.save(passengerTrip);
         session.getTransaction().commit();
+        session.close();
 
         //Open new session
-        session = this.session;
+        session = HibernateUtil.getSession();
 
         //Generate query to update number of seats available on each leg of trip
         for (Leg pl : passengerLegs) {
@@ -127,7 +129,7 @@ public class PassengerController {
         query2.setParameter("id", passenger.getUserID());
         query2.executeUpdate();
         session.getTransaction().commit();
-
+        session.close();
         return passengerTrip.toString();
     }
 }
