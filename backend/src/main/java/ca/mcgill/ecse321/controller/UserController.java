@@ -36,7 +36,7 @@ public class UserController {
     @RequestParam(value="phoneNumber") String phoneNumber) throws Exception {
 
         Passenger passenger =  new Passenger(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -47,9 +47,11 @@ public class UserController {
                 tx.rollback();
             }
             System.out.println("This username is taken! Please choose another username");
+            session.close();
             return null;
         }
 
+        session.close();
         return passenger;
     }
 
@@ -70,12 +72,11 @@ public class UserController {
     @RequestParam(value="phoneNumber") String phoneNumber) {
 
        Driver driver =  new Driver(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
-       Session session = this.session;
+       Session session = HibernateUtil.getSession();
        session.beginTransaction();
        session.saveOrUpdate(driver);
        session.getTransaction().commit();
-       
-
+       session.close();
        return driver;
     }
 
@@ -96,11 +97,11 @@ public class UserController {
     @RequestParam(value="phoneNumber") String phoneNumber) {
 
         Admin admin =  new Admin(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         session.saveOrUpdate(admin);
         session.getTransaction().commit();
-        
+        session.close();
 
         return admin;
     }
@@ -119,7 +120,7 @@ public class UserController {
     public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
     @RequestParam(value="newPassword") String newPassword) {
 
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         Boolean ret;
         session.beginTransaction();
 
@@ -144,7 +145,7 @@ public class UserController {
 
         //Save and close session
         session.getTransaction().commit();
-        
+        session.close();
 
         return ret;
     }
@@ -165,6 +166,8 @@ public class UserController {
     @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
     @RequestParam(value="phoneNumber") String phoneNumber){
         
+        Session session = HibernateUtil.getSession();
+
         //Begin transaction
         session.beginTransaction();
 
@@ -180,6 +183,7 @@ public class UserController {
             user.setPhone(phoneNumber);
         }catch(Exception e){
             session.getTransaction().rollback();
+            session.close();
             return "User does not exist!";
         }
 
@@ -189,9 +193,11 @@ public class UserController {
             session.getTransaction().commit();
         }catch(Exception e){
             session.getTransaction().rollback();
+            session.close();
             return "Cannot make changes to user!";
         }
 
+        session.close();
         return user.toString();
     } 
 
@@ -206,7 +212,7 @@ public class UserController {
     public String removeUser (@RequestParam(value="username") String username) {
         
         //Begin session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         User user;
@@ -216,6 +222,7 @@ public class UserController {
             user = getUserByUsername(username);
         }catch(Exception e){
             session.getTransaction().rollback();
+            session.close();
             return "User does not exist!";
         }
         //Change user status to remove their profile
@@ -227,8 +234,10 @@ public class UserController {
             session.getTransaction().commit();
         } catch(Exception e) {
             session.getTransaction().rollback();
+            session.close();
             return "Cannot make changes to user!";
         }
+        session.close();
         return user.toString();
     } 
 
@@ -244,7 +253,7 @@ public class UserController {
     @RequestMapping("/updateRating")
     public Boolean updateRating (@RequestParam(value="username") String username, @RequestParam(value="rating") int rating) { //username or passenger object
 
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         Boolean ret;
         session.beginTransaction();
         User user;
@@ -254,6 +263,7 @@ public class UserController {
             user = getUserByUsername(username);
         } catch(Exception e) {
             session.getTransaction().rollback();
+            session.close();
             return false;
         }
 
@@ -282,6 +292,7 @@ public class UserController {
                     session.saveOrUpdate(user);
                 } catch(Exception e) {
                     session.getTransaction().rollback();
+                    session.close();
                     return false;
                 }
                 ret = true;
@@ -296,8 +307,10 @@ public class UserController {
             session.getTransaction().commit();
         } catch(Exception e) {
             session.getTransaction().rollback();
+            session.close();
             return false;
         }
+        session.close();
         return ret;
     }
 

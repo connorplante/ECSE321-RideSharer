@@ -44,7 +44,7 @@ public class TripController {
     public String createTrip(@RequestParam(value="start")String start, @RequestParam(value="end")String end, 
     @RequestParam(value="date")Date date, @RequestParam(value="time")int time,
     @RequestParam(value="username") String username, @RequestParam(value="carID")int carID, int numSeats, @RequestParam List<String> stops, @RequestParam List<Integer> prices) throws InvalidInputException{
-
+        
         String error = "";
         
         //Check if input values of start and end are equal to eachother 
@@ -57,7 +57,7 @@ public class TripController {
 		}
 
         //Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
        
         //Access Driver object from database 
@@ -71,6 +71,7 @@ public class TripController {
             
         session.save(trip);
         session.getTransaction().commit();
+        session.close();
             
         //Initialize a counter to be used in a for loop
         int counter = 0;
@@ -104,7 +105,7 @@ public class TripController {
     public Boolean cancelTrip(@RequestParam(value="tripID")int tripID){
         
         //Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         Boolean ret = false;
     
@@ -129,6 +130,7 @@ public class TripController {
         }
         //close session
         session.getTransaction().commit();
+        session.close();
 
         return ret;
     }
@@ -143,7 +145,7 @@ public class TripController {
     public Boolean completeTrip(@RequestParam(value="tripID")int tripID, @RequestParam(value="username") String username){
     
         //Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
         Boolean ret = false;
 
@@ -168,9 +170,10 @@ public class TripController {
         }
         //close session
         session.getTransaction().commit();
+        session.close();
 
         //Update the number of rides for a Driver upon booking the trip 
-        session = this.session;
+        session = HibernateUtil.getSession();
         session.beginTransaction();
         String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
         SQLQuery query2 = session.createSQLQuery(string1);
@@ -178,6 +181,7 @@ public class TripController {
         query2.setParameter("id", driver.getUserID());
         query2.executeUpdate();
         session.getTransaction().commit();
+        session.close();
 	    
         return ret;
 
@@ -196,7 +200,7 @@ public class TripController {
     public Leg createLeg(String pointA, String pointB, int price, int numSeats, Trip trip){
         
         //Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         //Create new Leg object 
@@ -205,7 +209,7 @@ public class TripController {
         //Save to database and close session
         session.save(leg);
         session.getTransaction().commit();
-        
+        session.close();
         //Return Leg 
         return leg;
     }
@@ -235,7 +239,7 @@ public class TripController {
         String queryFK_TripID = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :fk_tripid";
 
         // Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make first query
@@ -261,6 +265,7 @@ public class TripController {
 
         // Close session
         session.getTransaction().commit();
+        session.close();
 
         List<Integer> foundFailCriteria = new ArrayList<Integer>();
 
@@ -339,7 +344,7 @@ public class TripController {
         String queryLegs = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :tripId";
 
         // Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make query on legs
@@ -354,6 +359,7 @@ public class TripController {
 
         // Close the session
         session.getTransaction().commit();
+        session.close();
 
         // iterate through tripLegs to add prices
         // assumes valid tripId, start, end
@@ -390,7 +396,7 @@ public class TripController {
         String queryMake = "SELECT Make FROM Cars WHERE CarID = :carId";
 
         // Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make query on legs, gets CarId
@@ -415,6 +421,7 @@ public class TripController {
 
         // Close the session
         session.getTransaction().commit();
+        session.close();
 
         // Check if make of car matches make given by user
         fitsCriteria = make.equalsIgnoreCase(carMake);
@@ -440,7 +447,7 @@ public class TripController {
         String queryModel = "SELECT Model FROM Cars WHERE CarID = :carId";
 
         // Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make query on legs, gets CarId
@@ -449,6 +456,7 @@ public class TripController {
         List<Integer> cars = queryGetCarId.list();
         if (cars.size() != 1) {
             System.out.println("Oops! Something went wrong");
+            session.close();
             return false;
         }
         int carId = cars.get(0); // holds carId of thr given trip
@@ -459,12 +467,14 @@ public class TripController {
         List<String> models = queryGetModel.list();
         if (models.size() != 1) {
             System.out.println("Oops! Something went wrong");
+            session.close();
             return false;
         }
         String carModel = models.get(0);
 
         // Close the session
         session.getTransaction().commit();
+        session.close();
 
         // Check if make of car matches make given by user
         fitsCriteria = model.equalsIgnoreCase(carModel);
@@ -490,7 +500,7 @@ public class TripController {
         String queryYear = "SELECT Year FROM Cars WHERE CarID = :carId";
 
         // Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make query on legs, gets CarId
@@ -499,6 +509,7 @@ public class TripController {
         List<Integer> cars = queryGetCarId.list();
         if (cars.size() != 1) {
             System.out.println("Oops! Something went wrong");
+            session.close();
             return false;
         }
         int carId = cars.get(0); // holds carId of thr given trip
@@ -509,12 +520,14 @@ public class TripController {
         List<Integer> years = queryGetYear.list();
         if (years.size() != 1) {
             System.out.println("Oops! Something went wrong");
+            session.close();
             return false;
         }
         int carYear = years.get(0);
 
         // Close the session
         session.getTransaction().commit();
+        session.close();
 
         // Check if make of car matches make given by user
         fitsCriteria = (year <= carYear);
@@ -532,7 +545,7 @@ public class TripController {
         String queryDate = "SELECT Date FROM Trips WHERE TripID = :tripId";
 
         // Begin Session
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Make query on legs, gets CarId
@@ -541,12 +554,14 @@ public class TripController {
         List<java.sql.Date> dates = queryGetDate.list();
         if (dates.size() != 1) {
             System.out.println("Oops! Something went wrong");
+            session.close();
             return false;
         }
         java.sql.Date tripDate = dates.get(0); // holds date of the given trip
 
         // Close the session
         session.getTransaction().commit();
+        session.close();
 
         String strTripDate = tripDate.toString();
         String strLowDate = lowDate.toString();

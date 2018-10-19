@@ -34,7 +34,7 @@ public class CarController {
     String licencePlate, @RequestParam(value="username") String driverUsername){
        
         // Get session and begin transaction
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // If the driver exists in the database, get the driver
@@ -42,6 +42,7 @@ public class CarController {
         try{
             driver = (Driver) session.byNaturalId(User.class).using("username", driverUsername).load();
         }catch(Exception i){
+            session.close();
             return "Driver does not exist!";
         }
 
@@ -61,9 +62,11 @@ public class CarController {
             session.save(car);
             session.getTransaction().commit();
         }catch(Exception e){
+            session.close();
             return "Could not create car!";
         }
         
+        session.close();
         return car.toString();
     }
 
@@ -86,7 +89,7 @@ public class CarController {
     String licencePlate){
 
         // Get the session and start the transaction
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Try to get the car from the database, catch the error if it does not exist
@@ -94,6 +97,7 @@ public class CarController {
         try{
             car = (Car) session.load(Car.class, carID);
         }catch(Exception e){
+            session.close();
             return "Car does not exist!";
         }
 
@@ -112,9 +116,11 @@ public class CarController {
         try{
             session.getTransaction().commit();
         }catch(Exception e){
+            session.close();
             return "Cannot make these changes!";
         }
-
+        
+        session.close();
         return car.toString();
     }
 
@@ -129,7 +135,7 @@ public class CarController {
     public String removeCar(@RequestParam(value="carID") int carID){
         
         // Get the session and begin the transaction
-        Session session = this.session;
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         // Try to load the car from the database, catch the error if it does not exist
@@ -137,6 +143,7 @@ public class CarController {
         try{
             car = (Car) session.load(Car.class, carID);
         }catch(Exception e){
+            session.close();
             return "Car does not exist!";
         }
 
@@ -145,6 +152,7 @@ public class CarController {
 
         // Commit changes to database
         session.getTransaction().commit();
+        session.close();
 
         return car.toString();
     }
