@@ -478,8 +478,10 @@ public class Trip
     "End" + ": " + getEnd() + ", " + 
     "Date" + ": " + getDate() + ", " + 
     "Time" + ": " + getTime() + ", " +
-    "Status" + ": " + getTripStatus() + ", " +
-    "Driver ID: "+ getDriver().getUserID() + ", " +
-    "Car ID: " + getCar().getCarID() + " ]";
+    "Status" + ": " + getTripStatus()
+    //"Driver ID: "+ getDriver().getUserID() + ", " +
+    //"Car ID: " + getCar().getCarID() 
+    + " ]"
+    ;
   }
 }

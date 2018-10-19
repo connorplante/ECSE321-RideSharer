@@ -85,6 +85,8 @@ public class TripController {
         }catch(Exception e){
             error += "trip";
         }
+
+        String finalTrip = trip.toString();
             
         session.saveOrUpdate(trip);
         session.getTransaction().commit();
@@ -111,8 +113,7 @@ public class TripController {
                 counter++; 
                 }
             }  
-        
-        String finalTrip = trip.toString();
+    
         //Return the created trip
         return finalTrip;
     }
