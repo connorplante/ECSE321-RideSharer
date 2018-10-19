@@ -69,7 +69,7 @@ public class TripController {
         //Create a Trip Object 
         Trip trip = new Trip(start, end, date, time, Status.Scheduled, driver, car);
             
-        session.save(trip);
+        session.saveOrUpdate(trip);
         session.getTransaction().commit();
         session.close();
             
