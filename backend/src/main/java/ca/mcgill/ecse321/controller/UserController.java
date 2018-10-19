@@ -187,16 +187,8 @@ public class UserController {
             return "User does not exist!";
         }
 
-        //Save and close session
-        try{
-            session.saveOrUpdate(user);
-            session.getTransaction().commit();
-        }catch(Exception e){
-            session.getTransaction().rollback();
-            session.close();
-            return "Cannot make changes to user!";
-        }
-
+        session.saveOrUpdate(user);
+        session.getTransaction().commit();
         session.close();
         return user.toString();
     } 
@@ -228,15 +220,7 @@ public class UserController {
         //Change user status to remove their profile
         user.setStatus(false);
 
-        //Commit and close session
-        
-        try {
-            session.getTransaction().commit();
-        } catch(Exception e) {
-            session.getTransaction().rollback();
-            session.close();
-            return "Cannot make changes to user!";
-        }
+        session.getTransaction().commit();
         session.close();
         return user.toString();
     } 
