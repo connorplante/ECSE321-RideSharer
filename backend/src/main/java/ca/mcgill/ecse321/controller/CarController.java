@@ -114,7 +114,7 @@ public class CarController {
 
         // Try to save the new information to the database, catch the error if not
         try{
-            saveOrUpdate(car);
+            session.saveOrUpdate(car);
             session.getTransaction().commit();
         }catch(Exception e){
             session.close();
@@ -152,7 +152,7 @@ public class CarController {
         car.setStatus(false);
 
         // Commit changes to database
-        saveOrUpdate(car);
+        session.saveOrUpdate(car);
         session.getTransaction().commit();
         session.close();
 
