@@ -60,18 +60,39 @@ public class TripController {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
        
-        //Access Driver object from database 
-        Driver driver = (Driver) session.byNaturalId( User.class ).using( "username", username ).load();
+        Driver driver = null;
         
+        //Access Driver object from database 
+        try{
+        driver = (Driver) session.byNaturalId( User.class ).using( "username", username ).load();
+        }catch(Exception e){
+            error += "driver";
+        }
+        
+        Car car = null;
+
         //Access Car object from database 
-        Car car = (Car) session.load(Car.class, carID);
+        try{
+        car = (Car) session.load(Car.class, carID);
+        }catch(Exception e){
+            error += "car";
+        }
            
+        Trip trip = null;
         //Create a Trip Object 
-        Trip trip = new Trip(start, end, date, time, Status.Scheduled, driver, car);
+        try{
+        trip = new Trip(start, end, date, time, Status.Scheduled, driver, car);
+        }catch(Exception e){
+            error += "trip";
+        }
             
         session.saveOrUpdate(trip);
         session.getTransaction().commit();
         session.close();
+
+        if(error.length() > 0){
+            return error;
+        }
             
         //Initialize a counter to be used in a for loop
         int counter = 0;
