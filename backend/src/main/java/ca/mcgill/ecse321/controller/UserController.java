@@ -219,7 +219,7 @@ public class UserController {
         }
         //Change user status to remove their profile
         user.setStatus(false);
-
+        session.saveOrUpdate(User);
         session.getTransaction().commit();
         session.close();
         return user.toString();
