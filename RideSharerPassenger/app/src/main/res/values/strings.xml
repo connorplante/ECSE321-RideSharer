@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">RideSharerPassenger</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+    <string name="title_activity_manage_profile">ManageProfile</string>
+    <string name="title_activity_trip_listings">TripListings</string>
+    <string name="title_activity_previous_trips">PreviousTrips</string>
+    <string name="title_activity_remove_user">RemoveUser</string>
+    <string name="title_activity_chnage_password">ChnagePassword</string>
+    <string name="title_activity_update_info">UpdateInfo</string>
+    <string name="title_activity_list_previous_rides">ListPreviousRides</string>
+    <string name="title_activity_rate_driver">RateDriver</string>
+</resources>
