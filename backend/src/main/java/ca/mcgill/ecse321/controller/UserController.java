@@ -13,6 +13,11 @@ import ca.mcgill.ecse321.model.Driver;
 import ca.mcgill.ecse321.model.Passenger;
 import ca.mcgill.ecse321.model.User;
 
+import javax.mail.*;
+import javax.mail.internet.*;
+
+import java.util.Properties;
+
 @RestController
 @RequestMapping("/User")
 public class UserController {
@@ -52,6 +57,39 @@ public class UserController {
         }
 
         session.close();
+        String host = "smtp.gmail.com";  
+       String wmail = "t00.ridesharer@gmail.com";//change accordingly  
+       String pw = "qydaqzkmmqnxgqjh";//change accordingly
+       String to = email;//change accordingly 
+       Properties props = new Properties();
+       props.setProperty("mail.transport.protocol", "smtp");
+       props.setProperty("mail.host", "smtp.gmail.com");
+       props.put("mail.smtp.auth", "true");
+       props.put("mail.smtp.port", "465");
+       props.put("mail.debug", "true");
+       props.put("mail.smtp.socketFactory.port", "465");
+       props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+       props.put("mail.smtp.socketFactory.fallback", "false"); 
+       
+       javax.mail.Session session2 = javax.mail.Session.getDefaultInstance(props, new javax.mail.Authenticator() {  
+      
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(wmail,pw);
+             }
+        });
+        
+        //Compose the message
+        try {
+            MimeMessage message = new MimeMessage(session2);
+            message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.setSubject("Welcome!");
+            message.setText("Hi! \n\nThank you for creating a Passenger profile! \n\nYour account has been successfully activated!\n\n" +
+            "The t00 Team");
+            
+            //send the message
+            Transport.send(message);
+        } catch (MessagingException e) {e.printStackTrace();}  
         return passenger;
     }
 
@@ -77,6 +115,41 @@ public class UserController {
        session.saveOrUpdate(driver);
        session.getTransaction().commit();
        session.close();
+
+       String host = "smtp.gmail.com";  
+       String wmail = "t00.ridesharer@gmail.com";//change accordingly  
+       String pw = "qydaqzkmmqnxgqjh";//change accordingly
+       String to = email;//change accordingly 
+       Properties props = new Properties();
+       props.setProperty("mail.transport.protocol", "smtp");
+       props.setProperty("mail.host", "smtp.gmail.com");
+       props.put("mail.smtp.auth", "true");
+       props.put("mail.smtp.port", "465");
+       props.put("mail.debug", "true");
+       props.put("mail.smtp.socketFactory.port", "465");
+       props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+       props.put("mail.smtp.socketFactory.fallback", "false"); 
+       
+       javax.mail.Session session2 = javax.mail.Session.getDefaultInstance(props, new javax.mail.Authenticator() {  
+      
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(wmail,pw);
+             }
+        });
+        
+        //Compose the message
+        try {
+            MimeMessage message = new MimeMessage(session2);
+            message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.setSubject("Welcome!");
+            message.setText("Hi! \n\nThank you for creating a Driver profile! \n\nYour account has been successfully activated!\n\n" +
+            "The t00 Team");
+            
+            //send the message
+            Transport.send(message);
+        } catch (MessagingException e) {e.printStackTrace();}  
+
        return driver;
     }
 
