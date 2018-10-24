@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">RideSharerDriver</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sign_up">SignUp</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+    <string name="title_activity_manage_trips">ManageTrips</string>
+    <string name="title_activity_update_trip">UpdateTrip</string>
+    <string name="title_activity_create_trip">CreateTrip</string>
+    <string name="title_activity_cancel_trip">CancelTrip</string>
+    <string name="title_activity_confirm_booking">ConfirmBooking</string>
+    <string name="title_activity_complete_trip">CompleteTrip</string>
+    <string name="title_activity_manage_car">ManageCar</string>
+    <string name="title_activity_create_car">CreateCar</string>
+    <string name="title_activity_update_car">UpdateCar</string>
+    <string name="title_activity_remove_car">RemoveCar</string>
+    <string name="title_activity_manage_profile">ManageProfile</string>
+    <string name="title_activity_change_password">ChangePassword</string>
+    <string name="title_activity_update_info">UpdateInfo</string>
+    <string name="title_activity_remove_user">RemoveUser</string>
+</resources>
