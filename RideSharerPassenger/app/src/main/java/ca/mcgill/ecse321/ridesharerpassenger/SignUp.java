@@ -16,7 +16,7 @@ import cz.msebera.android.httpclient.*;
 
 public class SignUp extends AppCompatActivity {
 
-    String error = "i";
+    String error = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class SignUp extends AppCompatActivity {
         TextView tvError = (TextView) findViewById(R.id.error);
         tvError.setText(error);
 
-        if (error == null || error.length() == 1) {
+        if (error == null) {
             tvError.setVisibility(View.GONE);
         } else {
             tvError.setVisibility(View.VISIBLE);
