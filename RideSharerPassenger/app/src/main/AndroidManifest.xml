@@ -101,6 +101,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.mcgill.ecse321.ridesharerpassenger.PreviousTrips" />
         </activity>
+        <activity
+            android:name=".ShowTripListings"
+            android:label="@string/title_activity_show_trip_listings"
+            android:parentActivityName=".TripListings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerpassenger.TripListings" />
+        </activity>
     </application>
 
 </manifest>
