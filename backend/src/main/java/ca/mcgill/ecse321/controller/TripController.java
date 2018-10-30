@@ -123,6 +123,214 @@ public class TripController {
      * @param tripID
      * @return Trip trip
      */
+	
+	    @RequestMapping("/updateTime")
+    public String updateTrip(@RequestParam(value="time")int time, @RequestParam(value="tripID")int tripID) throws InvalidInputException {
+       
+        Session session = this.session;
+        session.beginTransaction();
+    
+        //Access trip object from db
+        Trip trip = (Trip) session.load(Trip.class, tripID);
+
+        String string ="UPDATE Trips SET Time= :time WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        //Set status of trip to "1" represeting 'Cancelled'
+        query1.setParameter("time", (time));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        session.getTransaction().commit();
+       
+        return trip.toString();
+    }
+    
+    @RequestMapping("/updateDate")
+    public String updateDate(@RequestParam(value="date")Date date, @RequestParam(value="tripID")int tripID) throws InvalidInputException {
+       
+        Session session = this.session;
+        session.beginTransaction();
+    
+        //Access trip object from db
+        Trip trip = (Trip) session.load(Trip.class, tripID);
+
+        String string ="UPDATE Trips SET Date= :date WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        //Set status of trip to "1" represeting 'Cancelled'
+        query1.setParameter("date", (date));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        session.getTransaction().commit();
+       
+        return trip.toString();
+    
+    }
+
+    @RequestMapping("/updateStart")
+    public String updateStart(@RequestParam(value="oldStart")String oldStart, @RequestParam(value="newStart")String newStart,@RequestParam(value="tripID")int tripID) throws InvalidInputException {
+       
+        Session session = this.session;
+        session.beginTransaction();
+    
+        //Access trip object from db
+        Trip trip = (Trip) session.load(Trip.class, tripID);
+
+        String string ="UPDATE Trips SET Start= :newStart WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        //Set status of trip to "1" represeting 'Cancelled'
+        query1.setParameter("newStart", (newStart));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        session.getTransaction().commit();
+        
+        session.beginTransaction();
+
+        String string2 ="UPDATE Legs SET Start = :newStart WHERE FK_TripID = :id AND Start = :oldStart";
+        SQLQuery query2 = session.createSQLQuery(string2);
+        query2.setParameter("newStart", (newStart));
+        query2.setParameter("oldStart", (oldStart));
+        query2.setParameter("id", tripID);
+        query2.executeUpdate();
+        session.getTransaction().commit();
+        
+        return trip.toString();
+    
+    }
+
+    @RequestMapping("/updateEnd")
+    public String updateEnd(@RequestParam(value="oldEnd")String oldEnd, @RequestParam(value="newEnd")String newEnd,@RequestParam(value="tripID")int tripID) throws InvalidInputException {
+       
+        Session session = this.session;
+        session.beginTransaction();
+    
+        //Access trip object from db
+        Trip trip = (Trip) session.load(Trip.class, tripID);
+
+        String string ="UPDATE Trips SET End= :newEnd WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        //Set status of trip to "1" represeting 'Cancelled'
+        query1.setParameter("newEnd", (newEnd));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        session.getTransaction().commit();
+        
+        session.beginTransaction();
+
+        String string2 ="UPDATE Legs SET End = :newEnd WHERE FK_TripID = :id AND End = :oldEnd";
+        SQLQuery query2 = session.createSQLQuery(string2);
+        query2.setParameter("newEnd", (newEnd));
+        query2.setParameter("oldEnd", (oldEnd));
+        query2.setParameter("id", tripID);
+        query2.executeUpdate();
+        session.getTransaction().commit();
+        
+        return trip.toString();
+    
+    }
+
+@RequestMapping("/updateRoute")
+    public String updateRoute(@RequestParam(value = "tripID") int tripID, @RequestParam List<String> stops, @RequestParam List<Integer> prices) throws InvalidInputException{
+
+        Session session = this.session;
+        
+    
+        //Access trip object from db
+        Trip trip = (Trip) session.load(Trip.class, tripID);
+
+
+        String sql = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :id";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.setParameter("id", tripID);
+        
+        //Populate a list with results from the query
+        List<Object[]> queryLegs = query.list();
+        
+        //Initialize a Leg list 
+        ArrayList<Leg> oldTripLegs = new ArrayList<Leg>();
+        ArrayList<Leg> newTripLegs = new ArrayList<Leg>();
+
+        int counter = 0;
+
+        //Defined sizePriceList as the size of the list of prices taken in as an argument 
+        int sizePriceList = prices.size();
+
+        for (Object[] leg : queryLegs) {
+            Leg leg1 = new Leg((Integer)leg[0],(String)leg[1],(String)leg[2], (Integer)leg[3], (Integer)leg[4], trip);
+            oldTripLegs.add(leg1);
+        }
+
+        //List trough all stops inputted by user and create a leg corresponding to the start, end, price, numSeats, and trip
+            for (String stop: stops){
+                if ( counter < sizePriceList){
+                int price = prices.get(counter);
+                String pointA = stops.get(counter);
+                String pointB = stops.get(counter+1);
+                Leg leg = new Leg(pointA, pointB, price, 4, trip);
+                newTripLegs.add(leg);
+                counter++; 
+                }
+            }
+            
+            //check if first leg changed and then add
+        if(!newTripLegs.get(0).getStart().equals(oldTripLegs.get(0).getStart())){
+        session.beginTransaction();
+        
+        String string ="UPDATE Trips SET Start= :newStart WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        query1.setParameter("newStart", (newTripLegs.get(0).getStart()));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        session.getTransaction().commit();
+
+        createLeg(newTripLegs.get(0).getStart(), oldTripLegs.get(0).getStart(), prices.get(0), 4, trip);
+       
+        }
+
+        //check if last leg changed and then add
+        if(!newTripLegs.get(newTripLegs.size() - 1).getEnd().equals(oldTripLegs.get(oldTripLegs.size() - 1).getEnd())){
+        
+        session.beginTransaction();
+        String string ="UPDATE Trips SET End= :newEnd WHERE TripID = :id";
+        SQLQuery query1 = session.createSQLQuery(string);
+        
+        query1.setParameter("newEnd", (newTripLegs.get(newTripLegs.size()-1).getEnd()));
+        query1.setParameter("id", tripID);
+        query1.executeUpdate();
+        session.getTransaction().commit();
+
+        createLeg(oldTripLegs.get(oldTripLegs.size() - 1).getEnd(), newTripLegs.get(newTripLegs.size()-1).getEnd(), prices.get(prices.size()-1), 4, trip);
+
+        }
+        //route is not the first or last leg 
+       
+        for(int i = 0; i < newTripLegs.size(); i++){
+            if(!oldTripLegs.get(i).getEnd().equals(newTripLegs.get(i).getEnd())){
+                session.beginTransaction();
+                String string ="UPDATE Legs SET End= :newEnd, Price = :price WHERE FK_TripID = :id AND Start= :newStart";
+                SQLQuery query1 = session.createSQLQuery(string);
+                
+                query1.setParameter("newEnd", newTripLegs.get(i).getEnd());
+                query1.setParameter("price", prices.get(i));
+                query1.setParameter("newStart", oldTripLegs.get(i).getStart());
+                query1.setParameter("id", tripID);
+                query1.executeUpdate();
+                session.getTransaction().commit();
+
+                createLeg(newTripLegs.get(i).getEnd(), oldTripLegs.get(i).getEnd(),prices.get(i + 1),4,trip);
+                break;
+            }
+            
+        }
+
+    return trip.toString();
+
+    }
+	
+	
     @RequestMapping("/cancelTrip")
     public Boolean cancelTrip(@RequestParam(value="tripID")int tripID){
         
