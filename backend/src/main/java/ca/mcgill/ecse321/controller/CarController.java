@@ -191,7 +191,7 @@ public class CarController {
 
         int id = driver.getUserID();
 
-        String string ="SELECT * FROM Cars WHERE FK_UserID= :id";
+        String string ="SELECT * FROM Cars WHERE FK_UserID= :id AND status=1";
 
         SQLQuery queryFindCars = session.createSQLQuery(string);
         queryFindCars.setParameter("id", id);

@@ -70,5 +70,14 @@ CREATE TABLE `Trips` (
   UNIQUE KEY `TripID_UNIQUE` (`TripID`)
 );
 
+CREATE TABLE `Requests` (
+  `RequestID` int(11) NOT NULL AUTO_INCREMENT, 
+  `Status` tinyint(4) NOT NULL DEFAULT 1, 
+  `FK_PassengerID` int(11) DEFAULT NULL, 
+  `FK_DriverId` int(11) DEFAULT NULL, 
+  `FK_TripID` int(11) DEFAULT NULL, 
+  UNIQUE KEY `RequestID_UNIQUE` (`RequestID`)
+);
+
 
 
