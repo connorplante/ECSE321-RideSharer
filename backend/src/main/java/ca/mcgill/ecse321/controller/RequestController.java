@@ -199,7 +199,7 @@ public class RequestController {
              message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
              message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));message.setSubject("Trip Request Update");
              message.setText("Hi! \n\nYour request for a trip has been denied by the driver.\n\nYou can browse more trips " + 
-             "under the book trips tab on the app.\n\n" +
+             "under the book trips tab in the app.\n\n" +
              "The t00 Team");
              //send the message
              Transport.send(message);
