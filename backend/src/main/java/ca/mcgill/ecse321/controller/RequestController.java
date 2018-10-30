@@ -71,9 +71,9 @@ public class RequestController {
             MimeMessage message = new MimeMessage(session2);
             message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
-            message.setSubject("Trip Requested!");
-            message.setText("Hi! \n\nA passenger has requested to be on your trip! \n\nGo to the confirm book tab " + 
-            "under manage trips to check the request!\n\n" +
+            message.setSubject("Trip Request!");
+            message.setText("Hi! \n\nA passenger has requested to be on your trip!\n\nGo to the the confirm book tab under " + 
+            "manage trips to view this request.\n\n" +
             "The t00 Team");
             
             //send the message
@@ -106,13 +106,14 @@ public class RequestController {
         return requests;
     }
 
-    @RequestMapping("/setStatus")
+    @RequestMapping("/acceptRequest")
     public Request setStatus(@RequestParam(value="requestID") int requestID){
        
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         Request request = (Request) session.load(Request.class, requestID);
+        String email = request.getPassenger().getEmail();
 
         request.setStatus(false);
 
@@ -120,7 +121,92 @@ public class RequestController {
         session.getTransaction().commit();
         session.close();
 
+        String host = "smtp.gmail.com";  
+        String wmail = "t00.ridesharer@gmail.com";//change accordingly  
+        String pw = "qydaqzkmmqnxgqjh";//change accordingly
+        String to = email;//change accordingly 
+        Properties props = new Properties();
+        props.setProperty("mail.transport.protocol", "smtp");
+        props.setProperty("mail.host", "smtp.gmail.com");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false"); 
+        
+        javax.mail.Session session2 = javax.mail.Session.getDefaultInstance(props, new javax.mail.Authenticator() {  
+       
+             protected PasswordAuthentication getPasswordAuthentication() {
+                 return new PasswordAuthentication(wmail,pw);
+              }
+         });
+         
+         //Compose the message
+         try {
+             MimeMessage message = new MimeMessage(session2);
+             message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
+             message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+             message.setSubject("Request Accepted!");
+             message.setText("Hi! \n\nYour request for a trip has been accepted!\n\nBon voyage!\n\nThe t00 Team");
+             
+             //send the message
+             Transport.send(message);
+         } catch (MessagingException e) {e.printStackTrace();} 
+
         return request;
+    }
+
+    @RequestMapping("/rejectRequest")
+    public Request rejectRequest(@RequestParam(value="requestID") int requestID){
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        Request request = (Request) session.load(Request.class, requestID);
+        String email  = request.getPassenger().getEmail();
+
+        request.setStatus(false);
+
+        session.saveOrUpdate(request);
+        session.getTransaction().commit();
+        session.close();
+
+            String host = "smtp.gmail.com";  
+        String wmail = "t00.ridesharer@gmail.com";//change accordingly  
+        String pw = "qydaqzkmmqnxgqjh";//change accordingly
+        String to = email;//change accordingly 
+        Properties props = new Properties();
+        props.setProperty("mail.transport.protocol", "smtp");
+        props.setProperty("mail.host", "smtp.gmail.com");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        props.put("mail.debug", "true");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.fallback", "false"); 
+        
+        javax.mail.Session session2 = javax.mail.Session.getDefaultInstance(props, new javax.mail.Authenticator() {  
+       
+             protected PasswordAuthentication getPasswordAuthentication() {
+                 return new PasswordAuthentication(wmail,pw);
+              }
+         });
+         
+         //Compose the message
+         try {
+             MimeMessage message = new MimeMessage(session2);
+             message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
+             message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));message.setSubject("Trip Request Update");
+             message.setText("Hi! \n\nYour request for a trip has been denied by the driver.\n\nYou can browse more trips " + 
+             "under the book trips tab on the app.\n\n" +
+             "The t00 Team");
+             //send the message
+             Transport.send(message);
+         } catch (MessagingException e) {e.printStackTrace();} 
+
+        return request;
+
     }
 
 }
