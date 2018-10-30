@@ -225,6 +225,47 @@ public class UserController {
     }
 
     /**
+     * Resets a users password
+     * returns true if reset was successful
+     * returns false if reset failed
+     * Works for User, Driver, Passenger, Admin
+     * @param username
+     * @param currentPassword
+     * @param newPassword
+     * @return Boolean 
+     */
+    @RequestMapping("/logIn")
+    public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+
+        Session session = HibernateUtil.getSession();
+        Boolean ret;
+        session.beginTransaction();
+
+        User user; 
+
+        //Find user by username in database
+        try{
+            user = getUserByUsername(username);
+        }catch(Exception e){
+            session.close();
+            return false;
+        }
+
+        //Update password to the new one if entered current password is correct
+        if (user.getPassword().equals(password)) {
+            ret = true;
+        } else {
+            ret = false;
+        }
+
+        //Save and close session
+        session.getTransaction().commit();
+        session.close();
+
+        return ret;
+    }
+
+    /**
      * Updates a user's information (not including password or username)
      * Returns the user's String representation with their new information
      * 
