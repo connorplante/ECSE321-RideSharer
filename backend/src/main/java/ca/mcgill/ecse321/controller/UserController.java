@@ -43,6 +43,7 @@ public class UserController {
         Passenger passenger =  new Passenger(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
+        
         try {
             tx = session.beginTransaction();
             session.saveOrUpdate(passenger);
@@ -51,7 +52,6 @@ public class UserController {
             if (tx != null) {
                 tx.rollback();
             }
-            System.out.println("This username is taken! Please choose another username");
             session.close();
             return null;
         }
@@ -90,6 +90,7 @@ public class UserController {
             //send the message
             Transport.send(message);
         } catch (MessagingException e) {e.printStackTrace();}  
+
         return passenger;
     }
 

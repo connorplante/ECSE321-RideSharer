@@ -9,6 +9,9 @@ import ca.mcgill.ecse321.model.Driver;
 import ca.mcgill.ecse321.model.User;
 import org.hibernate.Hibernate;
 import org.hibernate.Transaction;
+import org.hibernate.SQLQuery;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/Car")
@@ -176,6 +179,28 @@ public class CarController {
       */
     public Car getCarByID(int id){
         return (Car) session.load(Car.class, id);
+    }
+
+    @RequestMapping("/showAllCars")
+    public List<Object[]> showAllCarsForUsername(@RequestParam(value="username") String username){
+        
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        User driver = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+
+        int id = driver.getUserID();
+
+        String string ="SELECT * FROM Cars WHERE FK_UserID= :id";
+
+        SQLQuery queryFindCars = session.createSQLQuery(string);
+        queryFindCars.setParameter("id", id);
+        List<Object[]> cars = queryFindCars.list();
+
+        session.getTransaction().commit();
+        session.close();
+
+        return cars;
     }
 
 }
