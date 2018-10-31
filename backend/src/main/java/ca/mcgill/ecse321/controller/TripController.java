@@ -117,6 +117,52 @@ public class TripController {
         //Return the created trip
         return finalTrip;
     }
+	//Method to return a list of upcoming trips associated with a driver 
+	@RequestMapping("/scheduledTripsOfDriver")
+     public List<Integer> scheduledTripsOfDriver(@RequestParam(value="username")String username){
+
+            Session session = HibernateUtil.getSession();
+            session.beginTransaction();
+
+
+            Driver driver = (Driver) session.byNaturalId( User.class ).using( "username", username ).load();
+        
+            
+            String string1 = "SELECT UserID FROM Users WHERE username= :username";
+            SQLQuery query1 = session.createSQLQuery(string1);
+
+            query1.setParameter("username", username);
+            
+
+            int userID = (Integer)query1.uniqueResult();
+
+            String string3 = "SELECT CarID FROM Cars WHERE FK_UserID= :userID LIMIT 1";
+            SQLQuery query3 = session.createSQLQuery(string3);
+
+            query3.setParameter("userID", userID);
+
+            //  int carID = (Integer)query3.uniqueResult();
+
+           // Car car = (Car) session.byNaturalId(Car.class).using ("CarID", carID).load();
+          
+            String string4 = "SELECT TripID FROM Trips where FK_UserID = :userID and Status= 0";
+            //String string2 = "SELECT TripID, Date, Time, Start, End, Status FROM Trips where FK_UserID= :userID and Status= 0";
+            SQLQuery query2 = session.createSQLQuery(string4);
+            query2.setParameter("userID", userID);
+
+            List<Integer> scheduledTripsObjects = query2.list();
+
+
+            // for (Object[] trip: scheduledTripsObjects){
+            //     System.out.println(trip);
+            // }
+
+            return scheduledTripsObjects;
+
+     }
+	
+	
+	
     /**
      * Method to cancel a Trip 
      * Use the url /Trip/cancelTrip
