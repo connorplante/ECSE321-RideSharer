@@ -17,6 +17,7 @@ import ca.mcgill.ecse321.model.Trip;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.ArrayList;
 
 import javax.mail.*;
 import javax.mail.internet.*;
@@ -29,7 +30,8 @@ public class RequestController {
 
     @RequestMapping("/createRequest")
     public Request CreateRequest(@RequestParam(value="passengerName") String passengerName, @RequestParam(value="driverName")
-    String driverName, @RequestParam(value="tripID") int tripID){
+    String driverName, @RequestParam(value="tripID") int tripID, @RequestParam(value="start") String start,
+    @RequestParam(value="end") String end){
         
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
@@ -39,7 +41,7 @@ public class RequestController {
         String email = driver.getEmail();
         Trip trip = (Trip) session.load(Trip.class, tripID);
 
-        Request request = new Request(passenger, driver, trip);
+        Request request = new Request(passenger, driver, trip, start, end);
 
         session.saveOrUpdate(request);
         session.getTransaction().commit();
@@ -85,7 +87,7 @@ public class RequestController {
     }
 
     @RequestMapping("/showRequestsToDriver")
-    public List<Object[]> showAllCarsForUsername(@RequestParam(value="username") String username){
+    public ArrayList<ArrayList<String>> showAllRequestsForUsername(@RequestParam(value="username") String username){
         
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
@@ -103,7 +105,60 @@ public class RequestController {
         session.getTransaction().commit();
         session.close();
 
-        return requests;
+        ArrayList arrayListOuter = new ArrayList<String>();
+
+        for(int i = 0; i < requests.size(); i++){
+
+            ArrayList arrayListInner = new ArrayList<String>();
+
+            arrayListInner.add(0, requests.get(i)[6].toString());
+
+            String s = requests.get(i)[4].toString();
+            Integer p = Integer.parseInt(s);
+            String passengerUsername = getUsername(p);
+
+            arrayListInner.add(1, passengerUsername);
+
+            String s2 = requests.get(i)[6].toString();
+            Integer p2 = Integer.parseInt(s2);
+            String date = getDate(p2);
+
+            arrayListInner.add(2, date);
+            
+            String startEnd = "Start: " + requests.get(i)[2].toString() + "\nEnd: " + requests.get(i)[3];
+
+            arrayListInner.add(3, startEnd);
+
+            arrayListOuter.add(i, arrayListInner);
+        }
+
+        return arrayListOuter;
+    }
+
+    private String getUsername(int i){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User passenger = (User) session.load(User.class, i);
+        String s = passenger.getUsername();
+
+        session.getTransaction().commit();
+        session.close();
+
+        return s;
+    }
+
+    private String getDate(int i){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        Trip trip = (Trip) session.load(Trip.class, i);
+        String s = trip.getDate().toString();
+
+        session.getTransaction().commit();
+        session.close();
+
+        return s;
     }
 
     @RequestMapping("/acceptRequest")
