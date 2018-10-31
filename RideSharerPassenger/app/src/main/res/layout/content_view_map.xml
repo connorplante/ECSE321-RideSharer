@@ -5,12 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ShowTripListings"
-    tools:showIn="@layout/activity_show_trip_listings">
+    tools:context=".ViewMapActivity"
+    tools:showIn="@layout/activity_view_map">
 
-    <ListView
-        android:id="@+id/listView"
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:id="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent"/>
+
 </android.support.constraint.ConstraintLayout>
