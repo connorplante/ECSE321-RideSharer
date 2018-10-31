@@ -238,7 +238,6 @@ public class UserController {
     public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
 
         Session session = HibernateUtil.getSession();
-        Boolean ret;
         session.beginTransaction();
 
         User user; 
@@ -248,21 +247,19 @@ public class UserController {
             user = getUserByUsername(username);
         }catch(Exception e){
             session.close();
-            return false;
+            return new Boolean(false);
         }
 
         //Update password to the new one if entered current password is correct
         if (user.getPassword().equals(password)) {
-            ret = true;
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(true);
         } else {
-            ret = false;
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(false);
         }
-
-        //Save and close session
-        session.getTransaction().commit();
-        session.close();
-
-        return ret;
     }
 
     /**
