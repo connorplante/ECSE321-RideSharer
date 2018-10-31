@@ -125,7 +125,7 @@ public class RequestController {
 
             arrayListInner.add(2, date);
             
-            String startEnd = "Start: " + requests.get(i)[2].toString() + "<br/>End: " + requests.get(i)[3];
+            String startEnd = "Start: " + requests.get(i)[2].toString() + "<br/>" + "End: " + requests.get(i)[3];
 
             arrayListInner.add(3, startEnd);
 
