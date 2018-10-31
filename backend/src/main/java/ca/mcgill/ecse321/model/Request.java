@@ -32,8 +32,14 @@ public class Request
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int requestID;
 
-  @Column(name = "status")
+  @Column(name = "Status")
   private boolean status;
+
+  @Column(name = "Start")
+  private String start;
+
+  @Column(name = "End")
+  private String end;
 
   //Car Associations
   @OneToOne
@@ -55,7 +61,7 @@ public class Request
   public Request(){
   }
   
-  public Request(Passenger aPassenger, Driver aDriver, Trip aTrip)
+  public Request(Passenger aPassenger, Driver aDriver, Trip aTrip, String aStart, String aEnd)
   {
     status = true;
     boolean didAddDriver = setDriver(aDriver);
@@ -73,6 +79,8 @@ public class Request
     {
       throw new RuntimeException("Unable to create car due to driver");
     }
+    start = aStart;
+    end = aEnd;
   }
 
   //------------------------
@@ -88,6 +96,22 @@ public class Request
     return wasSet;
   }
 
+  public boolean setStart(String aStart)
+  {
+    boolean wasSet = false;
+    start = aStart;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setEnd(String aEnd)
+  {
+    boolean wasSet = false;
+    end = aEnd;
+    wasSet = true;
+    return wasSet;
+  }
+
   public int getRequestID(){
       return requestID;
   }
@@ -96,6 +120,16 @@ public class Request
   public boolean getStatus()
   {
     return status;
+  }
+
+  public String getStart()
+  {
+    return start;
+  }
+
+  public String getEnd()
+  {
+    return end;
   }
 
   /* Code from template association_GetOne */
