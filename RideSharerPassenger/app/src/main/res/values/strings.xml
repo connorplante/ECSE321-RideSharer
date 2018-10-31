@@ -11,4 +11,5 @@
     <string name="title_activity_update_info">UpdateInfo</string>
     <string name="title_activity_list_previous_rides">ListPreviousRides</string>
     <string name="title_activity_rate_driver">RateDriver</string>
+    <string name="submit">Submit</string>
 </resources>
