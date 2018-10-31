@@ -129,7 +129,7 @@ public class RequestController {
 
             arrayListInner.add(3, startEnd);
 
-            arrayListInner.add(4, requests.get(i)[0]);
+            arrayListInner.add(4, requests.get(i)[0].toString());
 
             arrayListOuter.add(i, arrayListInner);
         }
