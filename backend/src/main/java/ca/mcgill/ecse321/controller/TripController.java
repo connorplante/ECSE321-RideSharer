@@ -594,6 +594,40 @@ public class TripController {
         return fitsCriteria;
     }
 
+    @RequestMapping("/showPassengersForTrip")
+    public List<Integer> showPassengersForTrip(@RequestParam(value="TripID") int TripID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        String string = "SELECT FK_UserID from PassengerTrips where FK_TripID=:TripID";
+        SQLQuery queryFindPassengers = session.createSQLQuery(string);
+        queryFindPassengers.setParameter("TripID", TripID);
+
+        List<Integer> passengers = queryFindPassengers.list(); 
+
+       session.getTransaction().commit();
+       session.close();
+    
+       return passengers;
+    }
+
+    @RequestMapping("/showDriverForTrip")
+    public List<Integer> showDriverForTrip(@RequestParam(value="TripID") int TripID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+       String string = "SELECT FK_UserID from Trips where TripID=:TripID";
+       SQLQuery queryFindDriver = session.createSQLQuery(string);
+       queryFindDriver.setParameter("TripID", TripID);
+
+       List<Integer> driver = queryFindDriver.list(); 
+
+       session.getTransaction().commit();
+       session.close();
+
+       return driver;
+    }
+
     public Trip getTripByID(int tripID) {
         return (Trip) session.load(Trip.class, tripID);
     }
