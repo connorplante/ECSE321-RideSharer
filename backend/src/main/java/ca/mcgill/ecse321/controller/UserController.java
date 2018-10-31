@@ -43,6 +43,7 @@ public class UserController {
         Passenger passenger =  new Passenger(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
+        
         try {
             tx = session.beginTransaction();
             session.saveOrUpdate(passenger);
@@ -51,7 +52,6 @@ public class UserController {
             if (tx != null) {
                 tx.rollback();
             }
-            System.out.println("This username is taken! Please choose another username");
             session.close();
             return null;
         }
@@ -90,6 +90,7 @@ public class UserController {
             //send the message
             Transport.send(message);
         } catch (MessagingException e) {e.printStackTrace();}  
+
         return passenger;
     }
 
@@ -221,6 +222,44 @@ public class UserController {
         session.close();
 
         return ret;
+    }
+
+    /**
+     * Resets a users password
+     * returns true if reset was successful
+     * returns false if reset failed
+     * Works for User, Driver, Passenger, Admin
+     * @param username
+     * @param currentPassword
+     * @param newPassword
+     * @return Boolean 
+     */
+    @RequestMapping("/logIn")
+    public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user; 
+
+        //Find user by username in database
+        try{
+            user = getUserByUsername(username);
+        }catch(Exception e){
+            session.close();
+            return new Boolean(false);
+        }
+
+        //Update password to the new one if entered current password is correct
+        if (user.getPassword().equals(password)) {
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(true);
+        } else {
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(false);
+        }
     }
 
     /**
