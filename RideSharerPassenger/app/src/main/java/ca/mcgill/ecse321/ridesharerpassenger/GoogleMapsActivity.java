@@ -80,7 +80,7 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         //mMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.5, -73.5), 4.0f));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.5, -73.5), 6.0f));
         mMap.getUiSettings().setZoomControlsEnabled(true);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
