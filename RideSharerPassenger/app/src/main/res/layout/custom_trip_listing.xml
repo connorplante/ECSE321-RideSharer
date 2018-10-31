@@ -15,6 +15,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
         android:textAlignment="center"
+        android:background="@drawable/back"
+        android:gravity="center"
         android:text="TripId" />
 
     <TextView
@@ -84,7 +86,7 @@
         android:layout_marginRight="63dp"
         android:text="Available Seats:" />
 
-    <TextView
+    <Button
         android:id="@+id/textView_book"
         android:layout_width="82dp"
         android:layout_height="wrap_content"
@@ -94,8 +96,17 @@
         android:layout_marginTop="29dp"
         android:onClick="bookTrip"
         android:text="Book"
-        android:background="@drawable/back"
         android:textAlignment="center"
-        android:textSize="30dp" />
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/SPACER"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_below="@+id/textView_price"
+        android:layout_alignEnd="@+id/textView_tripId"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="0dp"
+        android:text="" />
 
 </RelativeLayout>

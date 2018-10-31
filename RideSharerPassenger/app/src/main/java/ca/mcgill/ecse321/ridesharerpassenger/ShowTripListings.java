@@ -210,8 +210,8 @@ public class ShowTripListings extends AppCompatActivity {
     }
 
     public void bookTrip(View view) {
-        Intent intent = new Intent(this, GoogleMapsActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, GoogleMapsActivity.class);
+        //startActivity(intent);
     }
 
     private void refreshErrorMessage() {
