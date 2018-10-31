@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SelectTime"
+    tools:showIn="@layout/activity_select_time">
+
+    <Button
+        android:id="@+id/button18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="376dp"
+        android:onClick="switchViewSelectUsername"
+        android:text="Next >"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button24"
+        android:layout_width="wrap_content"
+        android:layout_height="52dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="80dp"
+        android:onClick="showTimePickerOnDialog"
+        android:text="Select Time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button25"
+        android:layout_width="118dp"
+        android:layout_height="52dp"
+        android:onClick="showDatePickerOnDialog"
+        android:text="Select Date"
+        tools:layout_editor_absoluteX="196dp"
+        tools:layout_editor_absoluteY="80dp" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="246dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginBottom="408dp"
+        android:text="Select the date and time for your trip!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

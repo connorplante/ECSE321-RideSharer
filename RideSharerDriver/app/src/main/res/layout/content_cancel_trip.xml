@@ -8,4 +8,53 @@
     tools:context=".CancelTrip"
     tools:showIn="@layout/activity_cancel_trip">
 
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginTop="48dp"
+        android:text="Here are your scheduled trips."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="341dp"
+        android:layout_marginBottom="21dp"
+        android:text="Please enter the Trip ID of the trip you would like to cancel:"
+        app:layout_constraintBottom_toTopOf="@+id/editText8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText8"
+        android:layout_width="106dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginEnd="51dp"
+        android:layout_marginBottom="29dp"
+        android:ems="10"
+        android:hint="Trip ID"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button27"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <Button
+        android:id="@+id/button27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:layout_marginBottom="29dp"
+        android:text="Cancel Trip"
+        android:onClick="cancelTrip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editText8" />
+
 </android.support.constraint.ConstraintLayout>

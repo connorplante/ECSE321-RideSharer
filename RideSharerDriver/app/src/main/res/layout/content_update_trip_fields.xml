@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".UpdateTripFields"
+    tools:showIn="@layout/activity_update_trip_fields">
+
+    <Button
+        android:id="@+id/selectTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26dp"
+        android:onClick="showTimePickerOnDialog"
+        android:text="Select Time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/changeTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="updateTime"
+        android:text="Change Time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/selectDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:onClick="showDatePickerOnDialog"
+        android:text="Select Date"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectTime" />
+
+    <Button
+        android:id="@+id/changeDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="13dp"
+        android:onClick="updateDate"
+        android:text="Change Date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeTime" />
+
+    <EditText
+        android:id="@+id/oldStart"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="121dp"
+        android:ems="10"
+        android:hint="Old Start"
+        android:inputType="textPersonName"
+        app:layout_constraintBaseline_toBaselineOf="@+id/newStart"
+        app:layout_constraintEnd_toStartOf="@+id/changeStart"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/newStart"
+        android:layout_width="112dp"
+        android:layout_height="39dp"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:hint="New Start"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/changeStart" />
+
+    <Button
+        android:id="@+id/changeStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+
+        android:text="Change Start"
+        android:onClick="updateStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/oldStart"
+        app:layout_constraintTop_toBottomOf="@+id/changeDate" />
+
+</android.support.constraint.ConstraintLayout>

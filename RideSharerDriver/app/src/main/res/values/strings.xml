@@ -1,4 +1,16 @@
 <resources>
+    <string-array name="num_seats_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
     <string name="app_name">RideSharerDriver</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_sign_up">SignUp</string>
@@ -17,4 +29,16 @@
     <string name="title_activity_change_password">ChangePassword</string>
     <string name="title_activity_update_info">UpdateInfo</string>
     <string name="title_activity_remove_user">RemoveUser</string>
+    <string name="title_activity_select_time">SelectTime</string>
+    <string name="title_activity_select_date">SelectDate</string>
+    <string name="title_activity_select_username">SelectUsername</string>
+    <string name="title_activity_select_start_end">SelectStartEnd</string>
+    <string name="title_activity_select_car_idnum_seats">SelectCarIDNumSeats</string>
+    <string name="title_activity_select_route_prices">SelectRoutePrices</string>
+    <string name="title_activity_create_final_trip">CreateFinalTrip</string>
+    <string name="init_text">Neurobin Time Picker Example</string>
+    <string name="init_text2">Neurobin Time Picker Example</string>
+    <string name="pick_time">Pick Time</string>
+    <string name="title_activity_update_trip_fields">UpdateTripFields</string>
+
 </resources>

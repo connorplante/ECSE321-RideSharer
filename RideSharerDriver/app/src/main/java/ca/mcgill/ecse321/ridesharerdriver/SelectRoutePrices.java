@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,17 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+public class SelectRoutePrices extends AppCompatActivity {
 
-public class CancelTrip extends AppCompatActivity {
-
-    String error = "";
+    String error = "i";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cancel_trip);
+        setContentView(R.layout.activity_select_route_prices);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
@@ -59,33 +57,52 @@ public class CancelTrip extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshErrorMessage() {
-        // set the error message
-        TextView tvError = (TextView) findViewById(R.id.error);
-        tvError.setText(error);
+//    private void refreshErrorMessage() {
+//        // set the error message
+//        TextView tvError = (TextView) findViewById(R.id.error);
+//        tvError.setText(error);
+//        tvError.setVisibility(View.GONE);
+//
+////        if (error == null || error != "i") {
+////            tvError.setVisibility(View.GONE);
+////        } else {
+////            tvError.setVisibility(View.VISIBLE);
+////        }
+//
+//    }
 
-        if (error == null || error.length() == 0) {
-            tvError.setVisibility(View.GONE);
-        } else {
-            tvError.setVisibility(View.VISIBLE);
+    public void switchViewCreateFinalTrip(View v){
+        final TextView stops = (TextView) findViewById(R.id.editText5);
+        final TextView prices = (TextView) findViewById(R.id.editText7);
+        String stops2 = stops.getText().toString();
+        String[] finalStops = stops2.split(",");
+        String urlStops = "";
+
+        for(int i = 0; i < finalStops.length; i++ ){
+            String str1 = "&stops=";
+            urlStops += str1 + finalStops[i];
         }
 
-    }
+        String prices2 = prices.getText().toString();
+        String[] finalPrices = prices2.split(",");
+        String urlPrices = "";
+
+        for(int j = 0; j < finalPrices.length; j++ ){
+            String str2 = "&prices=";
+            urlStops += str2 + finalPrices[j];
+        }
 
 
-    public void cancelTrip(View v) {
+        Intent intent6 = new Intent(this, CreateFinalTrip.class);
 
-        final TextView tripID = (TextView) findViewById(R.id.editText8);
-
-
-
-        HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
-
+        Bundle extras = getIntent().getExtras();
+        intent6.putExtras(extras);
+        intent6.putExtra("ROUTES", urlStops);
+        intent6.putExtra("PRICES", urlPrices);
 
 
 
-        });
-
+        startActivity(intent6);
     }
 
 }

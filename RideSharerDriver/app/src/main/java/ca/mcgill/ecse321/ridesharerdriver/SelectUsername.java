@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,17 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
+public class SelectUsername extends AppCompatActivity {
 
-public class CancelTrip extends AppCompatActivity {
-
-    String error = "";
+    String error = "i";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cancel_trip);
+        setContentView(R.layout.activity_select_username);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
@@ -59,33 +57,31 @@ public class CancelTrip extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshErrorMessage() {
-        // set the error message
-        TextView tvError = (TextView) findViewById(R.id.error);
-        tvError.setText(error);
+//    private void refreshErrorMessage() {
+//        // set the error message
+//        TextView tvError = (TextView) findViewById(R.id.error);
+//        tvError.setText(error);
+//        tvError.setVisibility(View.GONE);
+//
+////        if (error == null || error != "i") {
+////            tvError.setVisibility(View.GONE);
+////        } else {
+////            tvError.setVisibility(View.VISIBLE);
+////        }
+//
+//    }
+public void switchViewSelectStartEnd(View v){
 
-        if (error == null || error.length() == 0) {
-            tvError.setVisibility(View.GONE);
-        } else {
-            tvError.setVisibility(View.VISIBLE);
-        }
+    final TextView username = (TextView) findViewById(R.id.editText);
+    Intent intent3 = new Intent(this, SelectStartEnd.class);
 
-    }
-
-
-    public void cancelTrip(View v) {
-
-        final TextView tripID = (TextView) findViewById(R.id.editText8);
-
-
-
-        HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
+    Bundle extras = getIntent().getExtras();
 
 
+    intent3.putExtras(extras);
+    intent3.putExtra("USERNAME",username.getText().toString());
+    startActivity(intent3);
 
-
-        });
-
-    }
+}
 
 }

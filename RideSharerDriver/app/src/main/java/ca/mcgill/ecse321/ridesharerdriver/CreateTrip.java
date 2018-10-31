@@ -1,18 +1,23 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
+import com.loopj.android.http.*;
+import org.json.*;
+import cz.msebera.android.httpclient.*;
 
 public class CreateTrip extends AppCompatActivity {
 
-    String error = "";
+    String error = "i";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,17 +61,92 @@ public class CreateTrip extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshErrorMessage() {
-        // set the error message
-        TextView tvError = (TextView) findViewById(R.id.error);
-        tvError.setText(error);
+//    private void refreshErrorMessage() {
+//        // set the error message
+//        TextView tvError = (TextView) findViewById(R.id.error);
+//        tvError.setText(error);
+//        tvError.setVisibility(View.GONE);
+//
+////        if (error == null || error != "i") {
+////            tvError.setVisibility(View.GONE);
+////        } else {
+////            tvError.setVisibility(View.VISIBLE);
+////        }
+//
+//    }
 
-        if (error == null || error.length() == 0) {
-            tvError.setVisibility(View.GONE);
-        } else {
-            tvError.setVisibility(View.VISIBLE);
-        }
 
+//    public void createTrip(View v){
+//        error = "";
+//        final TextView date = (TextView) findViewById(R.id.newDate);
+//        final TextView time = (TextView) findViewById(R.id.newTime);
+//        final TextView start = (TextView) findViewById(R.id.newStart);
+//        final TextView end = (TextView) findViewById(R.id.newEnd);
+//        final TextView username = (TextView) findViewById(R.id.newUsername);
+//        final TextView carID = (TextView) findViewById(R.id.newCarID);
+//        final TextView numSeats = (TextView) findViewById(R.id.newNumSeats);
+//        final TextView stops = (TextView) findViewById(R.id.newStops);
+//        final TextView prices = (TextView) findViewById(R.id.newPrices);
+//
+//        String stops2 = stops.getText().toString();
+//        String[] finalStops = stops2.split(",");
+//        String urlStops = "";
+//
+//        for(int i = 0; i < finalStops.length; i++ ){
+//            String str1 = "&stops=";
+//            urlStops += str1 + finalStops[i];
+//        }
+//
+//        String prices2 = prices.getText().toString();
+//        String[] finalPrices = prices2.split(",");
+//        String urlPrices = "";
+//
+//        for(int j = 0; j < finalPrices.length; j++ ){
+//            String str2 = "&prices=";
+//            urlStops += str2 + finalPrices[j];
+//        }
+//
+//        HttpUtils.post("/Trip/createTrip?start=" + start.getText().toString() +
+//                "&end=" + end.getText().toString() + "&date=" + date.getText().toString()
+//                + "&time=" + time.getText().toString() + "&username=" + username.getText().toString()
+//                + "&carID=" + carID.getText().toString() + "&numSeats=" + numSeats.getText().toString() + urlStops + urlPrices, new RequestParams(), new JsonHttpResponseHandler(){
+//
+//            @Override
+//            public void onFinish() {
+//                //refreshErrorMessage();
+//
+//                start.setText("");
+//                end.setText("");
+//                date.setText("");
+//                time.setText("");
+//                username.setText("");
+//                carID.setText("");
+//                numSeats.setText("");
+//                stops.setText("");
+//                prices.setText("");
+//
+//            }
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+//                try {
+//                    String h = "hi";
+//                } catch (Exception e) {
+//                    error += e.getMessage();
+//                }
+//               // refreshErrorMessage();
+//            }
+//
+//        });
+//
+//
+//    }
+
+
+    public void switchViewSelectTime(View v){
+        Intent intent1 = new Intent(this, SelectTime.class);
+        startActivity(intent1);
     }
+
+
 
 }

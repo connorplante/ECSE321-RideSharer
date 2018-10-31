@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -64,6 +65,13 @@ public class UpdateTrip extends AppCompatActivity {
             tvError.setVisibility(View.VISIBLE);
         }
 
+    }
+
+    public void switchViewUpdateTripFields(View v){
+        Intent intent = new Intent(this, UpdateTripFields.class);
+        TextView tv1 = (TextView) findViewById(R.id.editText6);
+        intent.putExtra("TRIPID", tv1.getText().toString());
+        startActivity(intent);
     }
 
 }
