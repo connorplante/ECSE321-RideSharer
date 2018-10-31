@@ -811,7 +811,7 @@ public class TripController {
     }
 
     @RequestMapping("/tripInfo")
-    public ArrayList<String> getTripInfo(@RequestParam("tripId") int tripId, @RequestParam("start") String start, 
+    public ArrayList<ArrayList<String>> getTripInfo(@RequestParam("tripIds") ArrayList<Integer> tripIds, @RequestParam("start") String start, 
     @RequestParam("end") String end) {
         // date      0
         // price     1
@@ -823,74 +823,79 @@ public class TripController {
         // .
         // .
 
-        Trip trip = getTripByID(tripId);
-        ArrayList<String> ret = new ArrayList<String>();
-        String dateStr = trip.getDate().toString();
+        ArrayList<ArrayList<String>> retList = new ArrayList<ArrayList<String>>();
 
-        // add date to return list
-        ret.add(0, dateStr);
+        for (Integer tripId : tripIds) {
+            Trip trip = getTripByID(tripId);
+            ArrayList<String> ret = new ArrayList<String>();
+            String dateStr = trip.getDate().toString();
 
-        int effectivePrice = 0;
-        int effectiveNumSeats = 0;
+            // add date to return list
+            ret.add(0, dateStr);
 
-        // Get legs corresponding to Trip ID
-        String queryLegs = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :tripId";
+            int effectivePrice = 0;
+            int effectiveNumSeats = 0;
 
-        // Begin Session
-        Session session = HibernateUtil.getSession();
-        session.beginTransaction();
+            // Get legs corresponding to Trip ID
+            String queryLegs = "SELECT LegID, Start, End, Price, NumSeats, FK_TripID FROM Legs WHERE FK_TripID = :tripId";
 
-        // Make query on legs
-        SQLQuery queryGetLegs = session.createSQLQuery(queryLegs);
-        queryGetLegs.setParameter("tripId", tripId);
-        
-        // tripLegs contains the legs of the trips
-        // Legs are stored as such in the array:
-        // leg[0] | leg[1] | leg[2] | leg[3] | leg[4]   | leg[5] 
-        // LegID  | Start  | End    | Price  | NumSeats | FK_TripID
-        List<Object[]> tripLegs = queryGetLegs.list();
+            // Begin Session
+            Session session = HibernateUtil.getSession();
+            session.beginTransaction();
 
-        // Close the session
-        session.getTransaction().commit();
-        session.close();
+            // Make query on legs
+            SQLQuery queryGetLegs = session.createSQLQuery(queryLegs);
+            queryGetLegs.setParameter("tripId", tripId);
+            
+            // tripLegs contains the legs of the trips
+            // Legs are stored as such in the array:
+            // leg[0] | leg[1] | leg[2] | leg[3] | leg[4]   | leg[5] 
+            // LegID  | Start  | End    | Price  | NumSeats | FK_TripID
+            List<Object[]> tripLegs = queryGetLegs.list();
 
-        // iterate through tripLegs to add prices
-        // assumes valid tripId, start, end
-        for (Object[] tripLeg : tripLegs) {
-            if (((String)tripLeg[1]).equals(start)) {
-                effectivePrice += (int)tripLeg[3];
-                effectiveNumSeats = (int)tripLeg[4];
-            } else if (effectivePrice != 0) {
-                effectivePrice += (int)tripLeg[3];
+            // Close the session
+            session.getTransaction().commit();
+            session.close();
 
-                if (effectiveNumSeats > (int)tripLeg[4]) {
+            // iterate through tripLegs to add prices
+            // assumes valid tripId, start, end
+            for (Object[] tripLeg : tripLegs) {
+                if (((String)tripLeg[1]).equals(start)) {
+                    effectivePrice += (int)tripLeg[3];
                     effectiveNumSeats = (int)tripLeg[4];
+                } else if (effectivePrice != 0) {
+                    effectivePrice += (int)tripLeg[3];
+
+                    if (effectiveNumSeats > (int)tripLeg[4]) {
+                        effectiveNumSeats = (int)tripLeg[4];
+                    }
+                } 
+                if (((String)tripLeg[2]).equals(end)) {
+                    break;
                 }
-            } 
-            if (((String)tripLeg[2]).equals(end)) {
-                break;
             }
+
+            // add price to return list
+            String priceStr = String.valueOf(effectivePrice);
+            ret.add(1, priceStr);
+
+            // add numSeats to return list
+            String numSeatsStr = String.valueOf(effectiveNumSeats);
+            ret.add(2, numSeatsStr);
+
+            // add status to reutrn list
+            String statusStr = String.valueOf(trip.getTripStatus());
+            ret.add(3, statusStr);
+
+            // add stops to end of list
+            ret.add((String) tripLegs.get(0)[1]);
+
+            for (Object[] tripLeg : tripLegs) {
+                ret.add((String)tripLeg[2]);
+            }
+
+            retList.add(ret);
         }
-
-        // add price to return list
-        String priceStr = String.valueOf(effectivePrice);
-        ret.add(1, priceStr);
-
-        // add numSeats to return list
-        String numSeatsStr = String.valueOf(effectiveNumSeats);
-        ret.add(2, numSeatsStr);
-
-        // add status to reutrn list
-        String statusStr = String.valueOf(trip.getTripStatus());
-        ret.add(3, statusStr);
-
-        // add stops to end of list
-        ret.add((String) tripLegs.get(0)[1]);
-
-        for (Object[] tripLeg : tripLegs) {
-            ret.add((String)tripLeg[2]);
-        }
-
-        return ret;
+        return retList;
     }
 }
