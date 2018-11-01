@@ -10,6 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+
+import cz.msebera.android.httpclient.Header;
+
 public class ChangePassword extends AppCompatActivity {
 
     String error = "";
@@ -60,12 +67,67 @@ public class ChangePassword extends AppCompatActivity {
         TextView tvError = (TextView) findViewById(R.id.error);
         tvError.setText(error);
 
-        if (error == null || error.length() == 0) {
+        if (error.length() == 0) {
             tvError.setVisibility(View.GONE);
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
 
     }
+
+    public void changePassword(View v){
+        error = "";
+        final TextView ta = (TextView) findViewById(R.id.cpOldPass);
+        final TextView tb = (TextView) findViewById(R.id.cpNewPass);
+        final TextView tc = (TextView) findViewById(R.id.cpNewPassConfirm);
+
+        if(ta.getText().toString().equals("") || tb.getText().toString().equals("") || tc.getText().toString().equals("") ){
+            error = "Fill in all fields!";
+            refreshErrorMessage();
+            return;
+        }
+
+        if(!(tb.getText().toString().equals(tc.getText().toString()))){
+            error = "New passwords do not match";
+            refreshErrorMessage();
+            return;
+        }
+
+        String username = "samcattani";
+
+        String url = "/User/resetPassword?username=" + username + "&currentPassword=" + ta.getText().toString() + "&newPassword=" + tb.getText().toString();
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response){
+
+                Boolean b = false;
+
+                try{
+                    String s = response.get(0).toString();
+                    b = Boolean.parseBoolean(s);
+                }catch(Exception e){
+
+                }
+
+                if(b){
+                    refreshErrorMessage();
+                    ta.setText("");
+                    tb.setText("");
+                    tc.setText("");
+
+                }else{
+                    error = "Old password is incorrect";
+                    refreshErrorMessage();
+                }
+
+
+
+            }
+
+        });
+    }
+
 
 }
