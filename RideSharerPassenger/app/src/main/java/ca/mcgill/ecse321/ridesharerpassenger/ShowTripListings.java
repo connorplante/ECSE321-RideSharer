@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ public class ShowTripListings extends AppCompatActivity {
     ArrayList<ArrayList<String>> stopsLists;
     String start;
     String end;
+    String username = "";
 
     public static final String tripIDs = "ca.mcgill.ecse321.ridesharerpassenger.tripIDs";
     public static final String START = "ca.mcgill.ecse321.ridesharerpassenger.start";
@@ -50,8 +52,18 @@ public class ShowTripListings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_show_trip_listings);
 
+        // Get the username passed to this page
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
+        System.out.println("USERNAME ===> ");
+        System.out.println(username);
+
         // Get the tripIDs passed to this page from TripListings
-        if (getIntent().hasExtra(tripIDs)) {
+        if (getIntent().hasExtra(ShowTripListings.tripIDs)) {
             tripIds = getIntent().getIntegerArrayListExtra(tripIDs);
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + tripIDs);
@@ -147,14 +159,23 @@ public class ShowTripListings extends AppCompatActivity {
             TextView textView_date = (TextView) convertView.findViewById(R.id.textView_date);
             TextView textView_numSeats = (TextView) convertView.findViewById(R.id.textView_numSeats);
             TextView textView_price = (TextView) convertView.findViewById(R.id.textView_price);
+            Button button_book = (Button) convertView.findViewById(R.id.button_book);
 
             textView_tripId.setText(tripIds.get(position).toString());
             textView_date.setText(dates.get(position));
             textView_price.setText("$ " + prices.get(position));
             textView_numSeats.setText(numSeats.get(position));
+            button_book.setText("book " + tripIds.get(position).toString());
 
             return convertView;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, TripListings.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
     }
 
     @Override
@@ -164,24 +185,35 @@ public class ShowTripListings extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, TripListings.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void showMap(View view) {
         TextView textView_tripId = (TextView) view.findViewById(R.id.textView_tripId);
         String id = textView_tripId.getText().toString();
+
+        System.out.println(view.findViewById(R.id.textView_tripId));
+        System.out.println(view.findViewById(R.id.textView_date));
+        System.out.println(view.findViewById(R.id.button_book));
 
         System.out.println("id = " + id);
 
@@ -202,25 +234,50 @@ public class ShowTripListings extends AppCompatActivity {
 
         Bundle b = new Bundle();
         b.putStringArrayList(GoogleMapsActivity.STOPS, stops);
+        b.putIntegerArrayList(ShowTripListings.tripIDs, tripIds);
+        b.putStringArrayList(ShowTripListings.DATES, dates);
+        b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
+        b.putStringArrayList(ShowTripListings.STATUS, status);
+        b.putStringArrayList(ShowTripListings.PRICES, prices);
+        for (int j = 0; j < stopsLists.size(); j++) {
+            b.putStringArrayList(ShowTripListings.STOPSLISTS + j, stopsLists.get(j));
+        }
+        b.putString(ShowTripListings.START, start);
+        b.putString(ShowTripListings.END, end);
 
         Intent intent = new Intent(this, GoogleMapsActivity.class);
         intent.putExtras(b);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void bookTrip(View view) {
-        //Intent intent = new Intent(this, GoogleMapsActivity.class);
-        //startActivity(intent);
         // passenger name
         // trip id
         // start
         // end
-        //String url = "/request/createRequest?passengerName=" + username + "&tripID=" + tripId + "&start=" + start + "&end=" + end;
- /*       HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+
+        System.out.println("==> bookTrip method");
+
+        System.out.println("==== VIEW:");
+        System.out.println(view);
+
+        Button button_book = view.findViewById(R.id.button_book);
+
+        String buttonText = button_book.getText().toString();
+        String tripId = buttonText.substring(5);
+
+        System.out.println(tripId);
+
+        String url = "/Request/createRequest?passengerName=" + username + "&tripID=" + tripId + "&start=" + start + "&end=" + end;
+
+        System.out.println(url);
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
+                System.out.println("Successfully requested!");
             }
 
             @Override
@@ -236,7 +293,7 @@ public class ShowTripListings extends AppCompatActivity {
                 }
                 refreshErrorMessage();
             }
-        });*/
+        });
     }
 
     private void refreshErrorMessage() {
