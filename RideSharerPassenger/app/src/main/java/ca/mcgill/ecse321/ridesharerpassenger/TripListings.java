@@ -22,7 +22,11 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+
+
 public class TripListings extends AppCompatActivity {
+
+
 
     String error = "";
 
@@ -128,6 +132,9 @@ public class TripListings extends AppCompatActivity {
             url += "&highDate=" + tHighDate.getText().toString();
         }
 
+        final String start = tStart.getText().toString();
+        final String end = tEnd.getText().toString();
+
         System.out.println("Url: " + url);
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
@@ -149,9 +156,11 @@ public class TripListings extends AppCompatActivity {
                 }
 
                 System.out.println("ArrayList: " + tripIds.toString());
+                System.out.println("start: " + start);
+                System.out.println("end: " + end);
 
                 // call next view to display trips
-                viewFoundTrips(tripIds);
+                getTripsInfo(tripIds, start, end);
             }
 
             @Override
@@ -165,6 +174,7 @@ public class TripListings extends AppCompatActivity {
                 tYear.setText("");
                 tLowDate.setText("");
                 tHighDate.setText("");
+
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -178,11 +188,107 @@ public class TripListings extends AppCompatActivity {
         });
     }
 
-    public void viewFoundTrips(ArrayList<Integer> tripIds){
+    public void getTripsInfo(final ArrayList<Integer> tripIds, final String start, final String end){
+        // from me! get tripId info
+        String tripIdList = "";
+
+        for (int i = 0; i < tripIds.size(); i++) {
+            if (i == tripIds.size()-1) {
+                tripIdList = tripIdList + tripIds.get(i).toString();
+            } else {
+                tripIdList = tripIdList + tripIds.get(i).toString() + ",";
+            }
+        }
+        String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
+        System.out.println(url);
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                System.out.println("Success!!!");
+                System.out.println("Response: ");
+                System.out.println(response.toString());
+
+                // add trip ids from response to the array list
+                ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
+                ArrayList<String> stopsStrs = new ArrayList<String>();
+                ArrayList<String> dates = new ArrayList<String>();
+                ArrayList<String> prices = new ArrayList<String>();
+                ArrayList<String> numSeats = new ArrayList<String>();
+                ArrayList<String> status = new ArrayList<String>();
+
+
+                for (int i = 0; i < response.length(); i++) {
+                    ArrayList<String> stopList = new ArrayList<String>();
+                    try {
+                        for (int j = 0; j < response.getJSONArray(i).length(); j++){
+                            if ( j == 0) {
+                                dates.add(response.getJSONArray(i).getString(0));
+                            } else if ( j == 1) {
+                                prices.add(response.getJSONArray(i).getString(1));
+                            } else if ( j == 2) {
+                                numSeats.add(response.getJSONArray(i).getString(2));
+                            } else if ( j == 3) {
+                                status.add(response.getJSONArray(i).getString(3));
+                            } else {
+                                stopList.add(response.getJSONArray(i).getString(j));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    stopsLists.add(stopList);
+                }
+
+                System.out.println("response in arraylist of arraylists:");
+                System.out.println(dates);
+                System.out.println(prices);
+                System.out.println(status);
+                System.out.println(numSeats);
+                System.out.println(stopsLists);
+
+                viewFoundTrips(tripIds, start, end, prices, dates, numSeats, status, stopsLists);
+
+            }
+            @Override
+            public void onFinish() {
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                refreshErrorMessage();
+            }
+        });
+
+
+    }
+
+    public void viewFoundTrips(ArrayList<Integer> tripIds, String start, String end, ArrayList<String> prices,
+                               ArrayList<String> dates, ArrayList<String> numSeats, ArrayList<String> status,
+                               ArrayList<ArrayList<String>> stopsLists){
+
         Intent intent = new Intent(this, ShowTripListings.class);
         Bundle b = new Bundle();
-        b.putIntegerArrayList("tripIds", tripIds);
+        b.putIntegerArrayList(ShowTripListings.tripIDs, tripIds);
+        b.putStringArrayList(ShowTripListings.DATES, dates);
+        b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
+        b.putStringArrayList(ShowTripListings.STATUS, status);
+        b.putStringArrayList(ShowTripListings.PRICES, prices);
+        for (int i = 0; i < stopsLists.size(); i++) {
+            b.putStringArrayList(ShowTripListings.STOPSLISTS + i, stopsLists.get(i));
+        }
+
+        b.putString(ShowTripListings.START, start);
+        b.putString(ShowTripListings.END, end);
+
+        System.out.println("=======================================");
+
         intent.putExtras(b);
         startActivity(intent);
     }
+
 }
