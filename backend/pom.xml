@@ -19,6 +19,14 @@
     </properties>
 
     <dependencies>
+    
+        <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4</version>
+        </dependency>
+
         <!-- These are our dependencies -->
         <!-- Sprint-boot dependencies -->
         <dependency>

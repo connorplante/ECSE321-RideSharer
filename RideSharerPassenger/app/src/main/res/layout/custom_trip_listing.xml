@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:onClick="showMap"
+        android:id="@+id/textView_tripId"
+        android:textSize="30dp"
+        android:layout_width="82dp"
+        android:layout_height="86dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:textAlignment="center"
+        android:background="@drawable/back"
+        android:gravity="center"
+        android:text="TripId" />
+
+    <TextView
+        android:id="@+id/textView_date"
+        android:layout_width="161dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView_tripId"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="0dp"
+        android:text="Date"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/textView_numSeats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_tripId"
+        android:layout_alignLeft="@id/textView_date"
+        android:layout_alignRight="@id/textView_date"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="199dp"
+        android:layout_marginLeft="103dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginRight="-5dp"
+        android:text="numSeats" />
+
+    <TextView
+        android:id="@+id/textView_price"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_tripId"
+        android:layout_alignLeft="@id/textView_date"
+        android:layout_alignRight="@id/textView_date"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="136dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginRight="63dp"
+        android:text="price" />
+
+    <TextView
+        android:id="@+id/textView_priceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_tripId"
+        android:layout_alignLeft="@id/textView_date"
+        android:layout_alignRight="@id/textView_date"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="96dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="69dp"
+        android:layout_marginRight="126dp"
+        android:text="Price:" />
+
+    <TextView
+        android:id="@+id/textView_numSeatsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/textView_tripId"
+        android:layout_alignLeft="@id/textView_date"
+        android:layout_alignRight="@id/textView_date"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="95dp"
+        android:layout_marginLeft="-1dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginRight="63dp"
+        android:text="Available Seats:" />
+
+    <Button
+        android:id="@+id/button_book"
+        android:layout_width="111dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="263dp"
+        android:layout_marginTop="29dp"
+        android:onClick="bookTrip"
+        android:text="Book"
+        android:textAlignment="center"
+        android:textSize="18dp" />
+
+    <TextView
+        android:id="@+id/SPACER"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_below="@+id/textView_price"
+        android:layout_alignEnd="@+id/textView_tripId"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="0dp"
+        android:text="" />
+
+</RelativeLayout>
