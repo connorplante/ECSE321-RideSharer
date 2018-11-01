@@ -883,7 +883,7 @@ public class TripController {
     }
 
     @RequestMapping("/tripsToBeCancelled")
-    public List<Integer> tripsCanBeCancelled(@RequestParam(value="username") String username){
+    public ArrayList<ArrayList<String>> tripsCanBeCancelled(@RequestParam(value="username") String username){
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
@@ -916,18 +916,86 @@ public class TripController {
 
         ArrayList<String> legStrings = new ArrayList<String>();
 
-        for(int i = 0; i < tripIDs.size(); i++){
-            legStrings.add(i, getLegs(i));
+        int counter = 0;
+
+        for(Integer i : tripIDs){
+            legStrings.add(counter, getLegs(i));
+            counter++;
         }
 
-        return tripIDs;
+        ArrayList<String> dateStrings = new ArrayList<String>();
+        counter = 0;
+
+        for(Object[] o : trips){
+            String a = o[1].toString();
+            dateStrings.add(counter, a.substring(0, 10));
+            counter++;
+        }
+
+        ArrayList<String> timeStrings = new ArrayList<String>();
+        counter = 0;
+
+        for(Object[] o : trips){
+            String a = o[2].toString();
+            timeStrings.add(counter, a);
+            counter++;
+        }
+
+        ArrayList<Integer> numSeats = new ArrayList<Integer>();
+        counter = 0;
+
+        for(Integer w : tripIDs){
+            int p = getNumSeats(w);
+            numSeats.add(counter, p);
+            counter++;
+        }
+
+        ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>();
+
+        for(int k = 0; k < tripIDs.size(); k++){
+            ArrayList<String> inner = new ArrayList<String>();
+
+            inner.add(0, tripIDs.get(k).toString());
+            inner.add(1, legStrings.get(k));
+            inner.add(2, dateStrings.get(k));
+            inner.add(3, timeStrings.get(k));
+            inner.add(4, numSeats.get(k).toString());
+
+            outer.add(k, inner);
+        }
+
+
+        return outer;
+    }
+
+    public int getNumSeats(int i){
+        Session session2 = HibernateUtil.getSession();
+        session2.beginTransaction();
+
+        String string = "Select NumSeats from Legs where FK_TripID=:id";
+        
+        SQLQuery queryFindDriver = session2.createSQLQuery(string);
+        queryFindDriver.setParameter("id", i);
+        List<Integer> legs = queryFindDriver.list();
+
+        session2.getTransaction().commit();
+        session2.close();
+
+        int lowest = Integer.MAX_VALUE;
+
+        for(int j = 0; j < legs.size(); j++){
+            if(legs.get(j) < lowest){
+                lowest = legs.get(j);
+            }
+        }
+        return lowest;
     }
 
     public String getLegs(int i){
         Session session2 = HibernateUtil.getSession();
         session2.beginTransaction();
 
-        String string = "Select End, NumSeats from Legs where FK_TripID=:id";
+        String string = "Select Start, End from Legs where FK_TripID=:id";
         
         SQLQuery queryFindDriver = session2.createSQLQuery(string);
         queryFindDriver.setParameter("id", i);
@@ -940,9 +1008,12 @@ public class TripController {
 
         for(int j = 0; j < legs.size(); j++){
             if(j == legs.size() - 1){
-                s += legs.get(j)[0].toString();
-            }else{
-                s += legs.get(j)[0].toString() + ", ";
+                s += legs.get(j)[1].toString();
+            }else if(j == 0){
+                s += legs.get(j)[0].toString() + ", " + legs.get(j)[1].toString() + ", ";
+            }
+            else{
+                s += legs.get(j)[1].toString() + ", ";
             }
         }
         return s;
