@@ -882,8 +882,8 @@ public class TripController {
        return driver;
     }
 
-    @RequestMapping("/tripsToBeCancelled")
-    public ArrayList<ArrayList<String>> tripsCanBeCancelled(@RequestParam(value="username") String username){
+    @RequestMapping("/tripsToBeCompleted")
+    public ArrayList<ArrayList<String>> tripsCanBeCompleted(@RequestParam(value="username") String username){
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
