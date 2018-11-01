@@ -9,24 +9,33 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.RatingBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
 
-public class CreateCar extends AppCompatActivity {
+public class RatePassenger extends AppCompatActivity {
 
+    public RatingBar ratingBar;
+    public Spinner dropdown;
     String error = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_car);
+        setContentView(R.layout.activity_rate_passenger);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
@@ -38,6 +47,19 @@ public class CreateCar extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        /*ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            public void onRatingChanged(RatingBar ratingBar, float rating,
+                                        boolean fromUser){
+                changeRating(ratingBar);
+            }
+        });*/
+
+        dropdown = findViewById(R.id.spinner1);
+        String[] users = new String[]{"Click load to select a passenger"}; //TODO: populate dropdown with passengers
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, users);
+        dropdown.setAdapter(adapter);
     }
 
     @Override
@@ -61,13 +83,12 @@ public class CreateCar extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
     private void refreshErrorMessage() {
         // set the error message
         TextView tvError = (TextView) findViewById(R.id.error);
         tvError.setText(error);
 
-        if (error == null || error == "i") {
+        if (error == null || error.length() == 0) {
             tvError.setVisibility(View.GONE);
         } else {
             tvError.setVisibility(View.VISIBLE);
@@ -75,27 +96,18 @@ public class CreateCar extends AppCompatActivity {
 
     }
 
-    public void createCar(View v) {
-        error = "";
-        final TextView ta = (TextView) findViewById(R.id.make);
-        final TextView tb = (TextView) findViewById(R.id.model);
-        final TextView tc = (TextView) findViewById(R.id.year);
-        final TextView td = (TextView) findViewById(R.id.numSeats);
-        final TextView te = (TextView) findViewById(R.id.licensePlate);
-        final String user = "user1"; //TODO: Find user that is logged in
+    public String[] loadPassengers (View v) {
 
-        HttpUtils.post("Car/createCar?make=" + ta.getText().toString() + "&model=" + tb.getText().toString() +
-                "&year=" + tc.getText().toString() + "&numSeats=" + td.getText().toString() + "&licencePlate=" +
-                te.getText().toString() + "&username=" + user, new RequestParams(), new JsonHttpResponseHandler() {
+        int tripID=1;
+        dropdown = findViewById(R.id.spinner1);
+
+        final String[] users = new String[]{}; //TODO: populate with passengers
+        HttpUtils.post("User/showPassengerForTrip?TripID="+tripID, new RequestParams(),
+        new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
                 refreshErrorMessage();
-                viewManageCars();
-                ta.setText("");
-                tb.setText("");
-                tc.setText("");
-                td.setText("");
-                te.setText("");
+
             }
 
             @Override
@@ -107,13 +119,37 @@ public class CreateCar extends AppCompatActivity {
                 }
                 refreshErrorMessage();
             }
+
         });
 
+        return users;
     }
 
-    public void viewManageCars() {
-        Intent intent = new Intent(this, ManageCar.class);
+    public void changeRating(View v) {
+        final int numStars = ratingBar.getNumStars();
+        final String username = (String) dropdown.getSelectedItem();
+        HttpUtils.post("/User/ratePassenger?username="+ username + "&rating=" + String.valueOf(numStars)
+                , new RequestParams(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFinish() {
+                        refreshErrorMessage();
+                        viewManageTrips();
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        try {
+                            error += errorResponse.get("message").toString();
+                        } catch (JSONException e) {
+                            error += e.getMessage();
+                        }
+                        refreshErrorMessage();
+                    }
+                });
+    }
+
+    public void viewManageTrips(){
+        Intent intent = new Intent(this, ManageTrips.class);
         startActivity(intent);
     }
 }
-
