@@ -11,6 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+
+import cz.msebera.android.httpclient.Header;
+
 public class ManageProfile extends AppCompatActivity {
 
     String error = "";
@@ -67,6 +74,48 @@ public class ManageProfile extends AppCompatActivity {
 
     }
 
+    public void viewUserInfo(View v){
+        error = "";
+        final String username = "samcattani";
+        String url = "/User/displayProfileInfo?username=" + username;
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response){
+
+                String firstName = "";
+                String lastName = "";
+                String email = "";
+                String phone = "";
+
+                try {
+                    firstName = response.get(0).toString();
+                    lastName = response.get(1).toString();
+                    email = response.get(2).toString();
+                    phone = response.get(3).toString();
+                }catch(Exception e){
+
+                }
+
+                viewUpdateInfo(firstName, lastName, email, phone);
+
+            }
+
+        });
+    }
+
+    public void viewUpdateInfo(String firstName, String lastName, String email, String phone){
+        Intent intent = new Intent(this, UpdateInfo.class);
+        Bundle b = new Bundle();
+        b.putString(UpdateInfo.FIRSTNAME, firstName);
+        b.putString(UpdateInfo.LASTNAME, lastName);
+        b.putString(UpdateInfo.EMAIL, email);
+        b.putString(UpdateInfo.PHONE, phone);
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
     public void viewRemoveUser(View v){
         Intent intent = new Intent(this, RemoveUser.class);
         startActivity(intent);
@@ -74,11 +123,6 @@ public class ManageProfile extends AppCompatActivity {
 
     public void viewChangePassword(View v){
         Intent intent = new Intent(this, ChnagePassword.class);
-        startActivity(intent);
-    }
-
-    public void viewEditProfile(View v){
-        Intent intent = new Intent(this, UpdateInfo.class);
         startActivity(intent);
     }
 
