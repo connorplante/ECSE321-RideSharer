@@ -277,7 +277,7 @@ public class UserController {
      * @return String
      */
     @RequestMapping("/updateUserInfo")
-    public String updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
+    public ArrayList<String> updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
     @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
     @RequestParam(value="phoneNumber") String phoneNumber){
         
@@ -286,7 +286,7 @@ public class UserController {
         //Begin transaction
         session.beginTransaction();
 
-        User user;
+        User user = null;
 
         //find user by username in database
         try{
@@ -299,13 +299,16 @@ public class UserController {
         }catch(Exception e){
             session.getTransaction().rollback();
             session.close();
-            return "User does not exist!";
         }
 
         session.saveOrUpdate(user);
         session.getTransaction().commit();
         session.close();
-        return user.toString();
+
+        ArrayList<String> returning = new ArrayList<String>();
+        returning.add(0, username);
+
+        return returning;
     } 
 
     /**
