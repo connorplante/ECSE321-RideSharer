@@ -85,6 +85,8 @@ public class PassengerController {
             }
         }
 
+        s += "\n startid " + startId;
+        s += "\n end id " + endId;
         double totalPricePassenger = 0;
         ArrayList<Leg> passengerLegs = new ArrayList<Leg>();
         String s = "";
