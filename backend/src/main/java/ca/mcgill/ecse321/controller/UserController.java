@@ -194,50 +194,6 @@ public class UserController {
      * @return Boolean 
      */
     @RequestMapping("/resetPassword")
-    public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
-    @RequestParam(value="newPassword") String newPassword) {
-
-        Session session = HibernateUtil.getSession();
-        Boolean ret;
-        session.beginTransaction();
-
-        User user; 
-
-        //Find user by username in database
-        try{
-            user = getUserByUsername(username);
-        }catch(Exception e){
-            session.close();
-            return false;
-        }
-
-        //Update password to the new one if entered current password is correct
-        if (user.getPassword().equals(currentPassword)) {
-            user.setPassword(newPassword);
-            session.saveOrUpdate(user);
-            ret = true;
-        } else {
-            ret = false;
-        }
-
-        //Save and close session
-        session.getTransaction().commit();
-        session.close();
-
-        return ret;
-    }
-
-    /**
-     * Resets a users password
-     * returns true if reset was successful
-     * returns false if reset failed
-     * Works for User, Driver, Passenger, Admin
-     * @param username
-     * @param currentPassword
-     * @param newPassword
-     * @return Boolean 
-     */
-    @RequestMapping("/resetPassword")
     public ArrayList<Boolean> resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
     @RequestParam(value="newPassword") String newPassword) {
 
@@ -262,6 +218,44 @@ public class UserController {
         session.close();
 
         return isSet;
+    }
+    
+    /**
+     * Resets a users password
+     * returns true if reset was successful
+     * returns false if reset failed
+     * Works for User, Driver, Passenger, Admin
+     * @param username
+     * @param currentPassword
+     * @param newPassword
+     * @return Boolean 
+     */
+    @RequestMapping("/logIn")
+    public Boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user; 
+
+        //Find user by username in database
+        try{
+            user = getUserByUsername(username);
+        }catch(Exception e){
+            session.close();
+            return new Boolean(false);
+        }
+
+        //Update password to the new one if entered current password is correct
+        if (user.getPassword().equals(password)) {
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(true);
+        } else {
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(false);
+        }
     }
 
     /**
