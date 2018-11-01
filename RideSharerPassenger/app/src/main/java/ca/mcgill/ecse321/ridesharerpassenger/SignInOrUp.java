@@ -11,6 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import cz.msebera.android.httpclient.Header;
+
 public class SignInOrUp extends AppCompatActivity {
 
     String error = "";
@@ -54,26 +59,52 @@ public class SignInOrUp extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//
-//        if (error == null || error.length() == 0) {
-//            tvError.setVisibility(View.GONE);
-//        } else {
-//            tvError.setVisibility(View.VISIBLE);
-//        }
-//
-//    }
+    private void refreshErrorMessage() {
+        // set the error message
+        TextView tvError = (TextView) findViewById(R.id.error1);
 
-    public void viewSignUp(View v){
-        Intent intent = new Intent(this, SignUp.class);
+        if (error.length() == 0) {
+            tvError.setVisibility(View.GONE);
+        } else {
+            tvError.setText(error);
+            tvError.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void signIn(View v) {
+        error = "";
+        final TextView ta = (TextView) findViewById(R.id.editText);
+        final TextView tb = (TextView) findViewById(R.id.editText2);
+
+        if(ta.equals("") || tb.equals("")){
+            error = "Please enter all fields!";
+            refreshErrorMessage();
+            return;
+        }
+        HttpUtils.post("/User/logIn?username=" + ta.getText().toString() +
+                "&password=" + tb.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+
+                if(responseString.equals("true")){
+                    viewMainMenu();
+                }else{
+                    error += "Incorrect username or password";
+
+                    refreshErrorMessage();
+                }
+            }
+        });
+    }
+    public void viewMainMenu(){
+        Intent intent = new Intent(this, MainMenu.class);
         startActivity(intent);
     }
 
-    public void viewMainMenu(View v){
-        Intent intent = new Intent(this, MainMenu.class);
+    public void viewSignUp(View v){
+        Intent intent = new Intent(this, SignUp.class);
         startActivity(intent);
     }
 
