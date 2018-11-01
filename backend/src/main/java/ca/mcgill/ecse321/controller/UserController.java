@@ -238,7 +238,7 @@ public class UserController {
      * @return Boolean 
      */
     @RequestMapping("/logIn")
-    public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+    public Boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
