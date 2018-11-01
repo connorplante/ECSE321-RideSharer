@@ -848,7 +848,6 @@ public class TripController {
         return fitsCriteria;
     }
 
-<<<<<<< HEAD
     @RequestMapping("/showPassengersForTrip")
     public List<Integer> showPassengersForTrip(@RequestParam(value="TripID") int TripID) {
         Session session = HibernateUtil.getSession();
@@ -949,8 +948,6 @@ public class TripController {
         return s;
     }
 
-=======
->>>>>>> 6bf212075cece038ad3945fe78a230af7281a6b1
     public Trip getTripByID(int tripID) {
         return (Trip) session.load(Trip.class, tripID);
     }
