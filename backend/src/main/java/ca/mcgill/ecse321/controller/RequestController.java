@@ -193,6 +193,7 @@ public class RequestController {
 
         Request request = (Request) session.load(Request.class, requestID);
         String email = request.getPassenger().getEmail();
+        String passengerName = request.getPassenger().getUsername();
 
         request.setStatus(false);
 
@@ -207,6 +208,7 @@ public class RequestController {
 
         String a = request2.getStart();
         String b = request2.getEnd();
+        Integer id = request2.getTrip().getTripID();
 
         session3.getTransaction().commit();
         session3.close();
@@ -247,6 +249,8 @@ public class RequestController {
          ArrayList<String> returning = new ArrayList<String>();
         returning.add(0, a);
         returning.add(1, b);
+        returning.add(2, passengerName);
+        returning.add(3, id.toString());
         return returning;
 
     }
