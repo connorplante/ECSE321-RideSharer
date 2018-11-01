@@ -222,7 +222,10 @@ public class ConfirmBooking extends AppCompatActivity {
 
                         HttpUtils.post("Passenger/confirmBook?tripID=" + id + "&username=" + username + "&pointA=" + a + "&pointB=" + b,
                                 new RequestParams(), new JsonHttpResponseHandler(){
-
+                                    @Override
+                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                                        System.out.println(responseString);
+                                    }
                                 });
 
                     }
