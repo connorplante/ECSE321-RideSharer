@@ -40,5 +40,6 @@
     <string name="init_text2">Neurobin Time Picker Example</string>
     <string name="pick_time">Pick Time</string>
     <string name="title_activity_update_trip_fields">UpdateTripFields</string>
+    <string name="title_activity_finish_create_trip">FinishCreateTrip</string>
 
 </resources>

@@ -104,9 +104,7 @@ public class UpdateTrip extends AppCompatActivity {
         }
 
 
-        System.out.println("This is: " + tripIds);
-        System.out.println("This is: " + prices);
-        System.out.println("This is: " + numSeats);
+
         ListView listView = (ListView) findViewById(R.id.listView);
         UpdateTrip.CustomAdapter customAdapter = new UpdateTrip.CustomAdapter();
         listView.setAdapter(customAdapter);
@@ -139,13 +137,12 @@ public class UpdateTrip extends AppCompatActivity {
             TextView textView_start = (TextView)convertView.findViewById(R.id.textView_updateStart);
             TextView textView_end = (TextView)convertView.findViewById(R.id.textView_updateEnd);
 
-            //System.out.println("HELLO!!!!");
+
 
 
             textView_id.setText(tripIds.get(position).toString());
             textView_date.setText(dates.get(position));
-            // textView_start.setText("$ " + prices.get(position));
-            // textView_end.setText(numSeats.get(position));
+
             textView_time.setText(status.get(position));
 
             return convertView;

@@ -11,9 +11,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
+
 public class SelectStartEnd extends AppCompatActivity {
 
-    String error = "i";
+    String error = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +84,115 @@ public class SelectStartEnd extends AppCompatActivity {
 //    }
 
     public void switchViewSelectCarIDNumSeats(View v){
+
+        error = "";
+
+
+        String url = "/Car/getDriversCars?username=donya";
+
+
+        System.out.println("Url: " + url);
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                System.out.println("Success!!!");
+                System.out.println("Response: ");
+                System.out.println(response.toString());
+                ArrayList<String> carIds = new ArrayList<String>();
+                ArrayList<String> makes = new ArrayList<String>();
+                ArrayList<String> models = new ArrayList<String>();
+                String s = "";
+
+                // add trip ids from response to the array list
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                       s = s + response.get(i).toString();
+                    } catch (Exception e) {
+                        System.out.println("here");
+                    }
+                }
+
+               // System.out.println("ArrayList: " + tripIds.toString());
+                s = s.replaceAll("\\[", "");
+                s = s.replaceAll("\\]", ",");
+                s = s.replaceAll("\"", "");
+                String[] str = s.split(",");
+
+               for (int j = 0; j < str.length; j++){
+
+                   if (j % 3 == 0 ){
+                       carIds.add(str[j]);
+                   }
+                   if (j % 3  == 1){
+                       makes.add(str[j]);
+
+                   }
+                   if (j % 3 == 2){
+                       models.add(str[j]);
+                   }
+               }
+                viewCarIDs(carIds,makes,models);
+                // call next view to display trips
+               // getTripsInfo(tripIds);//NEED TO CALL GET CARS INFO
+            }
+
+            @Override
+            public void onFinish() {
+                //refreshErrorMessage();
+
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                // refreshErrorMessage();
+            }
+        });
+            //NEED TO CALL GET CARS INFO
+
+
+
+
+    }
+
+
+
+    public void viewCarIDs(ArrayList<String> carIDs, ArrayList<String> makes, ArrayList<String> models){
+
         final TextView start = (TextView) findViewById(R.id.editText2);
         final TextView end = (TextView) findViewById(R.id.editText3);
+
         Intent intent4 = new Intent(this, SelectCarIDNumSeats.class);
 
         Bundle extras = getIntent().getExtras();
-
+        extras.putStringArrayList(SelectCarIDNumSeats.CARIDS,carIDs);
+        extras.putStringArrayList(SelectCarIDNumSeats.MAKES,makes);
+        extras.putStringArrayList(SelectCarIDNumSeats.MODELS,models);
         intent4.putExtras(extras);
         intent4.putExtra("START", start.getText().toString());
         intent4.putExtra("END", end.getText().toString());
 
         startActivity(intent4);
+
+
+    }
+    public void callMethod(View v){
+        String url = "/Car/getDriversCars?username=donya";
+
+
+        System.out.println("Url: " + url);
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){});
+
+
+
+
     }
 
 }

@@ -10,125 +10,201 @@
 
     <Button
         android:id="@+id/selectTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="26dp"
+        android:layout_width="114dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="118dp"
         android:onClick="showTimePickerOnDialog"
         android:text="Select Time"
+        app:layout_constraintBottom_toTopOf="@+id/selectDate"
+        app:layout_constraintEnd_toStartOf="@+id/changeTime"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/changeTime" />
 
     <Button
         android:id="@+id/changeTime"
-        android:layout_width="121dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="12dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="3dp"
         android:onClick="updateTime"
         android:text="Change Time"
+        app:layout_constraintBottom_toTopOf="@+id/changeDate"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/selectTime"
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <Button
         android:id="@+id/selectDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_width="114dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="118dp"
+        android:layout_marginBottom="51dp"
         android:onClick="showDatePickerOnDialog"
         android:text="Select Date"
+        app:layout_constraintBottom_toTopOf="@+id/newStart"
+        app:layout_constraintEnd_toStartOf="@+id/changeDate"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectTime" />
+        app:layout_constraintTop_toTopOf="@+id/changeTime" />
 
     <Button
         android:id="@+id/changeDate"
-        android:layout_width="124dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="22dp"
         android:onClick="updateDate"
         android:text="Change Date"
+        app:layout_constraintBottom_toTopOf="@+id/changeStart"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/selectDate"
         app:layout_constraintTop_toBottomOf="@+id/changeTime" />
 
     <EditText
         android:id="@+id/oldStart"
         android:layout_width="0dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="121dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="Old Start"
         android:inputType="textPersonName"
-        app:layout_constraintBaseline_toBaselineOf="@+id/newStart"
+        app:layout_constraintBottom_toTopOf="@+id/newStart"
         app:layout_constraintEnd_toStartOf="@+id/changeStart"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectDate" />
 
     <EditText
         android:id="@+id/newStart"
-        android:layout_width="112dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="156dp"
-        android:layout_marginEnd="140dp"
+        android:layout_width="0dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+
+        android:layout_marginBottom="14dp"
         android:ems="10"
         android:hint="New Start"
         android:inputType="textPersonName"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/button27"
+        app:layout_constraintEnd_toStartOf="@+id/changeStart"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/changeStart" />
 
     <Button
         android:id="@+id/changeStart"
-        android:layout_width="128dp"
+        android:layout_width="138dp"
         android:layout_height="0dp"
-        android:layout_marginTop="147dp"
 
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="8dp"
         android:onClick="updateStart"
         android:text="Change Start"
-        app:layout_constraintBottom_toTopOf="@+id/button27"
+        app:layout_constraintBottom_toTopOf="@+id/newStart"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/newStart"
+        app:layout_constraintTop_toBottomOf="@+id/changeDate" />
 
     <EditText
         android:id="@+id/oldEnd"
         android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="135dp"
-        android:layout_marginBottom="208dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
+        android:hint="Old End"
         android:inputType="textPersonName"
-        android:text="Old End"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/newEnd"
         app:layout_constraintEnd_toStartOf="@+id/button27"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newStart"
+        app:layout_constraintVertical_bias="1.0" />
 
     <EditText
         android:id="@+id/newEnd"
-        android:layout_width="112dp"
-        android:layout_height="43dp"
-        android:layout_marginStart="136dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:ems="10"
+        android:hint="New End"
         android:inputType="textPersonName"
-        android:text="New End"
+        app:layout_constraintBottom_toTopOf="@+id/button29"
+        app:layout_constraintEnd_toStartOf="@+id/button27"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/newStart" />
+        app:layout_constraintTop_toBottomOf="@+id/button27" />
 
     <Button
         android:id="@+id/button27"
+        android:layout_width="136dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="9dp"
+        android:onClick="updateEnd"
+        android:text="Change End"
+        app:layout_constraintBottom_toTopOf="@+id/newEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/newEnd"
+        app:layout_constraintTop_toBottomOf="@+id/newStart" />
+
+    <EditText
+        android:id="@+id/editText9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="6dp"
-        android:layout_marginBottom="200dp"
-        android:text="Change End"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="17dp"
+        android:ems="10"
+        android:hint="New Route"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toStartOf="@+id/button29"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newEnd" />
+
+    <EditText
+        android:id="@+id/editText10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="17dp"
+        android:layout_marginBottom="16dp"
+        android:ems="10"
+        android:hint="New Prices"
+        android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button29"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button29" />
+
+    <Button
+        android:id="@+id/button29"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="9dp"
+        android:onClick="updateRoutePrices"
+        android:text="Change Route"
+        app:layout_constraintBottom_toTopOf="@+id/editText10"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/oldEnd"
-        app:layout_constraintTop_toBottomOf="@+id/changeStart"
-        android:onClick="updateEnd"/>
+        app:layout_constraintStart_toEndOf="@+id/editText10"
+        app:layout_constraintTop_toBottomOf="@+id/newEnd" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="26dp"
+        android:text="Update any feature of your selected trip:"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/changeTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

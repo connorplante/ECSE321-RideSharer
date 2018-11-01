@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class SelectUsername extends AppCompatActivity {
@@ -72,14 +73,18 @@ public class SelectUsername extends AppCompatActivity {
 //    }
 public void switchViewSelectStartEnd(View v){
 
-    final TextView username = (TextView) findViewById(R.id.editText);
+    //final TextView username = (TextView) findViewById(R.id.editText);
     Intent intent3 = new Intent(this, SelectStartEnd.class);
+    Spinner spinner = (Spinner) findViewById(R.id.spinner2);
+    String numSeats = spinner.getSelectedItem().toString();
 
     Bundle extras = getIntent().getExtras();
 
 
     intent3.putExtras(extras);
-    intent3.putExtra("USERNAME",username.getText().toString());
+    intent3.putExtra("USERNAME","donya");
+    intent3.putExtra("NUMSEATS", numSeats);
+
     startActivity(intent3);
 
 }

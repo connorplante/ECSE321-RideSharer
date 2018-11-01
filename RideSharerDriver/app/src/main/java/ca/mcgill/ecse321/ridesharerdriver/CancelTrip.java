@@ -105,9 +105,8 @@ public class CancelTrip extends AppCompatActivity {
         }
 
 
-        System.out.println("This is: " + tripIds);
-        System.out.println("This is: " + prices);
-        System.out.println("This is: " + numSeats);
+
+
         ListView listView = (ListView) findViewById(R.id.listView);
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
@@ -196,8 +195,6 @@ public class CancelTrip extends AppCompatActivity {
         final TextView tripID = (TextView) v.findViewById(R.id.textView_id);
 
 
-System.out.println("The trip id is: " + tripID.getText().toString());
-     System.out.println("/Trip/cancelTrip?tripID=" + tripID.getText().toString());
      HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
 
 

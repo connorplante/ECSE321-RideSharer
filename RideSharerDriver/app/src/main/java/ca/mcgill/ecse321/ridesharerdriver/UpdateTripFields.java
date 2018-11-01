@@ -149,4 +149,43 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
 
         });
     }
+
+    public void updateRoutePrices(View v){
+
+        Bundle extras = getIntent().getExtras();
+
+
+        final TextView stops = (TextView) findViewById(R.id.editText9);
+        final TextView prices = (TextView) findViewById(R.id.editText10);
+        String tripID = extras.getString("TRIPID");
+        String stops2 = stops.getText().toString();
+        String[] finalStops = stops2.split("-");
+        String urlStops = "";
+
+        for(int i = 0; i < finalStops.length; i++ ){
+            String str1 = "&stops=";
+            urlStops += str1 + finalStops[i];
+        }
+
+        String prices2 = prices.getText().toString();
+        String[] finalPrices = prices2.split(",");
+        String urlPrices = "";
+
+        for(int j = 0; j < finalPrices.length; j++ ){
+            String str2 = "&prices=";
+            urlStops += str2 + finalPrices[j];
+        }
+
+
+        HttpUtils.post("/Trip/updateRoute?tripID=" + tripID +
+                urlStops + urlPrices, new RequestParams(), new JsonHttpResponseHandler(){
+
+        });
+
+
+
+    }
+
+
+
 }

@@ -110,15 +110,13 @@ public class ManageTrips extends AppCompatActivity {
         String url = "/Trip/scheduledTripsOfDriver?username=donya";
 
 
-        System.out.println("Url: " + url);
+
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
+
                 ArrayList<Integer> tripIds = new ArrayList<>();
 
                 // add trip ids from response to the array list
@@ -130,7 +128,7 @@ public class ManageTrips extends AppCompatActivity {
                     }
                 }
 
-                System.out.println("ArrayList: " + tripIds.toString());
+
 
 
                 // call next view to display trips
@@ -169,13 +167,11 @@ public class ManageTrips extends AppCompatActivity {
         String start = "Ottawa";
         String end = "Toronto";
         String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
-        System.out.println(url);
+
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
+
 
                 // add trip ids from response to the array list
                 ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
@@ -208,12 +204,7 @@ public class ManageTrips extends AppCompatActivity {
                     stopsLists.add(stopList);
                 }
 
-                System.out.println("response in arraylist of arraylists:");
-                System.out.println(dates);
-                System.out.println(prices);
-                System.out.println(status);
-                System.out.println(numSeats);
-                System.out.println(stopsLists);
+
 
 
 
@@ -259,7 +250,7 @@ public class ManageTrips extends AppCompatActivity {
         }
 
 
-        System.out.println("=======================================");
+
 
         intent.putExtras(b);
         startActivity(intent);
@@ -276,15 +267,12 @@ public class ManageTrips extends AppCompatActivity {
         String url = "/Trip/scheduledTripsOfDriver?username=donya";
 
 
-        System.out.println("Url: " + url);
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
+
                 ArrayList<Integer> tripIds = new ArrayList<>();
 
                 // add trip ids from response to the array list
@@ -296,7 +284,7 @@ public class ManageTrips extends AppCompatActivity {
                     }
                 }
 
-                System.out.println("ArrayList: " + tripIds.toString());
+
 
 
                 // call next view to display trips
@@ -306,7 +294,7 @@ public class ManageTrips extends AppCompatActivity {
             @Override
             public void onFinish() {
                 //refreshErrorMessage();
-System.out.println("On FINISH");
+
 
             }
             @Override
@@ -335,13 +323,12 @@ System.out.println("On FINISH");
         String start = "Ottawa";
         String end = "Toronto";
         String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
-        System.out.println(url);
+
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
+
+
 
                 // add trip ids from response to the array list
                 ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
@@ -374,12 +361,6 @@ System.out.println("On FINISH");
                     stopsLists.add(stopList);
                 }
 
-                System.out.println("response in arraylist of arraylists:");
-                System.out.println(dates);
-                System.out.println(prices);
-                System.out.println(status);
-                System.out.println(numSeats);
-                System.out.println(stopsLists);
 
 
                 viewFoundTripsUpdate(tripIds, prices, dates, numSeats, status, stopsLists);
@@ -422,7 +403,7 @@ System.out.println("On FINISH");
         }
 
 
-        System.out.println("=======================================");
+
 
         intent.putExtras(b);
         startActivity(intent);

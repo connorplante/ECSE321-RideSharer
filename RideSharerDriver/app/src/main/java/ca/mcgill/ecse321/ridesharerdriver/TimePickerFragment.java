@@ -49,7 +49,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
         TextView tv1=(TextView) getActivity().findViewById(R.id.textView1);
         tv1.setText(view.getCurrentHour()+""+view.getCurrentMinute());
-        System.out.println("This is the time: " + tv1.getText().toString());
+
 
     }
 }

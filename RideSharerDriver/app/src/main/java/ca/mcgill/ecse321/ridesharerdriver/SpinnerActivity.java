@@ -17,8 +17,8 @@ public class SpinnerActivity extends Activity implements AdapterView.OnItemSelec
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_car_idnum_seats);
-        Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+        setContentView(R.layout.activity_select_username);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner2);
         spinner.setOnItemSelectedListener(this);
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item,numSeats);

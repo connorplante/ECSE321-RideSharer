@@ -5,7 +5,7 @@
     android:visibility="visible">
 
     <TextView
-        android:id="@+id/textView_updateID"
+        android:id="@+id/textView_carID"
         android:textSize="30dp"
         android:layout_width="82dp"
         android:layout_height="86dp"
@@ -17,11 +17,11 @@
         android:gravity="center"
         android:background="#4EC379"
         android:textColor="#FFFF"
-        android:onClick="switchViewUpdateTripFields"
-        android:text="TripId" />
+        android:onClick="switchViewSelectRoutePrices"
+        android:text="CarId" />
 
     <TextView
-        android:id="@+id/textView_updateTime"
+        android:id="@+id/textView_model"
         android:layout_width="133dp"
         android:layout_height="34dp"
         android:layout_alignParentStart="true"
@@ -30,18 +30,18 @@
         android:layout_marginLeft="-1dp"
         android:layout_marginTop="45dp"
         android:layout_marginRight="110dp"
-        android:text="Status"
+        android:text="Model"
         android:textSize="18dp" />
 
     <TextView
-        android:id="@+id/textView_updateDate"
+        android:id="@+id/textView_make"
         android:layout_width="131dp"
         android:layout_height="30dp"
-        android:layout_alignTop="@+id/button50"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="104dp"
-        android:layout_marginTop="1dp"
-        android:text="Date"
+        android:layout_marginTop="16dp"
+        android:text="Make"
         android:textSize="18dp" />
 
     <TextView
@@ -59,6 +59,8 @@
         android:layout_marginStart="105dp"
         android:layout_marginTop="79dp"
         android:textSize="18dp" />
+
+
 
 
 </RelativeLayout>

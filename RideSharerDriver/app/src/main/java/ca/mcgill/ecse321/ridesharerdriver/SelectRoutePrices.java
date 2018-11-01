@@ -75,7 +75,7 @@ public class SelectRoutePrices extends AppCompatActivity {
         final TextView stops = (TextView) findViewById(R.id.editText5);
         final TextView prices = (TextView) findViewById(R.id.editText7);
         String stops2 = stops.getText().toString();
-        String[] finalStops = stops2.split(",");
+        String[] finalStops = stops2.split("-");
         String urlStops = "";
 
         for(int i = 0; i < finalStops.length; i++ ){
@@ -97,11 +97,10 @@ public class SelectRoutePrices extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         intent6.putExtras(extras);
-        intent6.putExtra("ROUTES", urlStops);
-        intent6.putExtra("PRICES", urlPrices);
-
-
-
+        intent6.putExtra("ROUTES",stops2);
+        intent6.putExtra("PRICES",prices2);
+        intent6.putExtra("URLROUTES", urlStops);
+        intent6.putExtra("URLPRICES", urlPrices);
         startActivity(intent6);
     }
 

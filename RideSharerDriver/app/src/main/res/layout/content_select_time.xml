@@ -12,41 +12,53 @@
         android:id="@+id/button18"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginTop="376dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="452dp"
         android:onClick="switchViewSelectUsername"
-        android:text="Next >"
+        android:text="Next"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button24"
-        android:layout_width="wrap_content"
-        android:layout_height="52dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="80dp"
+        android:layout_width="128dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="67dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginBottom="354dp"
         android:onClick="showTimePickerOnDialog"
         android:text="Select Time"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button25"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView1" />
 
     <Button
         android:id="@+id/button25"
-        android:layout_width="118dp"
-        android:layout_height="52dp"
+        android:layout_width="125dp"
+        android:layout_height="56dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="323dp"
         android:onClick="showDatePickerOnDialog"
         android:text="Select Date"
-        tools:layout_editor_absoluteX="196dp"
-        tools:layout_editor_absoluteY="80dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/button24"
+        app:layout_constraintTop_toBottomOf="@+id/textView1"
+        app:layout_constraintVertical_bias="0.663" />
 
     <TextView
         android:id="@+id/textView1"
-        android:layout_width="246dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginBottom="408dp"
-        android:text="Select the date and time for your trip!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_width="339dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="61dp"
+        android:text="Select the date and time for your trip"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/button24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
