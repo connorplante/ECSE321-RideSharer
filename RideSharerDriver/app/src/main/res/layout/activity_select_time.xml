@@ -4,7 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CancelTrip">
+    tools:context=".SelectTime">
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/init_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/init_text2"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,7 +38,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_cancel_trip" />
+    <include layout="@layout/content_select_time" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -31,5 +49,3 @@
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </android.support.design.widget.CoordinatorLayout>
-
-

@@ -8,11 +8,34 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.view.ViewGroup;
+import java.util.ArrayList;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 public class CancelTrip extends AppCompatActivity {
 
     String error = "";
+    ArrayList<Integer> tripIds;
+    ArrayList<String> prices;
+    ArrayList<String> numSeats;
+    ArrayList<String> status;
+    ArrayList<String> dates;
+    ArrayList<ArrayList<String>> stopsLists;
+
+
+    public static final String tripIDs = "ca.mcgill.ecse321.ridesharerdriver.tripIDs";
+    public static final String START = "ca.mcgill.ecse321.ridesharerdriver.start";
+    public static final String END = "ca.mcgill.ecse321.ridesharerdriver.end";
+    public static final String PRICES = "ca.mcgill.ecse321.ridesharerdriver.prices";
+    public static final String NUMSEATS = "ca.mcgill.ecse321.ridesharerdriver.numSeats";
+    public static final String STATUS = "ca.mcgill.ecse321.ridesharerdriver.status";
+    public static final String DATES = "ca.mcgill.ecse321.ridesharerdriver.dates";
+    public static final String STOPSLISTS = "ca.mcgill.ecse321.ridesharerdriver.stopslists";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +53,105 @@ public class CancelTrip extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+        if (getIntent().hasExtra(tripIDs)) {
+            tripIds = getIntent().getIntegerArrayListExtra(tripIDs);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + tripIDs);
+        }
+
+        // Get the tripIDs passed to this page from TripListings
+
+
+        // Get the tripIDs passed to this page from TripListings
+
+
+        if (getIntent().hasExtra(PRICES)) {
+            prices = getIntent().getStringArrayListExtra(PRICES);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + PRICES);
+        }
+
+        if (getIntent().hasExtra(NUMSEATS)) {
+            numSeats = getIntent().getStringArrayListExtra(NUMSEATS);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + NUMSEATS);
+        }
+
+        if (getIntent().hasExtra(DATES)) {
+            dates = getIntent().getStringArrayListExtra(DATES);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + DATES);
+        }
+
+        if (getIntent().hasExtra(STATUS)) {
+            status = getIntent().getStringArrayListExtra(STATUS);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + STATUS);
+        }
+
+        stopsLists = new ArrayList<ArrayList<String>>();
+        for (int i = 0; i < dates.size(); i++) {
+            ArrayList<String> stops = new ArrayList<String>();
+            if (getIntent().hasExtra(STOPSLISTS + i)) {
+                stops = getIntent().getStringArrayListExtra(STOPSLISTS + i);
+            } else {
+                throw new IllegalArgumentException("Activity cannot find  extras " + STOPSLISTS);
+            }
+            stopsLists.add(stops);
+        }
+
+
+
+
+        ListView listView = (ListView) findViewById(R.id.listView);
+        CustomAdapter customAdapter = new CustomAdapter();
+        listView.setAdapter(customAdapter);
+
+
     }
 
+    class CustomAdapter extends BaseAdapter{
+        @Override
+        public int getCount() {
+            return tripIds.size();
+        }
+        @Override
+        public Object getItem(int i) {
+            return null;
+        }
+        @Override
+        public long getItemId(int i){
+            return 0;
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup){
+
+
+            convertView = getLayoutInflater().inflate(R.layout.custom_cancel_trip, null);
+
+            TextView textView_id = (TextView)convertView.findViewById(R.id.textView_id);
+            TextView textView_date = (TextView)convertView.findViewById(R.id.textView_date);
+            TextView textView_time = (TextView)convertView.findViewById(R.id.textView_time);
+            TextView textView_start = (TextView)convertView.findViewById(R.id.textView_start);
+            TextView textView_end = (TextView)convertView.findViewById(R.id.textView_end);
+
+            //System.out.println("HELLO!!!!");
+
+
+            textView_id.setText(tripIds.get(position).toString());
+            textView_date.setText(dates.get(position));
+           // textView_start.setText("$ " + prices.get(position));
+           // textView_end.setText(numSeats.get(position));
+            textView_time.setText(status.get(position));
+
+            return convertView;
+        }
+
+    }
 
 
     @Override
@@ -66,6 +186,19 @@ public class CancelTrip extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
+
+    }
+
+
+    public void cancelTrip(View v) {
+
+        final TextView tripID = (TextView) v.findViewById(R.id.textView_id);
+
+
+     HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
+
+
+        });
 
     }
 

@@ -117,6 +117,7 @@ public class TripController {
         //Return the created trip
         return finalTrip;
     }
+
 	//Method to return a list of upcoming trips associated with a driver 
 	@RequestMapping("/scheduledTripsOfDriver")
      public List<Integer> scheduledTripsOfDriver(@RequestParam(value="username")String username){
@@ -145,6 +146,10 @@ public class TripController {
 
            // Car car = (Car) session.byNaturalId(Car.class).using ("CarID", carID).load();
           
+
+
+
+
             String string4 = "SELECT TripID FROM Trips where FK_UserID = :userID and Status= 0";
             //String string2 = "SELECT TripID, Date, Time, Start, End, Status FROM Trips where FK_UserID= :userID and Status= 0";
             SQLQuery query2 = session.createSQLQuery(string4);
@@ -160,9 +165,7 @@ public class TripController {
             return scheduledTripsObjects;
 
      }
-	
-	
-	
+  
     /**
      * Method to cancel a Trip 
      * Use the url /Trip/cancelTrip

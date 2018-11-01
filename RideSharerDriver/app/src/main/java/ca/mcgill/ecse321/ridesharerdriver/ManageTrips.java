@@ -10,6 +10,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.ListView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
+
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -68,18 +81,18 @@ public class ManageTrips extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void refreshErrorMessage() {
-        // set the error message
-        TextView tvError = (TextView) findViewById(R.id.error);
-        tvError.setText(error);
-
-        if (error == null || error.length() == 0) {
-            tvError.setVisibility(View.GONE);
-        } else {
-            tvError.setVisibility(View.VISIBLE);
-        }
-
-    }
+//    private void refreshErrorMessage() {
+//        // set the error message
+//        TextView tvError = (TextView) findViewById(R.id.error);
+//        tvError.setText(error);
+//
+//        if (error == null || error.length() == 0) {
+//            tvError.setVisibility(View.GONE);
+//        } else {
+//            tvError.setVisibility(View.VISIBLE);
+//        }
+//
+//    }
 
     public void getRequests(View v){
         error = "";
@@ -244,4 +257,329 @@ public class ManageTrips extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void findDriversTripsCancel(View v) {
+        error = "";
+
+
+        String url = "/Trip/scheduledTripsOfDriver?username=donya";
+
+
+
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+                ArrayList<Integer> tripIds = new ArrayList<>();
+
+                // add trip ids from response to the array list
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        tripIds.add(response.getInt(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+
+                // call next view to display trips
+                getTripsInfo(tripIds);
+            }
+
+            @Override
+            public void onFinish() {
+                //refreshErrorMessage();
+
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+               // refreshErrorMessage();
+            }
+        });
+    }
+
+    public void getTripsInfo(final ArrayList<Integer> tripIds){
+        // from me! get tripId info
+        String tripIdList = "";
+
+        for (int i = 0; i < tripIds.size(); i++) {
+            if (i == tripIds.size()-1) {
+                tripIdList = tripIdList + tripIds.get(i).toString();
+            } else {
+                tripIdList = tripIdList + tripIds.get(i).toString() + ",";
+            }
+        }
+        String start = "Ottawa";
+        String end = "Toronto";
+        String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+
+                // add trip ids from response to the array list
+                ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
+                ArrayList<String> stopsStrs = new ArrayList<String>();
+                ArrayList<String> dates = new ArrayList<String>();
+                ArrayList<String> prices = new ArrayList<String>();
+                ArrayList<String> numSeats = new ArrayList<String>();
+                ArrayList<String> status = new ArrayList<String>();
+
+
+                for (int i = 0; i < response.length(); i++) {
+                    ArrayList<String> stopList = new ArrayList<String>();
+                    try {
+                        for (int j = 0; j < response.getJSONArray(i).length(); j++){
+                            if ( j == 0) {
+                                dates.add(response.getJSONArray(i).getString(0));
+                            } else if ( j == 1) {
+                                prices.add(response.getJSONArray(i).getString(1));
+                            } else if ( j == 2) {
+                                numSeats.add(response.getJSONArray(i).getString(2));
+                            } else if ( j == 3) {
+                                status.add(response.getJSONArray(i).getString(3));
+                            } else {
+                                stopList.add(response.getJSONArray(i).getString(j));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    stopsLists.add(stopList);
+                }
+
+
+
+
+
+
+
+                    viewFoundTripsCancel(tripIds, prices, dates, numSeats, status, stopsLists);
+
+
+            }
+            @Override
+            public void onFinish() {
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                //refreshErrorMessage();
+            }
+        });
+
+
+    }
+
+
+
+    public void viewFoundTripsCancel(ArrayList<Integer> tripIds, ArrayList<String> prices,
+                               ArrayList<String> dates, ArrayList<String> numSeats, ArrayList<String> status,
+                               ArrayList<ArrayList<String>> stopsLists){
+
+        Intent intent = new Intent(this, CancelTrip.class);
+        Bundle b = new Bundle();
+        b.putIntegerArrayList(CancelTrip.tripIDs, tripIds);
+        b.putStringArrayList(CancelTrip.DATES, dates);
+        b.putStringArrayList(CancelTrip.NUMSEATS, numSeats);
+        b.putStringArrayList(CancelTrip.STATUS, status);
+        b.putStringArrayList(CancelTrip.PRICES, prices);
+        for (int i = 0; i < stopsLists.size(); i++) {
+            b.putStringArrayList(CancelTrip.STOPSLISTS + i, stopsLists.get(i));
+        }
+
+
+
+
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
+
+    //COPIED RIGHT HERE
+
+
+    public void findDriversTripsUpdate(View v) {
+        error = "";
+
+
+        String url = "/Trip/scheduledTripsOfDriver?username=donya";
+
+
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+                ArrayList<Integer> tripIds = new ArrayList<>();
+
+                // add trip ids from response to the array list
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        tripIds.add(response.getInt(i));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+
+
+                // call next view to display trips
+                getTripsInfo2(tripIds);
+            }
+
+            @Override
+            public void onFinish() {
+                //refreshErrorMessage();
+
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                // refreshErrorMessage();
+            }
+        });
+    }
+
+    public void getTripsInfo2(final ArrayList<Integer> tripIds){
+        // from me! get tripId info
+        String tripIdList = "";
+
+        for (int i = 0; i < tripIds.size(); i++) {
+            if (i == tripIds.size()-1) {
+                tripIdList = tripIdList + tripIds.get(i).toString();
+            } else {
+                tripIdList = tripIdList + tripIds.get(i).toString() + ",";
+            }
+        }
+        String start = "Ottawa";
+        String end = "Toronto";
+        String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+
+
+                // add trip ids from response to the array list
+                ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
+                ArrayList<String> stopsStrs = new ArrayList<String>();
+                ArrayList<String> dates = new ArrayList<String>();
+                ArrayList<String> prices = new ArrayList<String>();
+                ArrayList<String> numSeats = new ArrayList<String>();
+                ArrayList<String> status = new ArrayList<String>();
+
+
+                for (int i = 0; i < response.length(); i++) {
+                    ArrayList<String> stopList = new ArrayList<String>();
+                    try {
+                        for (int j = 0; j < response.getJSONArray(i).length(); j++){
+                            if ( j == 0) {
+                                dates.add(response.getJSONArray(i).getString(0));
+                            } else if ( j == 1) {
+                                prices.add(response.getJSONArray(i).getString(1));
+                            } else if ( j == 2) {
+                                numSeats.add(response.getJSONArray(i).getString(2));
+                            } else if ( j == 3) {
+                                status.add(response.getJSONArray(i).getString(3));
+                            } else {
+                                stopList.add(response.getJSONArray(i).getString(j));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    stopsLists.add(stopList);
+                }
+
+
+
+                viewFoundTripsUpdate(tripIds, prices, dates, numSeats, status, stopsLists);
+
+
+            }
+            @Override
+            public void onFinish() {
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                //refreshErrorMessage();
+            }
+        });
+
+
+    }
+
+
+
+    public void viewFoundTripsUpdate(ArrayList<Integer> tripIds, ArrayList<String> prices,
+                                     ArrayList<String> dates, ArrayList<String> numSeats, ArrayList<String> status,
+                                     ArrayList<ArrayList<String>> stopsLists){
+
+        Intent intent = new Intent(this, UpdateTrip.class);
+        Bundle b = new Bundle();
+        b.putIntegerArrayList(UpdateTrip.tripIDs, tripIds);
+        b.putStringArrayList(UpdateTrip.DATES, dates);
+        b.putStringArrayList(UpdateTrip.NUMSEATS, numSeats);
+        b.putStringArrayList(UpdateTrip.STATUS, status);
+        b.putStringArrayList(UpdateTrip.PRICES, prices);
+        for (int i = 0; i < stopsLists.size(); i++) {
+            b.putStringArrayList(UpdateTrip.STOPSLISTS + i, stopsLists.get(i));
+        }
+
+
+
+
+        intent.putExtras(b);
+        startActivity(intent);
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
