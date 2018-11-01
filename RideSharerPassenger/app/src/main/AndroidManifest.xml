@@ -116,14 +116,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.mcgill.ecse321.ridesharerpassenger.TripListings" />
         </activity>
-        <activity
-            android:name=".ViewMapActivity"
-            android:label="@string/title_activity_view_map"
-            android:parentActivityName=".ShowTripListings">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ca.mcgill.ecse321.ridesharerpassenger.ShowTripListings" />
-        </activity>
 
         <activity
             android:name=".GoogleMapsActivity"

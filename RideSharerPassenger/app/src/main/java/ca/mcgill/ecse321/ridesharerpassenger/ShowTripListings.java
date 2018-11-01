@@ -202,7 +202,6 @@ public class ShowTripListings extends AppCompatActivity {
 
         Bundle b = new Bundle();
         b.putStringArrayList(GoogleMapsActivity.STOPS, stops);
-        GoogleMapsUtil.getMapData();
 
         Intent intent = new Intent(this, GoogleMapsActivity.class);
         intent.putExtras(b);
@@ -212,6 +211,32 @@ public class ShowTripListings extends AppCompatActivity {
     public void bookTrip(View view) {
         //Intent intent = new Intent(this, GoogleMapsActivity.class);
         //startActivity(intent);
+        // passenger name
+        // trip id
+        // start
+        // end
+        //String url = "/request/createRequest?passengerName=" + username + "&tripID=" + tripId + "&start=" + start + "&end=" + end;
+ /*       HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                refreshErrorMessage();
+            }
+        });*/
     }
 
     private void refreshErrorMessage() {
