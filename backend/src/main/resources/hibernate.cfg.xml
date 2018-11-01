@@ -21,11 +21,11 @@
     </property>
     
     <property name = "hibernate.connection.password">
-        beioaf1xfbjk7rj1
+        gjeh0zkw27b5q7dy
     </property>
 
     <property name="connection.pool_size">
-        10
+        50
     </property>
 
     <mapping class="ca.mcgill.ecse321.model.Admin" />
