@@ -9,5 +9,7 @@ before_install:
   - cd backend
 
   script: 
+  - cd ..   
   - cp backend/src/test/resources/test.hibernate.cfg.xml backend/src/main/resources/hibernate.cfg.xml
+  - cd backend
   - mvn test -B
