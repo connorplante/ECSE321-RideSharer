@@ -200,6 +200,17 @@ public class RequestController {
         session.getTransaction().commit();
         session.close();
 
+        Session session3 = HibernateUtil.getSession();
+        session3.beginTransaction();
+
+        Request request2 = (Request) session3.load(Request.class, requestID);
+
+        String a = request2.getStart();
+        String b = request2.getEnd();
+
+        session3.getTransaction().commit();
+        session3.close();
+
         String host = "smtp.gmail.com";  
         String wmail = "t00.ridesharer@gmail.com";//change accordingly  
         String pw = "qydaqzkmmqnxgqjh";//change accordingly
@@ -234,8 +245,10 @@ public class RequestController {
          } catch (MessagingException e) {e.printStackTrace();} 
 
          ArrayList<String> returning = new ArrayList<String>();
-         returning.add(0, "hi");
-         return returning;
+        returning.add(0, a);
+        returning.add(1, b);
+        return returning;
+
     }
 
     @RequestMapping("/rejectRequest")
