@@ -95,7 +95,7 @@ public class PassengerController {
                 if(allLegs.get(i).getNumSeats() == 0) {
                     error = "There are no available seats for this trip";
                 }
-                passengerLegs.add(allLegs.get(i));
+                passengerLegs.add(allLegs.get(i);
                 totalPricePassenger = totalPricePassenger + allLegs.get(i).getPrice();
                 System.out.println("bottom of loop " +totalPricePassenger);
             }
