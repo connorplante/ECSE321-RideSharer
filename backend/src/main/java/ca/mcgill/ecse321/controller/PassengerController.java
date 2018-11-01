@@ -75,6 +75,8 @@ public class PassengerController {
         int startId = 0;
         int endId = 0;
 
+        String s = "";
+
         //Filter allLegs to only the required legs based on the pointA and pointB requested by user
         for(int i =0 ; i< allLegs.size(); i++) {
             if(allLegs.get(i).getStart().contentEquals(pointA)) {
@@ -89,7 +91,6 @@ public class PassengerController {
         s += "\n end id " + endId;
         double totalPricePassenger = 0;
         ArrayList<Leg> passengerLegs = new ArrayList<Leg>();
-        String s = "";
 
         //Add the required legs to an array passengerLegs, total the price
         for(int i = 0; i < allLegs.size(); i++) {
