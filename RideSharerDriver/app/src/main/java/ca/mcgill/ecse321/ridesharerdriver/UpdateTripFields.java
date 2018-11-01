@@ -133,4 +133,20 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
 
 
     }
+
+
+    public void updateEnd(View v){
+        Bundle extras = getIntent().getExtras();
+        final TextView tv1 = (TextView) findViewById(R.id.oldEnd);
+        final TextView tv2 = (TextView) findViewById(R.id.newEnd);
+        String tripID = extras.getString("TRIPID");
+        String oldEnd = tv1.getText().toString();
+        String newEnd = tv2.getText().toString();
+
+        HttpUtils.post("/Trip/updateEnd?oldStart=" + oldEnd + "&newStart=" + newEnd + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+
+
+
+        });
+    }
 }
