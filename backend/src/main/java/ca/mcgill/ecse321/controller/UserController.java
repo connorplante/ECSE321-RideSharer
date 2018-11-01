@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.controller;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.SQLQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,8 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/User")
@@ -410,6 +413,71 @@ public class UserController {
         return ret;
     }
 
+    @RequestMapping("/showPassengersForTrip")
+    public String[] showPassengersForTrip(@RequestParam(value="TripID") int TripID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        String string = "SELECT FK_UserID from PassengerTrips where FK_TripID=:TripID";
+        SQLQuery queryFindPassengers = session.createSQLQuery(string);
+        queryFindPassengers.setParameter("TripID", TripID);
+
+        List<Integer> passengers = queryFindPassengers.list(); 
+
+       session.getTransaction().commit();
+       session.close();
+
+       List<String> stringPassengers = new ArrayList<String>(passengers.size());
+       for(Integer UserID : passengers) {
+            String username = getUsernameByID(UserID);
+            stringPassengers.add(username);
+       }
+       String[] returnPassengers = stringPassengers.toArray(new String[0]);
+    
+       return returnPassengers;
+    }
+
+    @RequestMapping("/showDriverForTrip")
+    public String[] showDriverForTrip(@RequestParam(value="TripID") int TripID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+       String string = "SELECT FK_UserID from Trips where TripID=:TripID";
+       SQLQuery queryFindDriver = session.createSQLQuery(string);
+       queryFindDriver.setParameter("TripID", TripID);
+
+       List<Integer> driver = queryFindDriver.list(); 
+       
+       session.getTransaction().commit();
+       session.close();
+
+       List<String> stringDriver = new ArrayList<String>(driver.size());
+       for(Integer UserID : driver) {
+            String username = getUsernameByID(UserID);
+            stringDriver.add(username);
+       }
+       String[] returnDriver = stringDriver.toArray(new String[0]);
+       
+       return returnDriver;
+    }
+
+    public String getUsernameByID(@RequestParam(value="UserID") int UserID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        String string = "SELECT Username FROM Users WHERE UserID=:UserID";
+        SQLQuery queryFindUsername = session.createSQLQuery(string);
+        queryFindUsername.setParameter("UserID", UserID);
+
+        List<String> username = queryFindUsername.list();
+
+        session.getTransaction().commit();
+        session.close();
+
+        String returnUser = username.toString();
+        return returnUser;
+    }
+    
     public User getUserByUsername(String username) {
         return (User) session.byNaturalId( User.class ).using( "username", username ).load();
     }
