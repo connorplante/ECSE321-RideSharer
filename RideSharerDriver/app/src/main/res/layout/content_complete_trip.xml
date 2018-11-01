@@ -8,4 +8,9 @@
     tools:context=".CompleteTrip"
     tools:showIn="@layout/activity_complete_trip">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"/>
+
 </android.support.constraint.ConstraintLayout>
