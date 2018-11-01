@@ -90,14 +90,12 @@ public class PassengerController {
 
         //Add the required legs to an array passengerLegs, total the price
         for(int i = 0; i < allLegs.size(); i++) {
-            System.out.println(totalPricePassenger + "top of loop");
             if (allLegs.get(i).getLegID() >= startId && allLegs.get(i).getLegID() <= endId) {
                 if(allLegs.get(i).getNumSeats() == 0) {
                     error = "There are no available seats for this trip";
                 }
                 passengerLegs.add(allLegs.get(i);
                 totalPricePassenger = totalPricePassenger + allLegs.get(i).getPrice();
-                                  System.out.println(totalPricePassenger + "bottom of loop");
             }
         }
         if (error.length() > 0) {
@@ -114,7 +112,6 @@ public class PassengerController {
 
         //Generate query to update number of seats available on each leg of trip
         for (Leg pl : passengerLegs) {
-            System.out.println("hi");
             Session session1 = HibernateUtil.getSession();
             session1.beginTransaction();
             String string ="UPDATE Legs SET NumSeats= :seats WHERE LegID = :id";
