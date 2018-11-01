@@ -1,88 +1,82 @@
-// package ca.mcgill.ecse321.UserTests;
-// import org.junit.Test;
+import org.junit.Test;
 
-// import ca.mcgill.ecse321.SessionFactoryRule;
-// import ca.mcgill.ecse321.controller.UserController;
-// import ca.mcgill.ecse321.model.*;
+import ca.mcgill.ecse321.controller.UserController;
+import ca.mcgill.ecse321.model.*;
 
-// import static org.junit.Assert.*;
+import static org.junit.Assert.*;
 
-// import org.hibernate.Session;
-// import org.junit.Before;
-// import org.junit.Rule;
+import org.hibernate.Session;
+import org.junit.Before;
+import org.junit.Rule;
 
-// public class UserTest {
+public class UserTest {
 
-//     @Rule 
-//     public final SessionFactoryRule sf = new SessionFactoryRule();
+    public UserController tUserController;
 
-//     public UserController tUserController;
+    @Before
+    public void before() {
+        tUserController = new UserController();
+    }
 
-//     @Before
-//     public void before() {
-//         tUserController = new UserController();
-//         tUserController.changeSession(sf.getSession());
-//     }
+    // @Test
+    // public void returnsUser() {
 
-//     @Test
-//     public void returnsUser() {
+    //     //  Arrange
+    //     Session session = sf.getSession();
 
-//         //  Arrange
-//         Session session = sf.getSession();
+    //     sf.beginTransaction();
 
-//         sf.beginTransaction();
+    //     String username = "tUsername";
+    //     String email = "test@test.com";
+    //     String firstName = "tFirstName";
+    //     String lastName = "tLastName";
 
-//         String username = "tUsername";
-//         String email = "test@test.com";
-//         String firstName = "tFirstName";
-//         String lastName = "tLastName";
+    //     User tUser = new User();
+    //     tUser.setUsername(username);
+    //     tUser.setEmail(email);
+    //     tUser.setFirstName(firstName);
+    //     tUser.setLastName(lastName);
 
-//         User tUser = new User();
-//         tUser.setUsername(username);
-//         tUser.setEmail(email);
-//         tUser.setFirstName(firstName);
-//         tUser.setLastName(lastName);
+    //     session.save(tUser);
 
-//         session.save(tUser);
+    //     sf.commit();
 
-//         sf.commit();
+    //     //  Act
+    //     User returnedUser = tUserController.getUserByUsername(username);
 
-//         //  Act
-//         User returnedUser = tUserController.getUserByUsername(username);
+    //     //  Assert
+    //     assertNotNull(returnedUser);
+    //     assertEquals(1, returnedUser.getUserID());
+    //     assertEquals(username, returnedUser.getUsername());
+    //     assertEquals(email, returnedUser.getEmail());
+    //     assertEquals(firstName, returnedUser.getFirstName());
+    //     assertEquals(lastName, returnedUser.getLastName());
+    // }
 
-//         //  Assert
-//         assertNotNull(returnedUser);
-//         assertEquals(1, returnedUser.getUserID());
-//         assertEquals(username, returnedUser.getUsername());
-//         assertEquals(email, returnedUser.getEmail());
-//         assertEquals(firstName, returnedUser.getFirstName());
-//         assertEquals(lastName, returnedUser.getLastName());
-//     }
-
-//     @Test
-//     public void createDriverTest() {
-//         //  Arrange 
-//         String username = "tUsername";
-//         String email = "test@test.com";
-//         String firstName = "tFirstName";
-//         String lastName = "tLastName";
-//         String password = "p";
-//         String phone = "1";
+    @Test
+    public void createDriverTest() {
+        //  Arrange 
+        String username = "tUsername2";
+        String email = "test@test.com";
+        String firstName = "tFirstName";
+        String lastName = "tLastName";
+        String password = "p";
+        String phone = "1";
 
 
-//         //  Act
-//         tUserController.createDriver(username, password, firstName, lastName, email, phone);
-//         User reUser = tUserController.getUserByUsername(username);
+        //  Act
+        tUserController.createDriver(username, password, firstName, lastName, email, phone);
+        User reUser = tUserController.getUserByUsername(username);
         
-//         //  Assert
-//         assertNotNull(reUser);
-//         assertEquals(1, reUser.getUserID());
-//         assertEquals(username, reUser.getUsername());
-//         assertEquals(email, reUser.getEmail());
-//         assertEquals(firstName, reUser.getFirstName());
-//         assertEquals(lastName, reUser.getLastName());
-//         assertEquals(2, reUser.getRole());
-//     }
+        //  Assert
+        assertNotNull(reUser);
+        assertEquals(1, reUser.getUserID());
+        assertEquals(username, reUser.getUsername());
+        assertEquals(email, reUser.getEmail());
+        assertEquals(firstName, reUser.getFirstName());
+        assertEquals(lastName, reUser.getLastName());
+        assertEquals(2, reUser.getRole());
+    }
 
 //     @Test
 //     public void createPassengerTest() throws Exception {
@@ -272,6 +266,12 @@
 //         //  Assert
 //         assertEquals(reUser.toString(), result);
 //         assertEquals(newFirst, reUser.getFirstName());
+//         assertEquals(newLast, reUser.getLastName());
+//         assertEquals(newEmail, reUser.getEmail());
+//         assertEquals(newPhone, reUser.getPhone());
+//     }
+
+}/         assertEquals(newFirst, reUser.getFirstName());
 //         assertEquals(newLast, reUser.getLastName());
 //         assertEquals(newEmail, reUser.getEmail());
 //         assertEquals(newPhone, reUser.getPhone());
