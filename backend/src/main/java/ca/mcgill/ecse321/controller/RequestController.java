@@ -29,15 +29,16 @@ public class RequestController {
     Session session = HibernateUtil.getSession();
 
     @RequestMapping("/createRequest")
-    public Request CreateRequest(@RequestParam(value="passengerName") String passengerName, @RequestParam(value="driverName")
-    String driverName, @RequestParam(value="tripID") int tripID, @RequestParam(value="start") String start,
+    public Request CreateRequest(@RequestParam(value="passengerName") String passengerName, @RequestParam(value="tripID") int tripID, @RequestParam(value="start") String start,
     @RequestParam(value="end") String end){
         
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         Passenger passenger = (Passenger) session.byNaturalId( User.class ).using( "username", passengerName ).load();
-        Driver driver = (Driver) session.byNaturalId( User.class ).using( "username", driverName ).load();
+
+        Driver driver = getDriver(tripID);
+
         String email = driver.getEmail();
         Trip trip = (Trip) session.load(Trip.class, tripID);
 
@@ -84,6 +85,29 @@ public class RequestController {
         
         return request;
 
+    }
+
+    private Driver getDriver(int id){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        String string = "SELECT FK_UserID FROM Trips WHERE TripID= :id";
+        SQLQuery queryFindRequests = session.createSQLQuery(string);
+        queryFindRequests.setParameter("id", id);
+        List<Object[]> requests = queryFindRequests.list();
+
+        session.getTransaction().commit();
+        session.close();
+
+        Integer driverID = Integer.parseInt(requests.get(0)[0].toString());
+
+        Session session2 = HibernateUtil.getSession();
+        session.beginTransaction();
+        Driver driver = (Driver) session.load(User.class, driverID);
+        session.getTransaction().commit();
+        session.close();
+
+        return driver;
     }
 
     @RequestMapping("/showRequestsToDriver")
@@ -164,7 +188,7 @@ public class RequestController {
     }
 
     @RequestMapping("/acceptRequest")
-    public Request setStatus(@RequestParam(value="requestID") int requestID){
+    public ArrayList<String> setStatus(@RequestParam(value="requestID") int requestID){
        
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
@@ -211,11 +235,13 @@ public class RequestController {
              Transport.send(message);
          } catch (MessagingException e) {e.printStackTrace();} 
 
-        return request;
+         ArrayList<String> returning = new ArrayList<String>();
+         returning.add(0, "hi");
+         return returning;
     }
 
     @RequestMapping("/rejectRequest")
-    public Request rejectRequest(@RequestParam(value="requestID") int requestID){
+    public ArrayList<String> rejectRequest(@RequestParam(value="requestID") int requestID){
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
@@ -262,7 +288,9 @@ public class RequestController {
              Transport.send(message);
          } catch (MessagingException e) {e.printStackTrace();} 
 
-        return request;
+        ArrayList<String> returning = new ArrayList<String>();
+        returning.add(0, "hi");
+        return returning;
 
     }
 

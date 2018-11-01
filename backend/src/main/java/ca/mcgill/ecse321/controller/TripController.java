@@ -882,6 +882,72 @@ public class TripController {
        return driver;
     }
 
+    @RequestMapping("/tripsToBeCancelled")
+    public List<Integer> tripsCanBeCancelled(@RequestParam(value="username") String username){
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User driver = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        int id = driver.getUserID();
+
+        session.getTransaction().commit();
+        session.close();
+
+        Session session2 = HibernateUtil.getSession();
+        session2.beginTransaction();
+
+        String string = "SELECT * from Trips where FK_UserID=:id AND Status=0";
+        
+        SQLQuery queryFindDriver = session2.createSQLQuery(string);
+        queryFindDriver.setParameter("id", id);
+        List<Object[]> trips = queryFindDriver.list();
+
+        session2.getTransaction().commit();
+        session2.close();
+
+        ArrayList<Integer> tripIDs = new ArrayList<Integer>();
+
+        for(Object[] o : trips){
+            String a = o[0].toString();
+            Integer i = Integer.parseInt(a);
+            tripIDs.add(i);
+        }
+
+        ArrayList<String> legStrings = new ArrayList<String>();
+
+        for(int i = 0; i < tripIDs.size(); i++){
+            legStrings.add(i, getLegs(i));
+        }
+
+        return tripIDs;
+    }
+
+    public String getLegs(int i){
+        Session session2 = HibernateUtil.getSession();
+        session2.beginTransaction();
+
+        String string = "Select End, NumSeats from Legs where FK_TripID=:id";
+        
+        SQLQuery queryFindDriver = session2.createSQLQuery(string);
+        queryFindDriver.setParameter("id", i);
+        List<Object[]> legs = queryFindDriver.list();
+
+        session2.getTransaction().commit();
+        session2.close();
+
+        String s = "";
+
+        for(int j = 0; j < legs.size(); j++){
+            if(j == legs.size() - 1){
+                s += legs.get(j)[0].toString();
+            }else{
+                s += legs.get(j)[0].toString() + ", ";
+            }
+        }
+        return s;
+    }
+
     public Trip getTripByID(int tripID) {
         return (Trip) session.load(Trip.class, tripID);
     }
