@@ -237,32 +237,31 @@ public class UserController {
      * @param newPassword
      * @return Boolean 
      */
-    @RequestMapping("/logIn")
-    public Boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+    @RequestMapping("/resetPassword")
+    public ArrayList<Boolean> resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
+    @RequestParam(value="newPassword") String newPassword) {
+
+        ArrayList<Boolean> isSet = new ArrayList<Boolean>();
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        User user; 
-
-        //Find user by username in database
-        try{
-            user = getUserByUsername(username);
-        }catch(Exception e){
-            session.close();
-            return new Boolean(false);
-        }
+        User user = getUserByUsername(username);
 
         //Update password to the new one if entered current password is correct
-        if (user.getPassword().equals(password)) {
-            session.getTransaction().commit();
-            session.close();
-            return new Boolean(true);
+        if (user.getPassword().equals(currentPassword)) {
+            user.setPassword(newPassword);
+            session.saveOrUpdate(user);
+            isSet.add(true);
         } else {
-            session.getTransaction().commit();
-            session.close();
-            return new Boolean(false);
+            isSet.add(false);
         }
+
+        //Save and close session
+        session.getTransaction().commit();
+        session.close();
+
+        return isSet;
     }
 
     /**
