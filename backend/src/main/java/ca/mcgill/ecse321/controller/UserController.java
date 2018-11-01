@@ -485,4 +485,30 @@ public class UserController {
     public void changeSession(Session change) {
         this.session = change;
     }
+
+    @RequestMapping("/displayProfileInfo")
+    public ArrayList<String> displayProfileInfo(@RequestParam(value="username") String username){
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+
+        String a = user.getFirstName();
+        String b = user.getLastName();
+        String c = user.getEmail();
+        String d = user.getPhone();
+
+        session.getTransaction().commit();
+        session.close();
+
+        ArrayList<String> returning = new ArrayList<String>();
+        returning.add(0, a);
+        returning.add(1, b);
+        returning.add(2, c);
+        returning.add(3, d);
+
+        return returning;
+
+    }
 }
