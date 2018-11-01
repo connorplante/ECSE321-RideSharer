@@ -881,6 +881,89 @@ public class TripController {
 
        return driver;
     }
+	@RequestMapping("/completedTrips")
+    public ArrayList<ArrayList<String>> completedTrips(@RequestParam(value="username") String username){
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User driver = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+        int id = driver.getUserID();
+
+        session.getTransaction().commit();
+        session.close();
+
+        Session session2 = HibernateUtil.getSession();
+        session2.beginTransaction();
+
+        String string = "SELECT * from Trips where FK_UserID=:id AND Status=2";
+        
+        SQLQuery queryFindDriver = session2.createSQLQuery(string);
+        queryFindDriver.setParameter("id", id);
+        List<Object[]> trips = queryFindDriver.list();
+
+        session2.getTransaction().commit();
+        session2.close();
+
+        ArrayList<Integer> tripIDs = new ArrayList<Integer>();
+
+        for(Object[] o : trips){
+            String a = o[0].toString();
+            Integer i = Integer.parseInt(a);
+            tripIDs.add(i);
+        }
+
+        ArrayList<String> legStrings = new ArrayList<String>();
+
+        int counter = 0;
+
+        for(Integer i : tripIDs){
+            legStrings.add(counter, getLegs(i));
+            counter++;
+        }
+
+        ArrayList<String> dateStrings = new ArrayList<String>();
+        counter = 0;
+
+        for(Object[] o : trips){
+            String a = o[1].toString();
+            dateStrings.add(counter, a.substring(0, 10));
+            counter++;
+        }
+
+        ArrayList<String> timeStrings = new ArrayList<String>();
+        counter = 0;
+
+        for(Object[] o : trips){
+            String a = o[2].toString();
+            timeStrings.add(counter, a);
+            counter++;
+        }
+
+        ArrayList<Integer> numSeats = new ArrayList<Integer>();
+        counter = 0;
+
+        for(Integer w : tripIDs){
+            int p = getNumSeats(w);
+            numSeats.add(counter, p);
+            counter++;
+        }
+
+        ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>();
+
+        for(int k = 0; k < tripIDs.size(); k++){
+            ArrayList<String> inner = new ArrayList<String>();
+
+            inner.add(0, tripIDs.get(k).toString());
+            inner.add(1, legStrings.get(k));
+            inner.add(2, dateStrings.get(k));
+            inner.add(3, timeStrings.get(k));
+            inner.add(4, numSeats.get(k).toString());
+
+            outer.add(k, inner);
+        }
+        return outer;
+    }
 
     @RequestMapping("/tripsToBeCompleted")
     public ArrayList<ArrayList<String>> tripsCanBeCompleted(@RequestParam(value="username") String username){
