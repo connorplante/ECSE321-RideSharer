@@ -87,12 +87,12 @@
         android:text="Available Seats:" />
 
     <Button
-        android:id="@+id/textView_book"
-        android:layout_width="82dp"
+        android:id="@+id/button_book"
+        android:layout_width="111dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="292dp"
+        android:layout_marginStart="263dp"
         android:layout_marginTop="29dp"
         android:onClick="bookTrip"
         android:text="Book"

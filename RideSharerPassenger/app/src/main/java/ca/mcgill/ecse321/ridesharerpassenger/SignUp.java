@@ -17,6 +17,7 @@ import cz.msebera.android.httpclient.*;
 public class SignUp extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,7 @@ public class SignUp extends AppCompatActivity {
                 + "&phoneNumber=" + tf.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
+                username = ta.getText().toString();
                 refreshErrorMessage();
                 viewMainMenu();
                 ta.setText("");
@@ -108,6 +110,7 @@ public class SignUp extends AppCompatActivity {
 
     public void viewMainMenu(){
         Intent intent = new Intent(this, MainMenu.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
