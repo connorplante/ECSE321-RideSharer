@@ -245,8 +245,13 @@ public class CarController {
             }
             outer.add(car);
         }
+        for (int i = 0; i < outer.size(); i++){
+            for (int j = 0; j < outer.get(i).size(); j++){
+            System.out.println("This is the element: " + (outer.get(i)).get(j))
+            }
+        
+        }
         return outer;
-
     }
 
 }
