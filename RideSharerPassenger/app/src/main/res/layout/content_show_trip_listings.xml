@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".CompleteTrip"
-    tools:showIn="@layout/activity_complete_trip">
+    tools:context=".ShowTripListings"
+    tools:showIn="@layout/activity_show_trip_listings">
 
     <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listView"/>
-
+        android:layout_height="match_parent"
+        />
 </android.support.constraint.ConstraintLayout>

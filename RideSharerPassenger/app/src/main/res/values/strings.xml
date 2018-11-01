@@ -11,4 +11,8 @@
     <string name="title_activity_update_info">UpdateInfo</string>
     <string name="title_activity_list_previous_rides">ListPreviousRides</string>
     <string name="title_activity_rate_driver">RateDriver</string>
+    <string name="title_activity_show_trip_listings">ShowTripListings</string>
+    <string name="title_activity_found_trips">FoundTrips</string>
+    <string name="title_activity_view_map">ViewMapActivity</string>
+    <string name="title_activity_google_maps">Map</string>
 </resources>

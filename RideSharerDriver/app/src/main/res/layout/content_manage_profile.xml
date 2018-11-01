@@ -26,7 +26,7 @@
         android:layout_height="0dp"
         android:layout_marginBottom="34dp"
         android:text="Update Profile Info"
-        android:onClick="viewUpdateInfo"
+        android:onClick="viewUserInfo"
         app:layout_constraintBottom_toTopOf="@+id/button15"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

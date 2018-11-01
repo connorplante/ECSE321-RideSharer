@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.controller;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.SQLQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,13 @@ import ca.mcgill.ecse321.model.Admin;
 import ca.mcgill.ecse321.model.Driver;
 import ca.mcgill.ecse321.model.Passenger;
 import ca.mcgill.ecse321.model.User;
+
+import javax.mail.*;
+import javax.mail.internet.*;
+
+import java.util.Properties;
+import java.util.List;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/User")
@@ -38,6 +46,7 @@ public class UserController {
         Passenger passenger =  new Passenger(username, password, firstName, lastName, email, phoneNumber, true, 0, 0);
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
+        
         try {
             tx = session.beginTransaction();
             session.saveOrUpdate(passenger);
@@ -46,12 +55,45 @@ public class UserController {
             if (tx != null) {
                 tx.rollback();
             }
-            System.out.println("This username is taken! Please choose another username");
             session.close();
             return null;
         }
 
         session.close();
+        String host = "smtp.gmail.com";  
+       String wmail = "t00.ridesharer@gmail.com";//change accordingly  
+       String pw = "qydaqzkmmqnxgqjh";//change accordingly
+       String to = email;//change accordingly 
+       Properties props = new Properties();
+       props.setProperty("mail.transport.protocol", "smtp");
+       props.setProperty("mail.host", "smtp.gmail.com");
+       props.put("mail.smtp.auth", "true");
+       props.put("mail.smtp.port", "465");
+       props.put("mail.debug", "true");
+       props.put("mail.smtp.socketFactory.port", "465");
+       props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+       props.put("mail.smtp.socketFactory.fallback", "false"); 
+       
+       javax.mail.Session session2 = javax.mail.Session.getDefaultInstance(props, new javax.mail.Authenticator() {  
+      
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(wmail,pw);
+             }
+        });
+        
+        //Compose the message
+        try {
+            MimeMessage message = new MimeMessage(session2);
+            message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.setSubject("Welcome!");
+            message.setText("Hi! \n\nThank you for creating a Passenger profile! \n\nYour account has been successfully activated!\n\n" +
+            "The t00 Team");
+            
+            //send the message
+            Transport.send(message);
+        } catch (MessagingException e) {e.printStackTrace();}  
+
         return passenger;
     }
 
@@ -77,6 +119,41 @@ public class UserController {
        session.saveOrUpdate(driver);
        session.getTransaction().commit();
        session.close();
+
+       String host = "smtp.gmail.com";  
+       String wmail = "t00.ridesharer@gmail.com";//change accordingly  
+       String pw = "qydaqzkmmqnxgqjh";//change accordingly
+       String to = email;//change accordingly 
+       Properties props = new Properties();
+       props.setProperty("mail.transport.protocol", "smtp");
+       props.setProperty("mail.host", "smtp.gmail.com");
+       props.put("mail.smtp.auth", "true");
+       props.put("mail.smtp.port", "465");
+       props.put("mail.debug", "true");
+       props.put("mail.smtp.socketFactory.port", "465");
+       props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+       props.put("mail.smtp.socketFactory.fallback", "false"); 
+       
+       javax.mail.Session session2 = javax.mail.Session.getDefaultInstance(props, new javax.mail.Authenticator() {  
+      
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(wmail,pw);
+             }
+        });
+        
+        //Compose the message
+        try {
+            MimeMessage message = new MimeMessage(session2);
+            message.setFrom(new InternetAddress("RideSharer t00 <t00.ridesharer@gmail.com>"));
+            message.addRecipient(Message.RecipientType.TO,new InternetAddress(to));
+            message.setSubject("Welcome!");
+            message.setText("Hi! \n\nThank you for creating a Driver profile! \n\nYour account has been successfully activated!\n\n" +
+            "The t00 Team");
+            
+            //send the message
+            Transport.send(message);
+        } catch (MessagingException e) {e.printStackTrace();}  
+
        return driver;
     }
 
@@ -117,11 +194,46 @@ public class UserController {
      * @return Boolean 
      */
     @RequestMapping("/resetPassword")
-    public Boolean resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
+    public ArrayList<Boolean> resetPassword (@RequestParam(value="username") String username, @RequestParam(value="currentPassword") String currentPassword,
     @RequestParam(value="newPassword") String newPassword) {
 
+        ArrayList<Boolean> isSet = new ArrayList<Boolean>();
+
         Session session = HibernateUtil.getSession();
-        Boolean ret;
+        session.beginTransaction();
+
+        User user = getUserByUsername(username);
+
+        //Update password to the new one if entered current password is correct
+        if (user.getPassword().equals(currentPassword)) {
+            user.setPassword(newPassword);
+            session.saveOrUpdate(user);
+            isSet.add(true);
+        } else {
+            isSet.add(false);
+        }
+
+        //Save and close session
+        session.getTransaction().commit();
+        session.close();
+
+        return isSet;
+    }
+    
+    /**
+     * Resets a users password
+     * returns true if reset was successful
+     * returns false if reset failed
+     * Works for User, Driver, Passenger, Admin
+     * @param username
+     * @param currentPassword
+     * @param newPassword
+     * @return Boolean 
+     */
+    @RequestMapping("/logIn")
+    public Boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+
+        Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
         User user; 
@@ -131,23 +243,19 @@ public class UserController {
             user = getUserByUsername(username);
         }catch(Exception e){
             session.close();
-            return false;
+            return new Boolean(false);
         }
 
         //Update password to the new one if entered current password is correct
-        if (user.getPassword().equals(currentPassword)) {
-            user.setPassword(newPassword);
-            session.saveOrUpdate(user);
-            ret = true;
+        if (user.getPassword().equals(password)) {
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(true);
         } else {
-            ret = false;
+            session.getTransaction().commit();
+            session.close();
+            return new Boolean(false);
         }
-
-        //Save and close session
-        session.getTransaction().commit();
-        session.close();
-
-        return ret;
     }
 
     /**
@@ -162,7 +270,7 @@ public class UserController {
      * @return String
      */
     @RequestMapping("/updateUserInfo")
-    public String updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
+    public ArrayList<String> updateUserInfo (@RequestParam(value="username") String username, @RequestParam(value="firstName") String firstName, 
     @RequestParam(value="lastName") String lastName, @RequestParam(value="email") String email, 
     @RequestParam(value="phoneNumber") String phoneNumber){
         
@@ -171,7 +279,7 @@ public class UserController {
         //Begin transaction
         session.beginTransaction();
 
-        User user;
+        User user = null;
 
         //find user by username in database
         try{
@@ -184,13 +292,16 @@ public class UserController {
         }catch(Exception e){
             session.getTransaction().rollback();
             session.close();
-            return "User does not exist!";
         }
 
         session.saveOrUpdate(user);
         session.getTransaction().commit();
         session.close();
-        return user.toString();
+
+        ArrayList<String> returning = new ArrayList<String>();
+        returning.add(0, username);
+
+        return returning;
     } 
 
     /**
@@ -298,11 +409,102 @@ public class UserController {
         return ret;
     }
 
+    @RequestMapping("/showPassengersForTrip")
+    public String[] showPassengersForTrip(@RequestParam(value="TripID") int TripID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        String string = "SELECT FK_UserID from PassengerTrips where FK_TripID=:TripID";
+        SQLQuery queryFindPassengers = session.createSQLQuery(string);
+        queryFindPassengers.setParameter("TripID", TripID);
+
+        List<Integer> passengers = queryFindPassengers.list(); 
+
+       session.getTransaction().commit();
+       session.close();
+
+       List<String> stringPassengers = new ArrayList<String>(passengers.size());
+       for(Integer UserID : passengers) {
+            String username = getUsernameByID(UserID);
+            stringPassengers.add(username);
+       }
+       String[] returnPassengers = stringPassengers.toArray(new String[0]);
+    
+       return returnPassengers;
+    }
+
+    @RequestMapping("/showDriverForTrip")
+    public String[] showDriverForTrip(@RequestParam(value="TripID") int TripID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+       String string = "SELECT FK_UserID from Trips where TripID=:TripID";
+       SQLQuery queryFindDriver = session.createSQLQuery(string);
+       queryFindDriver.setParameter("TripID", TripID);
+
+       List<Integer> driver = queryFindDriver.list(); 
+       
+       session.getTransaction().commit();
+       session.close();
+
+       List<String> stringDriver = new ArrayList<String>(driver.size());
+       for(Integer UserID : driver) {
+            String username = getUsernameByID(UserID);
+            stringDriver.add(username);
+       }
+       String[] returnDriver = stringDriver.toArray(new String[0]);
+       
+       return returnDriver;
+    }
+
+    public String getUsernameByID(@RequestParam(value="UserID") int UserID) {
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        String string = "SELECT Username FROM Users WHERE UserID=:UserID";
+        SQLQuery queryFindUsername = session.createSQLQuery(string);
+        queryFindUsername.setParameter("UserID", UserID);
+
+        List<String> username = queryFindUsername.list();
+
+        session.getTransaction().commit();
+        session.close();
+
+        String returnUser = username.toString();
+        return returnUser;
+    }
+    
     public User getUserByUsername(String username) {
         return (User) session.byNaturalId( User.class ).using( "username", username ).load();
     }
 
     public void changeSession(Session change) {
         this.session = change;
+    }
+
+    @RequestMapping("/displayProfileInfo")
+    public ArrayList<String> displayProfileInfo(@RequestParam(value="username") String username){
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User user = (User) session.byNaturalId( User.class ).using( "username", username ).load();
+
+        String a = user.getFirstName();
+        String b = user.getLastName();
+        String c = user.getEmail();
+        String d = user.getPhone();
+
+        session.getTransaction().commit();
+        session.close();
+
+        ArrayList<String> returning = new ArrayList<String>();
+        returning.add(0, a);
+        returning.add(1, b);
+        returning.add(2, c);
+        returning.add(3, d);
+
+        return returning;
+
     }
 }

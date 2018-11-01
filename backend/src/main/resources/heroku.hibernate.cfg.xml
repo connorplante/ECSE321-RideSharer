@@ -21,11 +21,11 @@
     </property>
     
     <property name = "hibernate.connection.password">
-        beioaf1xfbjk7rj1
+        x15boa9m385mt14z
     </property>
 
     <property name="connection.pool_size">
-        10
+        1000
     </property>
 
     <mapping class="ca.mcgill.ecse321.model.Admin" />
@@ -36,6 +36,7 @@
     <mapping class="ca.mcgill.ecse321.model.PassengerTrip" />
     <mapping class="ca.mcgill.ecse321.model.Trip" />
     <mapping class="ca.mcgill.ecse321.model.User" />
+    <mapping class="ca.mcgill.ecse321.model.Request" />
       
    </session-factory>
 </hibernate-configuration>
