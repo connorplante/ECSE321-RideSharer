@@ -10,7 +10,7 @@ import ca.mcgill.ecse321.model.User;
 import org.hibernate.Hibernate;
 import org.hibernate.Transaction;
 import org.hibernate.SQLQuery;
-
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
