@@ -29,7 +29,7 @@ public class RequestController {
     Session session = HibernateUtil.getSession();
 
     @RequestMapping("/createRequest")
-    public Request CreateRequest(@RequestParam(value="passengerName") String passengerName, @RequestParam(value="tripID") int tripID, @RequestParam(value="start") String start,
+    public ArrayList<String> CreateRequest(@RequestParam(value="passengerName") String passengerName, @RequestParam(value="tripID") int tripID, @RequestParam(value="start") String start,
     @RequestParam(value="end") String end){
         
         Session session = HibernateUtil.getSession();
@@ -37,7 +37,9 @@ public class RequestController {
 
         Passenger passenger = (Passenger) session.byNaturalId( User.class ).using( "username", passengerName ).load();
 
-        Driver driver = getDriver(tripID);
+        int driverID = getDriver(tripID);
+
+        Driver driver = (Driver) session.load(Driver.class, driverID);
 
         String email = driver.getEmail();
         Trip trip = (Trip) session.load(Trip.class, tripID);
@@ -83,31 +85,27 @@ public class RequestController {
             Transport.send(message);
         } catch (MessagingException e) {e.printStackTrace();} 
         
-        return request;
+        ArrayList<String> returning = new ArrayList<String>();
+        returning.add(0, "hi");
 
+        return returning;
     }
 
-    private Driver getDriver(int id){
+    private int getDriver(int id){
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         
         String string = "SELECT FK_UserID FROM Trips WHERE TripID= :id";
         SQLQuery queryFindRequests = session.createSQLQuery(string);
         queryFindRequests.setParameter("id", id);
-        List<Object[]> requests = queryFindRequests.list();
+        List<Integer> requests = queryFindRequests.list();
 
         session.getTransaction().commit();
         session.close();
 
-        Integer driverID = Integer.parseInt(requests.get(0)[0].toString());
+        int driverID = requests.get(0);
 
-        Session session2 = HibernateUtil.getSession();
-        session.beginTransaction();
-        Driver driver = (Driver) session.load(User.class, driverID);
-        session.getTransaction().commit();
-        session.close();
-
-        return driver;
+       return driverID;
     }
 
     @RequestMapping("/showRequestsToDriver")
