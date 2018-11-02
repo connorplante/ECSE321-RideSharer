@@ -11,6 +11,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+
+import cz.msebera.android.httpclient.Header;
+
 public class RemoveUser extends AppCompatActivity {
 
     String error = "";
@@ -67,6 +74,26 @@ public class RemoveUser extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void removeUser(View v){
+        String url = "User/removeUser?username=" + username;
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response){
+                viewFrontPage();
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
+                viewFrontPage();
+            }
+        });
+    }
+
+    public void viewFrontPage(){
+        Intent intent = new Intent(this, SignUpOrIn.class);
+        startActivity(intent);
     }
 
     private void refreshErrorMessage() {
