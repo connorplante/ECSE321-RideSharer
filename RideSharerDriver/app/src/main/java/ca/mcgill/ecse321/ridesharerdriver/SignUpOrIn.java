@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -80,7 +81,6 @@ public class SignUpOrIn extends AppCompatActivity {
         error = "";
         final TextView ta = (TextView) findViewById(R.id.editText);
         final TextView tb = (TextView) findViewById(R.id.editText2);
-        username = ta.getText().toString();
 
         if(ta.equals("") || tb.equals("")){
             error = "Please enter all fields!";
@@ -94,6 +94,7 @@ public class SignUpOrIn extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
                 if(responseString.equals("true")){
+                    username = ta.getText().toString();
                     viewMainMenu();
                 }else{
                     error += "Incorrect username or password";
@@ -103,6 +104,8 @@ public class SignUpOrIn extends AppCompatActivity {
             }
         });
     }
+
+
     public void viewMainMenu(){
         Intent intent = new Intent(this, MainMenu.class);
         intent.putExtra(MainMenu.USERNAME, username);

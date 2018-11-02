@@ -76,6 +76,7 @@ public class SignInOrUp extends AppCompatActivity {
         error = "";
         final TextView ta = (TextView) findViewById(R.id.editText);
         final TextView tb = (TextView) findViewById(R.id.editText2);
+
         username = ta.getText().toString();
 
         if(ta.equals("") || tb.equals("")){
@@ -91,14 +92,18 @@ public class SignInOrUp extends AppCompatActivity {
 
                 if(responseString.equals("true")){
                     viewMainMenu();
-                }else{
+                }else if (responseString.equals("false")){
                     error += "Incorrect username or password";
 
+                    refreshErrorMessage();
+                }else{
+                    error += "Database problem";
                     refreshErrorMessage();
                 }
             }
         });
     }
+
     public void viewMainMenu(){
         Intent intent = new Intent(this, MainMenu.class);
         intent.putExtra(MainMenu.USERNAME, username);

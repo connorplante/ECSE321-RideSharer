@@ -78,7 +78,28 @@ public class SignUp extends AppCompatActivity {
         final TextView td = (TextView) findViewById(R.id.newLastName);
         final TextView te = (TextView) findViewById(R.id.newEmail);
         final TextView tf = (TextView) findViewById(R.id.newPhoneNumber);
-        HttpUtils.post("/User/createDriver?username=" + ta.getText().toString() +
+
+        if(ta.getText().toString().equals("") || tb.getText().toString().equals("") || tc.getText().toString().equals("") ||
+                td.getText().toString().equals("") || te.getText().toString().equals("") || tf.getText().toString().equals("")){
+            error = "Please fill in all fields";
+            refreshErrorMessage();
+            return;
+        }
+
+        if(!(te.getText().toString().contains("@"))){
+            error = "Please enter a valid email";
+            refreshErrorMessage();
+            return;
+        }
+
+        if(!(tf.getText().toString().matches("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}"))){
+            error = "Please enter a valid phone number";
+            refreshErrorMessage();
+            return;
+        }
+
+        username = ta.getText().toString();
+        HttpUtils.post("User/createDriver?username=" + ta.getText().toString() +
                 "&password=" + tb.getText().toString() + "&firstName=" + tc.getText().toString()
                 + "&lastName=" + td.getText().toString() + "&email=" + te.getText().toString()
                 + "&phoneNumber=" + tf.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {

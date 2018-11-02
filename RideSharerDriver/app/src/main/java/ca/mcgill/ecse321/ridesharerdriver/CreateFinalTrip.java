@@ -98,7 +98,6 @@ public class CreateFinalTrip extends AppCompatActivity {
         String time = extras.getString("TIME");
         String start = extras.getString("START");
         String end = extras.getString("END");
-        String username = extras.getString("USERNAME");
         String carID = extras.getString("CARID");
         String numSeats = extras.getString("NUMSEATS");
         String stops = extras.getString("URLROUTES");
@@ -124,9 +123,14 @@ public class CreateFinalTrip extends AppCompatActivity {
         TextView pricesT = (TextView) findViewById(R.id.textView_tripPrices);
         pricesT.setText(pricesC);
 
+        System.out.println("/Trip/createTrip?start=" + start +
+                "&end=" + end + "&date=" + date
+                + "&time=" + time + "&username=" + username
+                + "&carID=" + carID + "&numSeats=" + numSeats + stops + prices);
+
         HttpUtils.post("/Trip/createTrip?start=" + start +
                 "&end=" + end + "&date=" + date
-                + "&time=" + time + "&username=donya"
+                + "&time=" + time + "&username=" + username
                 + "&carID=" + carID + "&numSeats=" + numSeats + stops + prices, new RequestParams(), new JsonHttpResponseHandler(){
         });
 

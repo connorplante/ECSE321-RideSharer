@@ -220,16 +220,6 @@ public class UserController {
         return isSet;
     }
     
-    /**
-     * Resets a users password
-     * returns true if reset was successful
-     * returns false if reset failed
-     * Works for User, Driver, Passenger, Admin
-     * @param username
-     * @param currentPassword
-     * @param newPassword
-     * @return Boolean 
-     */
     @RequestMapping("/logIn")
     public Boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
 

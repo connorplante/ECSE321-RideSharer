@@ -110,42 +110,38 @@ public class ManageTrips extends AppCompatActivity {
             ArrayList<String> routes = new ArrayList<String>();
             ArrayList<String> requestIDs = new ArrayList<String>();
 
-            String s = "";
+                for (int i = 0; i < response.length(); i++) {
+                    try {
+                        for (int j = 0; j < response.getJSONArray(i).length(); j++){
+                            if ( j == 0) {
+                                tripIDs.add(response.getJSONArray(i).getString(0));
+                            } else if ( j == 1) {
+                                usernames.add(response.getJSONArray(i).getString(1));
+                            } else if ( j == 2) {
+                                dates.add(response.getJSONArray(i).getString(2));
+                            } else if ( j == 3) {
+                                routes.add(response.getJSONArray(i).getString(3));
+                            } else {
+                                requestIDs.add(response.getJSONArray(i).getString(j));
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-            for(int i = 0; i < response.length(); i++) {
-                try {
-                    s += response.get(i).toString();
-                } catch (Exception e) {
-                    System.out.println("here");
-                }
-            }
 
-            s = s.replaceAll("\"", "");
-            s = s.replaceAll("\\[", "");
-            s = s.replaceAll("\\]", ",");
-
-            System.out.println(s);
-
-            String[] str = s.split(",");
-
-            for(int j = 0; j < str.length; j++){
-                if(j % 5 == 0){
-                    tripIDs.add(str[j]);
-                }
-                else if(j % 5 == 1){
-                    usernames.add(str[j]);
-                }
-                else if(j % 5 == 2){
-                    dates.add(str[j]);
-                }
-                else if (j % 5 == 3){
-                    routes.add(str[j]);
-                }
-                else{
-                    requestIDs.add(str[j]);
-                }
-            }
             viewConfirmBooking(tripIDs, usernames, dates, routes, requestIDs);
+            }
+
+            @Override
+            public void onFailure(int i, Header[] headers, Throwable throwable, JSONObject jsonObject){
+                ArrayList<String> tripIDs = new ArrayList<String>();
+                ArrayList<String> usernames = new ArrayList<String>();
+                ArrayList<String> dates = new ArrayList<String>();
+                ArrayList<String> routes = new ArrayList<String>();
+                ArrayList<String> requestIDs = new ArrayList<String>();
+                viewConfirmBooking(tripIDs, usernames, dates, routes, requestIDs);
             }
 
         });
@@ -182,6 +178,7 @@ public class ManageTrips extends AppCompatActivity {
             String[] str= s.split("\"");
 
             ArrayList<String> strings = new ArrayList<String>();
+
 
             for(int i = 1; i < str.length; i += 2){
                 strings.add(str[i]);
@@ -378,7 +375,7 @@ public class ManageTrips extends AppCompatActivity {
 
     public void findDriversTripsUpdate(View v) {
         error = "";
-        String url = "/Trip/scheduledTripsOfDriver?username=donya";
+        String url = "/Trip/scheduledTripsOfDriver?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
