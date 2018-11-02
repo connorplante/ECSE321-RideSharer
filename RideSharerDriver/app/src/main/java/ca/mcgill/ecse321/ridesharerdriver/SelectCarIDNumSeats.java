@@ -28,7 +28,7 @@ import android.widget.TextView;
 public class SelectCarIDNumSeats extends AppCompatActivity {
 
     String error = "i";
-
+    String username = "";
 
     ArrayList<String> carIDs;
     ArrayList<String> makes;
@@ -46,6 +46,12 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,9 +61,6 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
 
         if (getIntent().hasExtra(CARIDS)) {
             carIDs = getIntent().getStringArrayListExtra(CARIDS);
@@ -142,19 +145,25 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, SelectStartEnd.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -180,11 +189,10 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
 
         Intent intent5 = new Intent(this, SelectRoutePrices.class);
         Bundle extras = getIntent().getExtras();
-       // System.out.println("CARID: " +carID.getText().toString() + "NUMSEATS: " + Integer.parseInt(spinner.getSelectedItem().toString()));
+        // System.out.println("CARID: " +carID.getText().toString() + "NUMSEATS: " + Integer.parseInt(spinner.getSelectedItem().toString()));
         intent5.putExtras(extras);
-       intent5.putExtra("CARID", carID.getText().toString());
-
-
+        intent5.putExtra("CARID", carID.getText().toString());
+        intent5.putExtra(MainMenu.USERNAME, username);
 
         startActivity(intent5);
     }

@@ -16,7 +16,7 @@ import android.widget.DatePicker;
 
 public class SelectTime extends AppCompatActivity  implements TimePickerFragment.OnCompleteListener, DatePickerFragment.OnCompleteListener {
 
-
+    String username = "";
     String error = "i";
 
     @Override
@@ -25,6 +25,12 @@ public class SelectTime extends AppCompatActivity  implements TimePickerFragment
         setContentView(R.layout.activity_select_time);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,19 +52,25 @@ public class SelectTime extends AppCompatActivity  implements TimePickerFragment
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, CreateTrip.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
 //    private void refreshErrorMessage() {
@@ -104,13 +116,10 @@ public class SelectTime extends AppCompatActivity  implements TimePickerFragment
 
         String value = tv2.getText().toString();
         String value2 = tv1.getText().toString();
-//        System.out.println("This is the date:  "+value);
-//        System.out.println("This is the time:  "+value2);
 
-
-            intent2.putExtra("DATE", value);
-            intent2.putExtra("TIME", value2);
-
+        intent2.putExtra("DATE", value);
+        intent2.putExtra("TIME", value2);
+        intent2.putExtra(MainMenu.USERNAME, username);
 
         startActivity(intent2);
     }
