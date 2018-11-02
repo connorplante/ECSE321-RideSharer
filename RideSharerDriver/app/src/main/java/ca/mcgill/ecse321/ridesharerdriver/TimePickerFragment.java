@@ -11,8 +11,6 @@ import java.util.Calendar;
 import android.widget.TextView;
 import android.app.Activity;
 
-
-
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
 
     public static interface OnCompleteListener {
@@ -46,11 +44,8 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-
         TextView tv1=(TextView) getActivity().findViewById(R.id.textView1);
         tv1.setText(view.getCurrentHour()+""+view.getCurrentMinute());
-
-
     }
 }
 

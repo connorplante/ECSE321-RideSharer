@@ -55,19 +55,19 @@ public class UpdateInfo extends AppCompatActivity {
             }
         });
 
-        if(getIntent().hasExtra(FIRSTNAME)){
+        if (getIntent().hasExtra(FIRSTNAME)){
             firstName = getIntent().getStringExtra(FIRSTNAME);
         }
 
-        if(getIntent().hasExtra(LASTNAME)){
+        if (getIntent().hasExtra(LASTNAME)){
             lastName = getIntent().getStringExtra(LASTNAME);
         }
 
-        if(getIntent().hasExtra(EMAIL)){
+        if (getIntent().hasExtra(EMAIL)){
             email = getIntent().getStringExtra(EMAIL);
         }
 
-        if(getIntent().hasExtra(PHONE)){
+        if (getIntent().hasExtra(PHONE)){
             phoneNum = getIntent().getStringExtra(PHONE);
         }
 
@@ -119,7 +119,6 @@ public class UpdateInfo extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void updateInfo(View v){
@@ -134,27 +133,27 @@ public class UpdateInfo extends AppCompatActivity {
         String email = "";
         String phone = "";
 
-        if(ta.getText().toString().equals("")){
+        if (ta.getText().toString().equals("")){
             firstName = ta.getHint().toString();
-        }else{
+        } else {
             firstName = ta.getText().toString();
         }
 
-        if(tb.getText().toString().equals("")){
+        if (tb.getText().toString().equals("")){
             lastName = tb.getHint().toString();
-        }else{
+        } else {
             lastName = tb.getText().toString();
         }
 
-        if(tc.getText().toString().equals("")){
+        if (tc.getText().toString().equals("")){
             email = tc.getHint().toString();
-        }else{
+        } else {
             email = tc.getText().toString();
         }
 
-        if(td.getText().toString().equals("")){
+        if (td.getText().toString().equals("")){
             phone = td.getHint().toString();
-        }else{
+        } else {
             phone = td.getText().toString();
         }
 
@@ -179,7 +178,6 @@ public class UpdateInfo extends AppCompatActivity {
                 tb.setText("");
                 tc.setText("");
                 td.setText("");
-
             }
 
         });

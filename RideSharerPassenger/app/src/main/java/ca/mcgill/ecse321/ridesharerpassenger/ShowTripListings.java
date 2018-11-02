@@ -28,6 +28,8 @@ import cz.msebera.android.httpclient.Header;
 public class ShowTripListings extends AppCompatActivity {
 
     String error = "";
+    String username = "";
+
     ArrayList<Integer> tripIds;
     ArrayList<String> prices;
     ArrayList<String> numSeats;
@@ -36,7 +38,6 @@ public class ShowTripListings extends AppCompatActivity {
     ArrayList<ArrayList<String>> stopsLists;
     String start;
     String end;
-    String username = "";
 
     public static final String tripIDs = "ca.mcgill.ecse321.ridesharerpassenger.tripIDs";
     public static final String START = "ca.mcgill.ecse321.ridesharerpassenger.start";
@@ -58,9 +59,6 @@ public class ShowTripListings extends AppCompatActivity {
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
         }
-
-        System.out.println("USERNAME ===> ");
-        System.out.println(username);
 
         // Get the tripIDs passed to this page from TripListings
         if (getIntent().hasExtra(ShowTripListings.tripIDs)) {
@@ -118,20 +116,10 @@ public class ShowTripListings extends AppCompatActivity {
             stopsLists.add(stops);
         }
 
-
-
-        System.out.println("ShowTripListings:");
-        System.out.println(dates);
-        System.out.println(prices);
-        System.out.println(numSeats);
-        System.out.println(status);
-        System.out.println(stopsLists);
-
         // from tutorial
         ListView listView = (ListView) findViewById(R.id.listView);
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
-
     }
 
     class CustomAdapter extends BaseAdapter {
@@ -189,7 +177,6 @@ public class ShowTripListings extends AppCompatActivity {
         Intent intent = new Intent(this, TripListings.class);
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
-
     }
 
     @Override
@@ -211,12 +198,6 @@ public class ShowTripListings extends AppCompatActivity {
         TextView textView_tripId = (TextView) view.findViewById(R.id.textView_tripId);
         String id = textView_tripId.getText().toString();
 
-        System.out.println(view.findViewById(R.id.textView_tripId));
-        System.out.println(view.findViewById(R.id.textView_date));
-        System.out.println(view.findViewById(R.id.button_book));
-
-        System.out.println("id = " + id);
-
         int i = 0;
         for (i = 0; i < tripIds.size(); i++) {
             if (tripIds.get(i).toString().equals(id)) {
@@ -224,13 +205,7 @@ public class ShowTripListings extends AppCompatActivity {
             }
         }
 
-        System.out.println("i = " + i);
-        System.out.println("tripIds length = " + tripIds.size());
-        System.out.println("stopsLists length = " + stopsLists.size());
-
         ArrayList<String> stops = stopsLists.get(i);
-
-        System.out.println(stops);
 
         Bundle b = new Bundle();
         b.putStringArrayList(GoogleMapsActivity.STOPS, stops);
@@ -239,9 +214,11 @@ public class ShowTripListings extends AppCompatActivity {
         b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
         b.putStringArrayList(ShowTripListings.STATUS, status);
         b.putStringArrayList(ShowTripListings.PRICES, prices);
+
         for (int j = 0; j < stopsLists.size(); j++) {
             b.putStringArrayList(ShowTripListings.STOPSLISTS + j, stopsLists.get(j));
         }
+
         b.putString(ShowTripListings.START, start);
         b.putString(ShowTripListings.END, end);
 
@@ -252,26 +229,12 @@ public class ShowTripListings extends AppCompatActivity {
     }
 
     public void bookTrip(View view) {
-        // passenger name
-        // trip id
-        // start
-        // end
-
-        System.out.println("==> bookTrip method");
-
-        System.out.println("==== VIEW:");
-        System.out.println(view);
 
         Button button_book = view.findViewById(R.id.button_book);
 
         String buttonText = button_book.getText().toString();
         String tripId = buttonText.substring(5);
-
-        System.out.println(tripId);
-
         String url = "/Request/createRequest?passengerName=" + username + "&tripID=" + tripId + "&start=" + start + "&end=" + end;
-
-        System.out.println(url);
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
@@ -306,7 +269,5 @@ public class ShowTripListings extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

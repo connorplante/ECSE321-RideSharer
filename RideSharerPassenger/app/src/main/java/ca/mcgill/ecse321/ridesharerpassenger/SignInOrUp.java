@@ -70,7 +70,6 @@ public class SignInOrUp extends AppCompatActivity {
             tvError.setText(error);
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void signIn(View v) {
@@ -110,5 +109,4 @@ public class SignInOrUp extends AppCompatActivity {
         Intent intent = new Intent(this, SignUp.class);
         startActivity(intent);
     }
-
 }
