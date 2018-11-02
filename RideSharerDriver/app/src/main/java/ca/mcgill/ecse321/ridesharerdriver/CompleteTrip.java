@@ -177,13 +177,13 @@ public class CompleteTrip extends AppCompatActivity {
         String str = toFinish.getText().toString();
         str = str.replaceAll("[^\\d.]", "");
 
-        String url = "Trip/completeTrip?tripID=" + str + "&username=donya";
+        String url = "Trip/completeTrip?tripID=" + str + "&username=" + username;
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
-
+                        TextView tvError = (TextView) findViewById(R.id.error);
+                        tvError.setText("Trip completed");
                     }
                 }
         );
