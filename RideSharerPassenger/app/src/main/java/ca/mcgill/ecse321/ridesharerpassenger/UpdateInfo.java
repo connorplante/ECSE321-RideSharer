@@ -186,5 +186,4 @@ public class UpdateInfo extends AppCompatActivity {
 
         });
     }
-
 }

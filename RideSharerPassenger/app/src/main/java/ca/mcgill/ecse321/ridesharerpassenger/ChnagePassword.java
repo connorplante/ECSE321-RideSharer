@@ -51,7 +51,6 @@ public class ChnagePassword extends AppCompatActivity {
         Intent intent = new Intent(this, ManageProfile.class);
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
-
     }
 
     @Override
@@ -79,7 +78,5 @@ public class ChnagePassword extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

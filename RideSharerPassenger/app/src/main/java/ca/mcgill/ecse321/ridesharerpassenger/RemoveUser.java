@@ -79,7 +79,5 @@ public class RemoveUser extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

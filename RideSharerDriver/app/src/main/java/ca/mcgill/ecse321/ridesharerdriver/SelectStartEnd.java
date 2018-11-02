@@ -51,8 +51,6 @@ public class SelectStartEnd extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -81,37 +79,15 @@ public class SelectStartEnd extends AppCompatActivity {
         }
     }
 
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//        tvError.setVisibility(View.GONE);
-//
-////        if (error == null || error != "i") {
-////            tvError.setVisibility(View.GONE);
-////        } else {
-////            tvError.setVisibility(View.VISIBLE);
-////        }
-//
-//    }
-
     public void switchViewSelectCarIDNumSeats(View v){
 
         error = "";
-
-
-        String url = "/Car/getDriversCars?username=donya";
-
-
+        String url = "/Car/getDriversCars?username=" + username;
         System.out.println("Url: " + url);
-
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
                 ArrayList<String> carIds = new ArrayList<String>();
                 ArrayList<String> makes = new ArrayList<String>();
                 ArrayList<String> models = new ArrayList<String>();
@@ -125,8 +101,6 @@ public class SelectStartEnd extends AppCompatActivity {
                         System.out.println("here");
                     }
                 }
-
-               // System.out.println("ArrayList: " + tripIds.toString());
                 s = s.replaceAll("\\[", "");
                 s = s.replaceAll("\\]", ",");
                 s = s.replaceAll("\"", "");
@@ -147,14 +121,11 @@ public class SelectStartEnd extends AppCompatActivity {
                }
                 viewCarIDs(carIds,makes,models);
                 // call next view to display trips
-               // getTripsInfo(tripIds);//NEED TO CALL GET CARS INFO
             }
 
             @Override
             public void onFinish() {
                 //refreshErrorMessage();
-
-
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -166,46 +137,30 @@ public class SelectStartEnd extends AppCompatActivity {
                 // refreshErrorMessage();
             }
         });
-            //NEED TO CALL GET CARS INFO
-
-
-
-
     }
-
-
 
     public void viewCarIDs(ArrayList<String> carIDs, ArrayList<String> makes, ArrayList<String> models){
 
         final TextView start = (TextView) findViewById(R.id.editText2);
         final TextView end = (TextView) findViewById(R.id.editText3);
 
-        Intent intent4 = new Intent(this, SelectCarIDNumSeats.class);
+        Intent intent = new Intent(this, SelectCarIDNumSeats.class);
 
         Bundle extras = getIntent().getExtras();
         extras.putStringArrayList(SelectCarIDNumSeats.CARIDS,carIDs);
         extras.putStringArrayList(SelectCarIDNumSeats.MAKES,makes);
         extras.putStringArrayList(SelectCarIDNumSeats.MODELS,models);
-        intent4.putExtras(extras);
-        intent4.putExtra("START", start.getText().toString());
-        intent4.putExtra("END", end.getText().toString());
-        intent4.putExtra(MainMenu.USERNAME, username);
+        intent.putExtras(extras);
+        intent.putExtra("START", start.getText().toString());
+        intent.putExtra("END", end.getText().toString());
+        intent.putExtra(MainMenu.USERNAME, username);
 
-        startActivity(intent4);
-
-
+        startActivity(intent);
     }
+
     public void callMethod(View v){
-        String url = "/Car/getDriversCars?username=donya";
-
-
+        String url = "/Car/getDriversCars?username=" + username;
         System.out.println("Url: " + url);
-
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){});
-
-
-
-
     }
-
 }

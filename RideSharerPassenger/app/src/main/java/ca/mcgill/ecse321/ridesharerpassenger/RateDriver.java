@@ -50,7 +50,6 @@ public class RateDriver extends AppCompatActivity {
         Intent intent = new Intent(this, PreviousTrips.class);
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
-
     }
 
     @Override
@@ -67,5 +66,4 @@ public class RateDriver extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

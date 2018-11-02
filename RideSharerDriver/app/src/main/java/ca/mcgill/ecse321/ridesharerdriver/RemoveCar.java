@@ -78,7 +78,5 @@ public class RemoveCar extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

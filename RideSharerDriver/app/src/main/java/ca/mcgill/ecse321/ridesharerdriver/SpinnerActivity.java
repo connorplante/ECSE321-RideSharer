@@ -8,10 +8,7 @@ import android.view.View;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.os.Bundle;
 
-
-
 public class SpinnerActivity extends Activity implements AdapterView.OnItemSelectedListener {
-
 
     String [] numSeats = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     @Override
@@ -34,6 +31,4 @@ public class SpinnerActivity extends Activity implements AdapterView.OnItemSelec
     public void onNothingSelected(AdapterView<?> parent) {
         // Another interface callback
     }
-
-
 }

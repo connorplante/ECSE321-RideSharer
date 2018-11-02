@@ -55,7 +55,6 @@ public class SignUp extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -69,7 +68,6 @@ public class SignUp extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void createDriver(View v) {
@@ -112,6 +110,4 @@ public class SignUp extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
-
 }

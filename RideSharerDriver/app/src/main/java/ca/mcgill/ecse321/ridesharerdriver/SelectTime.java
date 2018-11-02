@@ -43,8 +43,6 @@ public class SelectTime extends AppCompatActivity  implements TimePickerFragment
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -73,55 +71,33 @@ public class SelectTime extends AppCompatActivity  implements TimePickerFragment
         }
     }
 
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//        tvError.setVisibility(View.GONE);
-//
-////        if (error == null || error != "i") {
-////            tvError.setVisibility(View.GONE);
-////        } else {
-////            tvError.setVisibility(View.VISIBLE);
-////        }
-//
-//    }
-
     public void onComplete(String time) {
-       // System.out.print("This is the time: " + time);
+
     }
 
-
     public void showTimePickerOnDialog(View v){
-//        final TextView time = findViewById(R.id.textView1);
-//        System.out.print("This is the time: " + time.getText().toString());
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
-
     }
 
     public void showDatePickerOnDialog(View v){
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
-
     }
 
     public void switchViewSelectUsername(View v){
 
-        Intent intent2 = new Intent(this, SelectUsername.class);
-
+        Intent intent = new Intent(this, SelectUsername.class);
         TextView tv1 = (TextView) findViewById(R.id.textView1);
-
         TextView tv2=(TextView) findViewById(R.id.textView2);
 
         String value = tv2.getText().toString();
         String value2 = tv1.getText().toString();
 
-        intent2.putExtra("DATE", value);
-        intent2.putExtra("TIME", value2);
-        intent2.putExtra(MainMenu.USERNAME, username);
+        intent.putExtra("DATE", value);
+        intent.putExtra("TIME", value2);
+        intent.putExtra(MainMenu.USERNAME, username);
 
-        startActivity(intent2);
+        startActivity(intent);
     }
-
 }

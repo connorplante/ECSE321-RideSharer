@@ -74,7 +74,6 @@ public class MainMenu extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void viewManageProfile(View v){
@@ -94,5 +93,4 @@ public class MainMenu extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

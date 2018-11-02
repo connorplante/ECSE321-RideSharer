@@ -66,26 +66,20 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void onComplete(String time) {
-        // System.out.print("This is the time: " + time);
+
     }
 
-
     public void showTimePickerOnDialog(View v) {
-//        final TextView time = findViewById(R.id.textView1);
-//        System.out.print("This is the time: " + time.getText().toString());
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getSupportFragmentManager(), "timePicker");
-
     }
 
     public void showDatePickerOnDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getSupportFragmentManager(), "datePicker");
-
     }
 
     public void updateTime(View v) {
@@ -94,13 +88,9 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
         String time = tv1.getText().toString();
         String tripID = extras.getString("TRIPID");
 
-
         HttpUtils.post("/Trip/updateTime?time=" + time + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
 
-
         });
-
-
     }
 
     public void updateDate(View v) {
@@ -109,13 +99,9 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
         String date = tv1.getText().toString();
         String tripID = extras.getString("TRIPID");
 
-
         HttpUtils.post("/Trip/updateDate?date=" + date + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
 
-
         });
-
-
     }
 
     public void updateStart(View v){
@@ -128,12 +114,8 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
 
         HttpUtils.post("/Trip/updateStart?oldStart=" + oldStart + "&newStart=" + newStart + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
 
-
         });
-
-
     }
-
 
     public void updateEnd(View v){
         Bundle extras = getIntent().getExtras();
@@ -145,15 +127,12 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
 
         HttpUtils.post("/Trip/updateEnd?oldStart=" + oldEnd + "&newStart=" + newEnd + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
 
-
-
         });
     }
 
     public void updateRoutePrices(View v){
 
         Bundle extras = getIntent().getExtras();
-
 
         final TextView stops = (TextView) findViewById(R.id.editText9);
         final TextView prices = (TextView) findViewById(R.id.editText10);
@@ -176,16 +155,9 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
             urlStops += str2 + finalPrices[j];
         }
 
-
         HttpUtils.post("/Trip/updateRoute?tripID=" + tripID +
                 urlStops + urlPrices, new RequestParams(), new JsonHttpResponseHandler(){
 
         });
-
-
-
     }
-
-
-
 }
