@@ -90,7 +90,6 @@ public class ManageProfile extends AppCompatActivity {
 
     public void viewUserInfo(View v){
         error = "";
-        final String username = "samcattani";
         String url = "/User/displayProfileInfo?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
