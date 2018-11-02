@@ -231,10 +231,12 @@ public class UserController {
      * @return Boolean 
      */
     @RequestMapping("/logIn")
-    public Boolean logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
+    public ArrayList<Boolean> logIn(@RequestParam(value="username") String username, @RequestParam(value="password") String password) {
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
+
+        ArrayList<Boolean> returning = new ArrayList<Boolean>();
 
         User user; 
 
@@ -243,19 +245,22 @@ public class UserController {
             user = getUserByUsername(username);
         }catch(Exception e){
             session.close();
-            return new Boolean(false);
+            returning.add(false);
+            return returning;
         }
 
         //Update password to the new one if entered current password is correct
         if (user.getPassword().equals(password)) {
             session.getTransaction().commit();
             session.close();
-            return new Boolean(true);
+            returning.add(true);
         } else {
             session.getTransaction().commit();
             session.close();
-            return new Boolean(false);
+            returning.add(false);
         }
+
+        return returning;
     }
 
     /**
