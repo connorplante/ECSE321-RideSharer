@@ -95,7 +95,7 @@ public class SignUpOrIn extends AppCompatActivity {
 
                 if(responseString.equals("true")){
                     username = ta.getText().toString();
-                    viewMainMenu(username);
+                    viewMainMenu();
                 }else{
                     error += "Incorrect username or password";
 
