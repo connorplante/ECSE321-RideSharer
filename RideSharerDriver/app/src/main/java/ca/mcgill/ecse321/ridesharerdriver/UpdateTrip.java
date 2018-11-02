@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 public class UpdateTrip extends AppCompatActivity {
 
+    String username = "";
     String error = "";
     ArrayList<Integer> tripIds;
     ArrayList<String> prices;
@@ -43,6 +44,12 @@ public class UpdateTrip extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,9 +59,6 @@ public class UpdateTrip extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-
 
         if (getIntent().hasExtra(tripIDs)) {
             tripIds = getIntent().getIntegerArrayListExtra(tripIDs);
@@ -158,19 +162,25 @@ public class UpdateTrip extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, ManageTrips.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
 
@@ -190,8 +200,9 @@ public class UpdateTrip extends AppCompatActivity {
 
     public void switchViewUpdateTripFields(View v){
         Intent intent = new Intent(this, UpdateTripFields.class);
-       TextView tv1 = (TextView) v.findViewById(R.id.textView_updateID);
+        TextView tv1 = (TextView) v.findViewById(R.id.textView_updateID);
         intent.putExtra("TRIPID", tv1.getText().toString());
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 

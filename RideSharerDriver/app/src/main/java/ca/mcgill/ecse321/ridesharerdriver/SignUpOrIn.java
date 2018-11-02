@@ -22,6 +22,7 @@ import cz.msebera.android.httpclient.Header;
 public class SignUpOrIn extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +80,7 @@ public class SignUpOrIn extends AppCompatActivity {
         error = "";
         final TextView ta = (TextView) findViewById(R.id.editText);
         final TextView tb = (TextView) findViewById(R.id.editText2);
+        username = ta.getText().toString();
 
         if(ta.equals("") || tb.equals("")){
             error = "Please enter all fields!";
@@ -103,6 +105,7 @@ public class SignUpOrIn extends AppCompatActivity {
     }
     public void viewMainMenu(){
         Intent intent = new Intent(this, MainMenu.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
