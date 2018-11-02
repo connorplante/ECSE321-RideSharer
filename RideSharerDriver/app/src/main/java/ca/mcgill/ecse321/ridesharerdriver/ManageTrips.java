@@ -41,6 +41,7 @@ import cz.msebera.android.httpclient.Header;
 public class ManageTrips extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,12 @@ public class ManageTrips extends AppCompatActivity {
         setContentView(R.layout.activity_manage_trips);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,19 +73,25 @@ public class ManageTrips extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, MainMenu.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
 //    private void refreshErrorMessage() {
@@ -222,16 +235,19 @@ public class ManageTrips extends AppCompatActivity {
 
     public void viewUpdateTrip(View v){
         Intent intent = new Intent(this, UpdateTrip.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void viewCreateTrip(View v){
         Intent intent = new Intent(this, CreateTrip.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void viewCancelTrip(View v){
         Intent intent = new Intent(this, CancelTrip.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
     public void viewConfirmBooking(ArrayList<String> tripIDs, ArrayList<String> usernames, ArrayList<String> dates, ArrayList<String> routes, ArrayList<String> requestIDs){
@@ -243,6 +259,7 @@ public class ManageTrips extends AppCompatActivity {
         b.putStringArrayList(ConfirmBooking.ROUTES, routes);
         b.putStringArrayList(ConfirmBooking.REQUESTIDs, requestIDs);
         intent.putExtras(b);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
     public void viewCompleteTrip(ArrayList<String> trips, ArrayList<String> places, ArrayList<String> days, ArrayList<String> times, ArrayList<String> numSeats){
@@ -254,6 +271,7 @@ public class ManageTrips extends AppCompatActivity {
         b.putStringArrayList(CompleteTrip.TIMES, times);
         b.putStringArrayList(CompleteTrip.NUMSEATS, numSeats);
         intent.putExtras(b);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
@@ -405,7 +423,7 @@ public class ManageTrips extends AppCompatActivity {
 
 
 
-
+        intent.putExtra(MainMenu.USERNAME, username);
         intent.putExtras(b);
         startActivity(intent);
     }
@@ -552,13 +570,12 @@ public class ManageTrips extends AppCompatActivity {
         b.putStringArrayList(UpdateTrip.NUMSEATS, numSeats);
         b.putStringArrayList(UpdateTrip.STATUS, status);
         b.putStringArrayList(UpdateTrip.PRICES, prices);
+
         for (int i = 0; i < stopsLists.size(); i++) {
             b.putStringArrayList(UpdateTrip.STOPSLISTS + i, stopsLists.get(i));
         }
 
-
-
-
+        intent.putExtra(MainMenu.USERNAME, username);
         intent.putExtras(b);
         startActivity(intent);
     }

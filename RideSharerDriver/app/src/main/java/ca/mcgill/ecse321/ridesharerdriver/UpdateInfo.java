@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import cz.msebera.android.httpclient.Header;
 public class UpdateInfo extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     String firstName;
     String lastName;
@@ -37,6 +39,12 @@ public class UpdateInfo extends AppCompatActivity {
         setContentView(R.layout.activity_update_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -80,19 +88,25 @@ public class UpdateInfo extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, ManageProfile.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void refreshErrorMessage() {
@@ -149,9 +163,6 @@ public class UpdateInfo extends AppCompatActivity {
         final String finalEmail = email;
         final String finalPhone = phone;
 
-
-        String username = "samcattani";
-
         String url = "User/updateUserInfo?username=" + username + "&firstName=" + firstName + "&lastName=" + lastName + "&email=" + email + "&phoneNumber=" + phone;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
@@ -173,6 +184,4 @@ public class UpdateInfo extends AppCompatActivity {
 
         });
     }
-
-
 }

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import com.loopj.android.http.RequestParams;
 
 public class CancelTrip extends AppCompatActivity {
 
+    String username = "";
     String error = "";
     ArrayList<Integer> tripIds;
     ArrayList<String> prices;
@@ -44,6 +46,12 @@ public class CancelTrip extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
 
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,20 +62,11 @@ public class CancelTrip extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
-
         if (getIntent().hasExtra(tripIDs)) {
             tripIds = getIntent().getIntegerArrayListExtra(tripIDs);
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + tripIDs);
         }
-
-        // Get the tripIDs passed to this page from TripListings
-
-
-        // Get the tripIDs passed to this page from TripListings
-
 
         if (getIntent().hasExtra(PRICES)) {
             prices = getIntent().getStringArrayListExtra(PRICES);
@@ -104,9 +103,6 @@ public class CancelTrip extends AppCompatActivity {
             stopsLists.add(stops);
         }
 
-
-
-
         ListView listView = (ListView) findViewById(R.id.listView);
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
@@ -119,17 +115,19 @@ public class CancelTrip extends AppCompatActivity {
         public int getCount() {
             return tripIds.size();
         }
+
         @Override
         public Object getItem(int i) {
             return null;
         }
+
         @Override
         public long getItemId(int i){
             return 0;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup){
-
 
             convertView = getLayoutInflater().inflate(R.layout.custom_cancel_trip, null);
 
@@ -139,20 +137,14 @@ public class CancelTrip extends AppCompatActivity {
             TextView textView_start = (TextView)convertView.findViewById(R.id.textView_start);
             TextView textView_end = (TextView)convertView.findViewById(R.id.textView_end);
 
-            //System.out.println("HELLO!!!!");
-
-
             textView_id.setText(tripIds.get(position).toString());
             textView_date.setText(dates.get(position));
-           // textView_start.setText("$ " + prices.get(position));
-           // textView_end.setText(numSeats.get(position));
             textView_time.setText(status.get(position));
 
             return convertView;
         }
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,19 +153,25 @@ public class CancelTrip extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, ManageTrips.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void refreshErrorMessage() {
@@ -189,14 +187,11 @@ public class CancelTrip extends AppCompatActivity {
 
     }
 
-
     public void cancelTrip(View v) {
 
         final TextView tripID = (TextView) v.findViewById(R.id.textView_id);
 
-
-     HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
-
+        HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
 
         });
 
