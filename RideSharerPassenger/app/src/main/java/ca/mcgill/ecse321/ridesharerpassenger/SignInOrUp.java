@@ -90,9 +90,12 @@ public class SignInOrUp extends AppCompatActivity {
 
                 if(responseString.equals("true")){
                     viewMainMenu();
-                }else{
+                }else if (responseString.equals("false")){
                     error += "Incorrect username or password";
 
+                    refreshErrorMessage();
+                }else{
+                    error += "Database problem";
                     refreshErrorMessage();
                 }
             }
