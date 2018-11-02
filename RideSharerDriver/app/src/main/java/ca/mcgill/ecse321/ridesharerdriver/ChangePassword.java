@@ -142,5 +142,8 @@ public class ChangePassword extends AppCompatActivity {
         });
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 19fefc8491d731a96929a8093b2987a26d6a3b21
 }
