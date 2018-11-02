@@ -141,12 +141,12 @@ public class PreviousTrips extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                try {
-                    error += errorResponse.get("message").toString();
-                } catch (JSONException e) {
-                    error += e.getMessage();
-                }
-                refreshErrorMessage();
+                ArrayList<String> trips = new ArrayList<String>();
+                ArrayList<String> places = new ArrayList<String>();
+                ArrayList<String> days = new ArrayList<String>();
+                ArrayList<String> times = new ArrayList<String>();
+                ArrayList<String> numSeats = new ArrayList<String>();
+                viewListPreviousRides(trips, places, days, times, numSeats);
             }
         });
 
