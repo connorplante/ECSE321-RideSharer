@@ -79,7 +79,5 @@ public class ChangePassword extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

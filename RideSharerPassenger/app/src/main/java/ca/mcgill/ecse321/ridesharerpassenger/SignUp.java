@@ -69,7 +69,6 @@ public class SignUp extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void createPassenger(View v) {
@@ -113,6 +112,4 @@ public class SignUp extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
-
 }

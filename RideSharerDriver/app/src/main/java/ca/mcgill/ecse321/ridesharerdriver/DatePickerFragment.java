@@ -43,26 +43,18 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            TextView tv1=(TextView) getActivity().findViewById(R.id.textView2);
-            int correctMonth = (view.getMonth()) + 1;
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        TextView tv1=(TextView) getActivity().findViewById(R.id.textView2);
+        int correctMonth = (view.getMonth()) + 1;
 
-
-            String sCorrectMonth = Integer.toString(correctMonth);
-            if(correctMonth < 10){
-                sCorrectMonth = "0" + sCorrectMonth;
-            }
-
-
-
-            tv1.setText(view.getYear()+"-"+sCorrectMonth +"-"+view.getDayOfMonth());
-
-
-
-            System.out.println("This is the date: " + tv1.getText().toString());
-            System.out.println(view);
+        String sCorrectMonth = Integer.toString(correctMonth);
+        if(correctMonth < 10){
+            sCorrectMonth = "0" + sCorrectMonth;
         }
+
+        tv1.setText(view.getYear()+"-"+sCorrectMonth +"-"+view.getDayOfMonth());
     }
+}
 
 
 

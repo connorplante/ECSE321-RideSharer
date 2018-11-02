@@ -60,6 +60,7 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(CARIDS)) {
@@ -67,12 +68,6 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + CARIDS);
         }
-
-        // Get the tripIDs passed to this page from TripListings
-
-
-        // Get the tripIDs passed to this page from TripListings
-
 
         if (getIntent().hasExtra(MAKES)) {
             makes = getIntent().getStringArrayListExtra(MAKES);
@@ -86,16 +81,9 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
             throw new IllegalArgumentException("Activity cannot find  extras " + MODELS);
         }
 
-
-
-        System.out.println("This is: " + carIDs);
-        System.out.println("This is: " + makes);
-        System.out.println("This is: " + models);
         ListView listView = (ListView) findViewById(R.id.listView);
         SelectCarIDNumSeats.CustomAdapter customAdapter = new SelectCarIDNumSeats.CustomAdapter();
         listView.setAdapter(customAdapter);
-
-
     }
 
     class CustomAdapter extends BaseAdapter {
@@ -103,40 +91,33 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
         public int getCount() {
             return carIDs.size();
         }
+
         @Override
         public Object getItem(int i) {
             return null;
         }
+
         @Override
         public long getItemId(int i){
             return 0;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup){
-
 
             convertView = getLayoutInflater().inflate(R.layout.custom_select_cars, null);
 
             TextView textView_id = (TextView)convertView.findViewById(R.id.textView_carID);
             TextView textView_make = (TextView)convertView.findViewById(R.id.textView_make);
             TextView textView_model = (TextView)convertView.findViewById(R.id.textView_model);
-            TextView textView_start = (TextView)convertView.findViewById(R.id.textView_updateStart);
-            TextView textView_end = (TextView)convertView.findViewById(R.id.textView_updateEnd);
 
-            //System.out.println("HELLO!!!!");
-
-
-            textView_id.setText(carIDs.get(position).toString());
+            textView_id.setText(carIDs.get(position));
             textView_make.setText(makes.get(position));
-            // textView_start.setText("$ " + prices.get(position));
-            // textView_end.setText(numSeats.get(position));
             textView_model.setText(models.get(position));
 
             return convertView;
         }
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -177,24 +158,15 @@ public class SelectCarIDNumSeats extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
-
-
 
     public void switchViewSelectRoutePrices(View v){
         final TextView carID = (TextView) v.findViewById(R.id.textView_carID);
-
-
         Intent intent5 = new Intent(this, SelectRoutePrices.class);
         Bundle extras = getIntent().getExtras();
-        // System.out.println("CARID: " +carID.getText().toString() + "NUMSEATS: " + Integer.parseInt(spinner.getSelectedItem().toString()));
         intent5.putExtras(extras);
         intent5.putExtra("CARID", carID.getText().toString());
         intent5.putExtra(MainMenu.USERNAME, username);
-
         startActivity(intent5);
     }
-
 }

@@ -50,7 +50,6 @@ public class PreviousTrips extends AppCompatActivity {
         Intent intent = new Intent(this, MainMenu.class);
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
-
     }
 
     @Override

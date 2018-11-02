@@ -86,7 +86,6 @@ public class ManageProfile extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void viewUserInfo(View v){
@@ -109,14 +108,11 @@ public class ManageProfile extends AppCompatActivity {
                     lastName = response.get(1).toString();
                     email = response.get(2).toString();
                     phone = response.get(3).toString();
-                }catch(Exception e){
+                } catch (Exception e){
 
                 }
-
                 viewUpdateInfo(firstName, lastName, email, phone);
-
             }
-
         });
     }
 
@@ -143,6 +139,4 @@ public class ManageProfile extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
-
 }

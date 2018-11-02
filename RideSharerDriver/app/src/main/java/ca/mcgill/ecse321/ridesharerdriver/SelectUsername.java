@@ -41,8 +41,6 @@ public class SelectUsername extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -71,34 +69,18 @@ public class SelectUsername extends AppCompatActivity {
         }
     }
 
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//        tvError.setVisibility(View.GONE);
-//
-////        if (error == null || error != "i") {
-////            tvError.setVisibility(View.GONE);
-////        } else {
-////            tvError.setVisibility(View.VISIBLE);
-////        }
-//
-//    }
-public void switchViewSelectStartEnd(View v){
+    public void switchViewSelectStartEnd(View v){
 
-    //final TextView username = (TextView) findViewById(R.id.editText);
-    Intent intent3 = new Intent(this, SelectStartEnd.class);
-    Spinner spinner = (Spinner) findViewById(R.id.spinner2);
-    String numSeats = spinner.getSelectedItem().toString();
+        //final TextView username = (TextView) findViewById(R.id.editText);
+        Intent intent = new Intent(this, SelectStartEnd.class);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner2);
+        String numSeats = spinner.getSelectedItem().toString();
+        Bundle extras = getIntent().getExtras();
 
-    Bundle extras = getIntent().getExtras();
+        intent.putExtras(extras);
+        intent.putExtra(MainMenu.USERNAME, username);
+        intent.putExtra("NUMSEATS", numSeats);
 
-    intent3.putExtras(extras);
-    intent3.putExtra(MainMenu.USERNAME, username);
-    intent3.putExtra("NUMSEATS", numSeats);
-
-    startActivity(intent3);
-
-}
-
+        startActivity(intent);
+    }
 }

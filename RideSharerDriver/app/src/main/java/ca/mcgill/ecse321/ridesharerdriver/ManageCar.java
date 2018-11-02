@@ -77,7 +77,6 @@ public class ManageCar extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void viewCreateCar(View v){
@@ -97,5 +96,4 @@ public class ManageCar extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

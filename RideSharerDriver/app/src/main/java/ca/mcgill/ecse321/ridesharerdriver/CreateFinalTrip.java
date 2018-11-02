@@ -35,11 +35,6 @@ public class CreateFinalTrip extends AppCompatActivity {
         String time = extras.getString("TIME");
         String start = extras.getString("START");
         String end = extras.getString("END");
-        String username = extras.getString("USERNAME");
-        String carID = extras.getString("CARID");
-        String numSeats = extras.getString("NUMSEATS");
-        String stops = extras.getString("URLROUTES");
-        String prices = extras.getString("URLPRICES");
         String routesC = extras.getString("ROUTES");
         String pricesC = extras.getString("PRICES");
 
@@ -73,7 +68,6 @@ public class CreateFinalTrip extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
 
     public void onUpButtonPressed() {

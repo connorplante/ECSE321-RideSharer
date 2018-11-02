@@ -17,8 +17,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
@@ -29,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +35,13 @@ import java.util.List;
 public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private LatLng defaultLoc;
     public static final String STOPS = "ca.mcgill.ecse321.ridesharerpassenger.Stops";
     private static final int LOCATION_REQUEST = 500;
+
     String username = "";
+    String error = "";
 
     ArrayList<String> stops;
-    String error = "";
     ArrayList<Integer> tripIds;
     ArrayList<String> prices;
     ArrayList<String> numSeats;
@@ -131,42 +128,26 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
             throw new IllegalArgumentException("Activity cannot find  extras " + STOPS);
         }
 
-        System.out.println(stops);
-
         String url = getRequestUrl(stops);
-        System.out.println("URL ===> " + url);
         TaskRequestDirections taskRequestDirections = new TaskRequestDirections();
         taskRequestDirections.execute(url);
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        //mMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(45.5, -73.5), 6.0f));
         mMap.getUiSettings().setZoomControlsEnabled(true);
+
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST);
             return;
         }
         mMap.setMyLocationEnabled(true);
-
     }
 
     @Override
     public void onBackPressed() {
-        System.out.println("==== ON BACK PRESSED ====");
-
         Intent intent = new Intent(this, ShowTripListings.class);
         intent.putExtra(MainMenu.USERNAME, username);
         Bundle b = new Bundle();
@@ -176,9 +157,11 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
         b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
         b.putStringArrayList(ShowTripListings.STATUS, status);
         b.putStringArrayList(ShowTripListings.PRICES, prices);
+
         for (int j = 0; j < stopsLists.size(); j++) {
             b.putStringArrayList(ShowTripListings.STOPSLISTS + j, stopsLists.get(j));
         }
+
         b.putString(ShowTripListings.START, start);
         b.putString(ShowTripListings.END, end);
         intent.putExtras(b);
@@ -186,12 +169,6 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
     }
 
     private String getRequestUrl(ArrayList<String> stops) {
-        // value of origin
-        //String str_org = "origin=" + origin.latitude + "," + origin.longitude;
-        // value of origin
-        //String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
-
-        //String param = str_org + "&" + str_dest;
 
         String origin = stops.get(0);
         String dest = stops.get(stops.size()-1);
@@ -260,7 +237,6 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
                 }
                 break;
         }
-
     }
 
     public class TaskRequestDirections extends AsyncTask<String, Void, String> {
@@ -334,7 +310,6 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
             } else {
                 Toast.makeText(getApplicationContext(), "Directions not found", Toast.LENGTH_SHORT).show();
             }
-
         }
     }
 }

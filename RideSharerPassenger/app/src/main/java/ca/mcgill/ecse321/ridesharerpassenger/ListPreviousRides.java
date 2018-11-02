@@ -67,5 +67,4 @@ public class ListPreviousRides extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

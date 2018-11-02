@@ -94,143 +94,120 @@ public class ManageTrips extends AppCompatActivity {
         }
     }
 
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//
-//        if (error == null || error.length() == 0) {
-//            tvError.setVisibility(View.GONE);
-//        } else {
-//            tvError.setVisibility(View.VISIBLE);
-//        }
-//
-//    }
-
     public void getRequests(View v){
         error = "";
-        final String driverUsername = "donya";
 
-        String url = "/Request/showRequestsToDriver?username="+driverUsername;
+        String url = "/Request/showRequestsToDriver?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response){
 
-                ArrayList<String> tripIDs = new ArrayList<String>();
-                ArrayList<String> usernames = new ArrayList<String>();
-                ArrayList<String> dates = new ArrayList<String>();
-                ArrayList<String> routes = new ArrayList<String>();
-                ArrayList<String> requestIDs = new ArrayList<String>();
+            ArrayList<String> tripIDs = new ArrayList<String>();
+            ArrayList<String> usernames = new ArrayList<String>();
+            ArrayList<String> dates = new ArrayList<String>();
+            ArrayList<String> routes = new ArrayList<String>();
+            ArrayList<String> requestIDs = new ArrayList<String>();
 
-                String s = "";
+            String s = "";
 
-                for(int i = 0; i < response.length(); i++) {
-                    try {
-                        s += response.get(i).toString();
-                    } catch (Exception e) {
-                        System.out.println("here");
-                    }
+            for(int i = 0; i < response.length(); i++) {
+                try {
+                    s += response.get(i).toString();
+                } catch (Exception e) {
+                    System.out.println("here");
                 }
+            }
 
-                s = s.replaceAll("\"", "");
-                s = s.replaceAll("\\[", "");
-                s = s.replaceAll("\\]", ",");
+            s = s.replaceAll("\"", "");
+            s = s.replaceAll("\\[", "");
+            s = s.replaceAll("\\]", ",");
 
-                System.out.println(s);
+            System.out.println(s);
 
-                String[] str = s.split(",");
+            String[] str = s.split(",");
 
-                for(int j = 0; j < str.length; j++){
-                    if(j % 5 == 0){
-                        tripIDs.add(str[j]);
-                    }
-                    else if(j % 5 == 1){
-                        usernames.add(str[j]);
-                    }
-                    else if(j % 5 == 2){
-                        dates.add(str[j]);
-                    }
-                    else if (j % 5 == 3){
-                        routes.add(str[j]);
-                    }
-                    else{
-                        requestIDs.add(str[j]);
-                    }
+            for(int j = 0; j < str.length; j++){
+                if(j % 5 == 0){
+                    tripIDs.add(str[j]);
                 }
-
-
-                viewConfirmBooking(tripIDs, usernames, dates, routes, requestIDs);
-
+                else if(j % 5 == 1){
+                    usernames.add(str[j]);
+                }
+                else if(j % 5 == 2){
+                    dates.add(str[j]);
+                }
+                else if (j % 5 == 3){
+                    routes.add(str[j]);
+                }
+                else{
+                    requestIDs.add(str[j]);
+                }
+            }
+            viewConfirmBooking(tripIDs, usernames, dates, routes, requestIDs);
             }
 
         });
-
     }
 
 
     public void selectCompleteTrip(View v){
         error = "";
-        final String driverUsername = "donya";
-
-        String url = "/Trip/tripsToBeCompleted?username="+driverUsername;
+        String url = "/Trip/tripsToBeCompleted?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response){
 
-                ArrayList<String> trips = new ArrayList<String>();
-                ArrayList<String> places = new ArrayList<String>();
-                ArrayList<String> days = new ArrayList<String>();
-                ArrayList<String> times = new ArrayList<String>();
-                ArrayList<String> numSeats = new ArrayList<String>();
+            ArrayList<String> trips = new ArrayList<String>();
+            ArrayList<String> places = new ArrayList<String>();
+            ArrayList<String> days = new ArrayList<String>();
+            ArrayList<String> times = new ArrayList<String>();
+            ArrayList<String> numSeats = new ArrayList<String>();
 
-                String s = "";
+            String s = "";
 
-                for(int i = 0; i < response.length(); i++) {
-                    try {
-                        s += response.get(i).toString();
-                    } catch (Exception e) {
-                        System.out.println("here");
-                    }
+            for(int i = 0; i < response.length(); i++) {
+                try {
+                    s += response.get(i).toString();
+                } catch (Exception e) {
+                    System.out.println("here");
                 }
+            }
 
-                s = s.replaceAll("\\[", "");
-                s = s.replaceAll("\\]", ",");
-                String[] str= s.split("\"");
+            s = s.replaceAll("\\[", "");
+            s = s.replaceAll("\\]", ",");
+            String[] str= s.split("\"");
 
-                ArrayList<String> strings = new ArrayList<String>();
+            ArrayList<String> strings = new ArrayList<String>();
 
-                for(int i = 1; i < str.length; i += 2){
-                    strings.add(str[i]);
+            for(int i = 1; i < str.length; i += 2){
+                strings.add(str[i]);
+            }
+
+            for(int j = 0; j < strings.size(); j++){
+                if(j % 5 == 0){
+                    trips.add(strings.get(j));
                 }
-
-                for(int j = 0; j < strings.size(); j++){
-                    if(j % 5 == 0){
-                        trips.add(strings.get(j));
-                    }
-                    if(j % 5 == 1){
-                        places.add(strings.get(j));
-                    }
-                    if(j % 5 == 2){
-                        days.add(strings.get(j));
-                    }
-                    if(j % 5 == 3){
-                        times.add(strings.get(j));
-                    }
-                    if(j % 5 == 4){
-                        numSeats.add(strings.get(j));
-                    }
+                if(j % 5 == 1){
+                    places.add(strings.get(j));
                 }
-
-                viewCompleteTrip(trips, places, days, times, numSeats);
-
+                if(j % 5 == 2){
+                    days.add(strings.get(j));
+                }
+                if(j % 5 == 3){
+                    times.add(strings.get(j));
+                }
+                if(j % 5 == 4){
+                    numSeats.add(strings.get(j));
+                }
+            }
+            viewCompleteTrip(trips, places, days, times, numSeats);
             }
 
         });
-
     }
 
     public void viewUpdateTrip(View v){
@@ -277,12 +254,7 @@ public class ManageTrips extends AppCompatActivity {
 
     public void findDriversTripsCancel(View v) {
         error = "";
-
-
-        String url = "/Trip/scheduledTripsOfDriver?username=donya";
-
-
-
+        String url = "/Trip/scheduledTripsOfDriver?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
@@ -299,10 +271,6 @@ public class ManageTrips extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
-
-
-
                 // call next view to display trips
                 getTripsInfo(tripIds);
             }
@@ -310,8 +278,6 @@ public class ManageTrips extends AppCompatActivity {
             @Override
             public void onFinish() {
                 //refreshErrorMessage();
-
-
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -344,7 +310,6 @@ public class ManageTrips extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-
                 // add trip ids from response to the array list
                 ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
                 ArrayList<String> stopsStrs = new ArrayList<String>();
@@ -352,7 +317,6 @@ public class ManageTrips extends AppCompatActivity {
                 ArrayList<String> prices = new ArrayList<String>();
                 ArrayList<String> numSeats = new ArrayList<String>();
                 ArrayList<String> status = new ArrayList<String>();
-
 
                 for (int i = 0; i < response.length(); i++) {
                     ArrayList<String> stopList = new ArrayList<String>();
@@ -375,16 +339,7 @@ public class ManageTrips extends AppCompatActivity {
                     }
                     stopsLists.add(stopList);
                 }
-
-
-
-
-
-
-
-                    viewFoundTripsCancel(tripIds, prices, dates, numSeats, status, stopsLists);
-
-
+                viewFoundTripsCancel(tripIds, prices, dates, numSeats, status, stopsLists);
             }
             @Override
             public void onFinish() {
@@ -400,11 +355,7 @@ public class ManageTrips extends AppCompatActivity {
                 //refreshErrorMessage();
             }
         });
-
-
     }
-
-
 
     public void viewFoundTripsCancel(ArrayList<Integer> tripIds, ArrayList<String> prices,
                                ArrayList<String> dates, ArrayList<String> numSeats, ArrayList<String> status,
@@ -420,25 +371,14 @@ public class ManageTrips extends AppCompatActivity {
         for (int i = 0; i < stopsLists.size(); i++) {
             b.putStringArrayList(CancelTrip.STOPSLISTS + i, stopsLists.get(i));
         }
-
-
-
         intent.putExtra(MainMenu.USERNAME, username);
         intent.putExtras(b);
         startActivity(intent);
     }
 
-
-    //COPIED RIGHT HERE
-
-
     public void findDriversTripsUpdate(View v) {
         error = "";
-
-
         String url = "/Trip/scheduledTripsOfDriver?username=donya";
-
-
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
@@ -455,10 +395,6 @@ public class ManageTrips extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
-
-
-
                 // call next view to display trips
                 getTripsInfo2(tripIds);
             }
@@ -466,8 +402,6 @@ public class ManageTrips extends AppCompatActivity {
             @Override
             public void onFinish() {
                 //refreshErrorMessage();
-
-
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -482,7 +416,6 @@ public class ManageTrips extends AppCompatActivity {
     }
 
     public void getTripsInfo2(final ArrayList<Integer> tripIds){
-        // from me! get tripId info
         String tripIdList = "";
 
         for (int i = 0; i < tripIds.size(); i++) {
@@ -492,6 +425,7 @@ public class ManageTrips extends AppCompatActivity {
                 tripIdList = tripIdList + tripIds.get(i).toString() + ",";
             }
         }
+
         String start = "Ottawa";
         String end = "Toronto";
         String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
@@ -500,16 +434,12 @@ public class ManageTrips extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
 
-
-
                 // add trip ids from response to the array list
                 ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
-                ArrayList<String> stopsStrs = new ArrayList<String>();
                 ArrayList<String> dates = new ArrayList<String>();
                 ArrayList<String> prices = new ArrayList<String>();
                 ArrayList<String> numSeats = new ArrayList<String>();
                 ArrayList<String> status = new ArrayList<String>();
-
 
                 for (int i = 0; i < response.length(); i++) {
                     ArrayList<String> stopList = new ArrayList<String>();
@@ -533,11 +463,7 @@ public class ManageTrips extends AppCompatActivity {
                     stopsLists.add(stopList);
                 }
 
-
-
                 viewFoundTripsUpdate(tripIds, prices, dates, numSeats, status, stopsLists);
-
-
             }
             @Override
             public void onFinish() {
@@ -553,11 +479,7 @@ public class ManageTrips extends AppCompatActivity {
                 //refreshErrorMessage();
             }
         });
-
-
     }
-
-
 
     public void viewFoundTripsUpdate(ArrayList<Integer> tripIds, ArrayList<String> prices,
                                      ArrayList<String> dates, ArrayList<String> numSeats, ArrayList<String> status,
@@ -579,7 +501,6 @@ public class ManageTrips extends AppCompatActivity {
         intent.putExtras(b);
         startActivity(intent);
     }
-
 }
 
 

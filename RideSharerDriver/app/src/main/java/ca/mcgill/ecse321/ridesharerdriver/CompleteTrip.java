@@ -127,13 +127,8 @@ public class CompleteTrip extends AppCompatActivity {
             completeTrip.setText("Complete Trip " + trips.get(position));
 
             return view;
-
         }
-
-
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -191,8 +186,6 @@ public class CompleteTrip extends AppCompatActivity {
 
                     }
                 }
-
         );
     }
-
 }
