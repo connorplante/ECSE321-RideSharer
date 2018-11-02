@@ -21,7 +21,7 @@
     </property>
     
     <property name = "hibernate.connection.password">
-        mzmbuto3p9a8atzx
+        d95shgkkwujlm3he
     </property>
 
     <property name="connection.pool_size">
