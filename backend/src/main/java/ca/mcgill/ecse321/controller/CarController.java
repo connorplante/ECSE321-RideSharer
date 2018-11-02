@@ -10,7 +10,7 @@ import ca.mcgill.ecse321.model.User;
 import org.hibernate.Hibernate;
 import org.hibernate.Transaction;
 import org.hibernate.SQLQuery;
-
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -202,5 +202,54 @@ public class CarController {
 
         return cars;
     }
+    
+    
+    //ADDING IN A METHOD 
+    @RequestMapping("/getDriversCars")
+    public ArrayList<ArrayList<String>> getDriversCars(@RequestParam(value="username") String username){
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        User driver = (User) session.byNaturalId(User.class).using("username",username).load();
+        int id = driver.getUserID();
+
+        session.getTransaction().commit();
+        session.close();
+
+
+        Session session2 = HibernateUtil.getSession();
+        session2.beginTransaction();
+
+        String string = "SELECT CarID, Make, Model FROM Cars WHERE FK_UserID=:userID AND Status=1";
+
+        SQLQuery query = session2.createSQLQuery(string);
+        query.setParameter("userID", id);
+        
+        List<Object[]> cars = query.list();
+        
+        session2.getTransaction().commit();
+        session2.close();
+
+
+        
+        ArrayList<String> makes = new ArrayList<String>();
+        ArrayList<String> models = new ArrayList<String>();
+        ArrayList<ArrayList<String>> outer = new ArrayList<ArrayList<String>>();
+        
+        
+        for (Object[] numCars: cars){
+            ArrayList<String> car = new ArrayList<String>();
+            for (int i = 0; i < 3; i++){
+                car.add(numCars[i].toString());   
+            }
+            outer.add(car);
+        }
+
+
+        
+        return outer;
+
+    }
+   
 
 }

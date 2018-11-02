@@ -219,7 +219,7 @@ public class UserController {
 
         return isSet;
     }
-
+    
     /**
      * Resets a users password
      * returns true if reset was successful

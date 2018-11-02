@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +30,7 @@ import cz.msebera.android.httpclient.Header;
 public class ConfirmBooking extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     ArrayList<String> tripIDs;
     ArrayList<String> usernames;
@@ -42,13 +44,18 @@ public class ConfirmBooking extends AppCompatActivity {
     public static final String ROUTES = "ca.mcgill.ecse321.ridesharerdriver.routes";
     public static final String REQUESTIDs = "ca.mcgill.ecse321.ridesharerdriver.requestIDs";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_booking);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +90,6 @@ public class ConfirmBooking extends AppCompatActivity {
         ListView listView = (ListView)findViewById(R.id.listView);
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
-
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -92,19 +98,25 @@ public class ConfirmBooking extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, ManageTrips.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     class CustomAdapter extends BaseAdapter{
@@ -131,7 +143,6 @@ public class ConfirmBooking extends AppCompatActivity {
             TextView usernameView = (TextView)view.findViewById(R.id.textView2);
             TextView legsView = (TextView)view.findViewById(R.id.textView3);
             TextView dateView = (TextView)view.findViewById(R.id.textView4);
-            //TextView requestView = (TextView)view.findViewById(R.id.textView6);
             TextView confirmBook = (TextView)view.findViewById(R.id.button3);
             TextView cancelBook = (TextView)view.findViewById(R.id.button17);
 
@@ -147,15 +158,11 @@ public class ConfirmBooking extends AppCompatActivity {
             usernameView.setText(usernames.get(position));
             dateView.setText(dates.get(position));
             legsView.setText(routes.get(position));
-            //requestView.setText("Request " + requestIDs.get(position));
             confirmBook.setText("Confirm Request " + requestIDs.get(position));
             cancelBook.setText("Reject Request " + requestIDs.get(position));
 
             return view;
-
         }
-
-
     }
 
     private void refreshErrorMessage() {
@@ -168,7 +175,6 @@ public class ConfirmBooking extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void rejectBooking(View v){
@@ -188,8 +194,6 @@ public class ConfirmBooking extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void confirmBooking(View v){
@@ -200,41 +204,36 @@ public class ConfirmBooking extends AppCompatActivity {
         str = str.replaceAll("[^\\d.]", "");
         confirm.setText("Choice confirmed");
 
-
-
         String url = "Request/acceptRequest?requestID=" + str;
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                        String a = "";
-                        String b = "";
-                        String username = "";
-                        String id = "";
-                        try {
-                            a = response.get(0).toString();
-                            b = response.get(1).toString();
-                            username = response.get(2).toString();
-                            id = response.get(3).toString();
-                        } catch (Exception e) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                String a = "";
+                String b = "";
+                String username = "";
+                String id = "";
+                try {
+                    a = response.get(0).toString();
+                    b = response.get(1).toString();
+                    username = response.get(2).toString();
+                    id = response.get(3).toString();
+                } catch (Exception e) {
 
-                        }
-
-                        HttpUtils.post("Passenger/confirmBook?tripID=" + id + "&username=" + username + "&pointA=" + a + "&pointB=" + b,
-                                new RequestParams(), new JsonHttpResponseHandler(){
-                                    @Override
-                                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                                        System.out.println(responseString);
-                                    }
-                                });
-
-                    }
                 }
 
-        );
+                HttpUtils.post("Passenger/confirmBook?tripID=" + id + "&username=" + username + "&pointA=" + a + "&pointB=" + b,
+                    new RequestParams(), new JsonHttpResponseHandler(){
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                        System.out.println(responseString);
+                    }
+                });
 
-        }
+            }
+        });
     }
+}
 
 
 

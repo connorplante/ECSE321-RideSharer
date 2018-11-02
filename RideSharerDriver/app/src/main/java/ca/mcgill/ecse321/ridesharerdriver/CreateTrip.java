@@ -1,18 +1,24 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
+import com.loopj.android.http.*;
+import org.json.*;
+import cz.msebera.android.httpclient.*;
 
 public class CreateTrip extends AppCompatActivity {
 
-    String error = "";
+    String error = "i";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,12 @@ public class CreateTrip extends AppCompatActivity {
         setContentView(R.layout.activity_create_trip);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -32,8 +44,6 @@ public class CreateTrip extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -41,32 +51,30 @@ public class CreateTrip extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, ManageTrips.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    private void refreshErrorMessage() {
-        // set the error message
-        TextView tvError = (TextView) findViewById(R.id.error);
-        tvError.setText(error);
-
-        if (error == null || error.length() == 0) {
-            tvError.setVisibility(View.GONE);
-        } else {
-            tvError.setVisibility(View.VISIBLE);
-        }
-
+    public void switchViewSelectTime(View v){
+        Intent intent1 = new Intent(this, SelectTime.class);
+        intent1.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent1);
     }
-
 }

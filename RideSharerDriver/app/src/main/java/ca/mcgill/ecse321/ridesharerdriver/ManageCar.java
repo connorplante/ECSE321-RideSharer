@@ -14,6 +14,7 @@ import android.widget.TextView;
 public class ManageCar extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +22,12 @@ public class ManageCar extends AppCompatActivity {
         setContentView(R.layout.activity_manage_car);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -39,19 +46,25 @@ public class ManageCar extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, MainMenu.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void refreshErrorMessage() {
@@ -64,22 +77,23 @@ public class ManageCar extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void viewCreateCar(View v){
         Intent intent = new Intent(this, CreateCar.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void viewUpdateCar(View v){
         Intent intent = new Intent(this, UpdateCar.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void viewRemoveCar(View v){
         Intent intent = new Intent(this, RemoveCar.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

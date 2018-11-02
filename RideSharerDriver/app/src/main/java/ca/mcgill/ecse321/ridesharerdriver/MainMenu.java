@@ -13,6 +13,9 @@ import android.widget.TextView;
 
 public class MainMenu extends AppCompatActivity {
 
+    public static final String USERNAME  = "MainMenu.USERNAME";
+
+    String username = "";
     String error = "";
 
     @Override
@@ -21,6 +24,13 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        // Get the username passed to this page
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -64,22 +74,23 @@ public class MainMenu extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void viewManageProfile(View v){
         Intent intent = new Intent(this, ManageProfile.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void viewManageCars(View v){
         Intent intent = new Intent(this, ManageCar.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void viewManageTrips(View v){
         Intent intent = new Intent(this, ManageTrips.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

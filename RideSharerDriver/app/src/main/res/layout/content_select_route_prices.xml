@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".SelectRoutePrices"
+    tools:showIn="@layout/activity_select_route_prices">
+
+    <Button
+        android:id="@+id/button23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="140dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="switchViewCreateFinalTrip"
+        android:text="Review Your Trip"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/editText5"
+        android:layout_width="368dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="148dp"
+        android:ems="10"
+        android:hint="Route"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editText7"
+        android:layout_width="368dp"
+        android:layout_height="49dp"
+        android:layout_marginBottom="236dp"
+
+        android:ems="10"
+        android:hint="Prices"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.488"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="399dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="156dp"
+        android:gravity="center"
+        android:text="Please enter the route and corresponding prices of your trip (including your start and end destinations) in dash separated lists. (E.g. Toronto,ON-Kingston,ON-Montreal,QC)"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/editText7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

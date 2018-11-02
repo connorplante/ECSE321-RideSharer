@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerpassenger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import cz.msebera.android.httpclient.Header;
 public class ChnagePassword extends AppCompatActivity {
 
     String error = "";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,13 @@ public class ChnagePassword extends AppCompatActivity {
         setContentView(R.layout.activity_chnage_password);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        // Get the username passed to this page
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -45,19 +54,25 @@ public class ChnagePassword extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, ManageProfile.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private void refreshErrorMessage() {
@@ -70,8 +85,8 @@ public class ChnagePassword extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
+<<<<<<< HEAD
     public void changePassword(View v){
         error = "";
         final TextView ta = (TextView) findViewById(R.id.cpOldPass);
@@ -127,4 +142,6 @@ public class ChnagePassword extends AppCompatActivity {
         });
     }
 
+=======
+>>>>>>> f9ef446399592ca134cee6a694d1463e92f12701
 }

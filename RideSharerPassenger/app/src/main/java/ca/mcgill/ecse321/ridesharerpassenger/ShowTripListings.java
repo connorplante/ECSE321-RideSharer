@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +28,8 @@ import cz.msebera.android.httpclient.Header;
 public class ShowTripListings extends AppCompatActivity {
 
     String error = "";
+    String username = "";
+
     ArrayList<Integer> tripIds;
     ArrayList<String> prices;
     ArrayList<String> numSeats;
@@ -50,8 +53,15 @@ public class ShowTripListings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_show_trip_listings);
 
+        // Get the username passed to this page
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
         // Get the tripIDs passed to this page from TripListings
-        if (getIntent().hasExtra(tripIDs)) {
+        if (getIntent().hasExtra(ShowTripListings.tripIDs)) {
             tripIds = getIntent().getIntegerArrayListExtra(tripIDs);
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + tripIDs);
@@ -106,20 +116,10 @@ public class ShowTripListings extends AppCompatActivity {
             stopsLists.add(stops);
         }
 
-
-
-        System.out.println("ShowTripListings:");
-        System.out.println(dates);
-        System.out.println(prices);
-        System.out.println(numSeats);
-        System.out.println(status);
-        System.out.println(stopsLists);
-
         // from tutorial
         ListView listView = (ListView) findViewById(R.id.listView);
         CustomAdapter customAdapter = new CustomAdapter();
         listView.setAdapter(customAdapter);
-
     }
 
     class CustomAdapter extends BaseAdapter {
@@ -147,14 +147,23 @@ public class ShowTripListings extends AppCompatActivity {
             TextView textView_date = (TextView) convertView.findViewById(R.id.textView_date);
             TextView textView_numSeats = (TextView) convertView.findViewById(R.id.textView_numSeats);
             TextView textView_price = (TextView) convertView.findViewById(R.id.textView_price);
+            Button button_book = (Button) convertView.findViewById(R.id.button_book);
 
             textView_tripId.setText(tripIds.get(position).toString());
             textView_date.setText(dates.get(position));
             textView_price.setText("$ " + prices.get(position));
             textView_numSeats.setText(numSeats.get(position));
+            button_book.setText("book " + tripIds.get(position).toString());
 
             return convertView;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, TripListings.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
     }
 
     @Override
@@ -164,26 +173,30 @@ public class ShowTripListings extends AppCompatActivity {
         return true;
     }
 
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, TripListings.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onUpButtonPressed();
+                return true;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void showMap(View view) {
         TextView textView_tripId = (TextView) view.findViewById(R.id.textView_tripId);
         String id = textView_tripId.getText().toString();
-
-        System.out.println("id = " + id);
 
         int i = 0;
         for (i = 0; i < tripIds.size(); i++) {
@@ -192,35 +205,42 @@ public class ShowTripListings extends AppCompatActivity {
             }
         }
 
-        System.out.println("i = " + i);
-        System.out.println("tripIds length = " + tripIds.size());
-        System.out.println("stopsLists length = " + stopsLists.size());
-
         ArrayList<String> stops = stopsLists.get(i);
-
-        System.out.println(stops);
 
         Bundle b = new Bundle();
         b.putStringArrayList(GoogleMapsActivity.STOPS, stops);
+        b.putIntegerArrayList(ShowTripListings.tripIDs, tripIds);
+        b.putStringArrayList(ShowTripListings.DATES, dates);
+        b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
+        b.putStringArrayList(ShowTripListings.STATUS, status);
+        b.putStringArrayList(ShowTripListings.PRICES, prices);
+
+        for (int j = 0; j < stopsLists.size(); j++) {
+            b.putStringArrayList(ShowTripListings.STOPSLISTS + j, stopsLists.get(j));
+        }
+
+        b.putString(ShowTripListings.START, start);
+        b.putString(ShowTripListings.END, end);
 
         Intent intent = new Intent(this, GoogleMapsActivity.class);
         intent.putExtras(b);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 
     public void bookTrip(View view) {
-        //Intent intent = new Intent(this, GoogleMapsActivity.class);
-        //startActivity(intent);
-        // passenger name
-        // trip id
-        // start
-        // end
-        //String url = "/request/createRequest?passengerName=" + username + "&tripID=" + tripId + "&start=" + start + "&end=" + end;
- /*       HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
+
+        Button button_book = view.findViewById(R.id.button_book);
+
+        String buttonText = button_book.getText().toString();
+        String tripId = buttonText.substring(5);
+        String url = "/Request/createRequest?passengerName=" + username + "&tripID=" + tripId + "&start=" + start + "&end=" + end;
+
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-
+                System.out.println("Successfully requested!");
             }
 
             @Override
@@ -236,7 +256,7 @@ public class ShowTripListings extends AppCompatActivity {
                 }
                 refreshErrorMessage();
             }
-        });*/
+        });
     }
 
     private void refreshErrorMessage() {
@@ -249,7 +269,5 @@ public class ShowTripListings extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

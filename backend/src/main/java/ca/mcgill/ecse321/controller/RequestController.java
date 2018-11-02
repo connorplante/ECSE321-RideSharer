@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.SQLQuery;
 import ca.mcgill.ecse321.model.Request;
 import ca.mcgill.ecse321.model.Trip;
+import ca.mcgill.ecse321.model.*;
 
 import java.util.List;
 import java.util.Properties;

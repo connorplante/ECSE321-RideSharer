@@ -55,7 +55,7 @@
         </activity>
         <activity
             android:name=".CreateTrip"
-            android:label="@string/title_activity_create_trip"
+            android:label="Welcome"
             android:parentActivityName=".ManageTrips">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -148,6 +148,80 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ca.mcgill.ecse321.ridesharerdriver.ManageProfile" />
+        </activity>
+        <activity
+            android:name=".SelectTime"
+            android:label="Date and Time"
+            android:parentActivityName=".CreateTrip">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.CreateTrip" />
+        </activity>
+        <activity
+            android:name=".SelectDate"
+            android:label="HELLO"
+            android:parentActivityName=".SelectTime">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.SelectTime" />
+        </activity>
+        <activity
+            android:name=".SelectUsername"
+            android:label="Number of Seats"
+            android:parentActivityName=".SelectDate">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.SelectTime" />
+        </activity>
+        <activity
+            android:name=".SelectStartEnd"
+            android:label="Start and End"
+            android:parentActivityName=".SelectUsername">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.SelectUsername" />
+        </activity>
+        <activity
+            android:name=".SelectCarIDNumSeats"
+            android:label="Select Car"
+            android:parentActivityName=".SelectStartEnd">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.SelectStartEnd" />
+        </activity>
+        <activity
+            android:name=".SelectRoutePrices"
+            android:label="Route and Prices"
+            android:parentActivityName=".SelectCarIDNumSeats">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.SelectCarIDNumSeats" />
+        </activity>
+        <activity
+            android:name=".CreateFinalTrip"
+            android:label="Review"
+            android:parentActivityName=".SelectRoutePrices"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.SelectRoutePrices" />
+        </activity>
+        <activity
+            android:name=".UpdateTripFields"
+            android:label="@string/title_activity_update_trip_fields"
+            android:parentActivityName=".UpdateTrip">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.UpdateTrip" />
+        </activity>
+        <activity
+            android:name=".FinishCreateTrip"
+            android:label="Confirmation"
+            android:parentActivityName=".CreateFinalTrip"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ca.mcgill.ecse321.ridesharerdriver.CreateFinalTrip" />
         </activity>
     </application>
 

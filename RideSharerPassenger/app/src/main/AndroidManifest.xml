@@ -119,7 +119,7 @@
 
         <activity
             android:name=".GoogleMapsActivity"
-            android:label="@string/title_activity_google_maps"
+            android:label="GoogleMapsActivity"
             android:parentActivityName=".ShowTripListings">
         </activity>
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyARu3Nay_8IzQxKh3PDIS4QBb4J5fEUmgE"/>
