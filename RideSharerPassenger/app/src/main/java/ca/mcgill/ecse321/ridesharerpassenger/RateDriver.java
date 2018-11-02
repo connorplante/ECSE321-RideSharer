@@ -72,7 +72,7 @@ public class RateDriver extends AppCompatActivity {
     public void changeRating(View v) {
         final int numStars = ratingBar.getNumStars();
         final TextView driver = (TextView) findViewById(R.id.driverName);
-        final String username = "user1";
+        final String username = driver.getText().toString();
 
         driver.setText(username);
 
