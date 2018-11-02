@@ -77,7 +77,7 @@ public class RemoveUser extends AppCompatActivity {
     }
 
     public void removeUser(View v){
-        String url = "User/removeUser?username=" + username;
+        String url = "/User/removeUser?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
             @Override
@@ -92,7 +92,7 @@ public class RemoveUser extends AppCompatActivity {
     }
 
     public void viewFrontPage(){
-        Intent intent = new Intent(this, SignUpOrIn.class);
+        Intent intent = new Intent(this, SignInOrUp.class);
         startActivity(intent);
     }
 
