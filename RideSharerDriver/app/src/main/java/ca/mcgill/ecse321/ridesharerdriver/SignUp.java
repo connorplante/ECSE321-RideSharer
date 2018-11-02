@@ -78,6 +78,7 @@ public class SignUp extends AppCompatActivity {
         final TextView td = (TextView) findViewById(R.id.newLastName);
         final TextView te = (TextView) findViewById(R.id.newEmail);
         final TextView tf = (TextView) findViewById(R.id.newPhoneNumber);
+        username = ta;
         HttpUtils.post("User/createDriver?username=" + ta.getText().toString() +
                 "&password=" + tb.getText().toString() + "&firstName=" + tc.getText().toString()
                 + "&lastName=" + td.getText().toString() + "&email=" + te.getText().toString()
