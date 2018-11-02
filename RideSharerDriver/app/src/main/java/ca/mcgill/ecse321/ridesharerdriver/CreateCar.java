@@ -94,11 +94,22 @@ public class CreateCar extends AppCompatActivity {
         final TextView tc = (TextView) findViewById(R.id.year);
         final TextView td = (TextView) findViewById(R.id.numSeats);
         final TextView te = (TextView) findViewById(R.id.licensePlate);
-        final String user = "user1"; //TODO: Find user that is logged in
+        final String user = username;
 
-        HttpUtils.post("Car/createCar?make=" + ta.getText().toString() + "&model=" + tb.getText().toString() +
-                "&year=" + tc.getText().toString() + "&numSeats=" + td.getText().toString() + "&licencePlate=" +
-                te.getText().toString() + "&username=" + user, new RequestParams(), new JsonHttpResponseHandler() {
+        String make = ta.getText().toString();
+        make = make.replaceAll("[^0-9A-Za-z]", "");
+        String model = tb.getText().toString();
+        model = model.replaceAll("[^0-9A-Za-z]", "");
+        String year = tc.getText().toString();
+        year = year.replaceAll("[^0-9]", "");
+        String numSeats = td.getText().toString();
+        numSeats = numSeats.replaceAll("[^0-9]", "");
+        String licencePlate = te.getText().toString();
+        licencePlate = licencePlate.replaceAll("[^0-9A-Za-z]", "");
+
+        HttpUtils.post("Car/createCar?make=" + make + "&model=" + model +
+                "&year=" + year + "&numSeats=" + numSeats + "&licencePlate=" +
+                licencePlate + "&username=" + user, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
                 refreshErrorMessage();

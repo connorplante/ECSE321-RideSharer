@@ -38,7 +38,7 @@ public class ListPreviousRides extends AppCompatActivity {
 
     public static final String TRIPS = "ca.mcgill.ecse321.ridesharerpassenger.trips";
     public static final String PLACES = "ca.mcgill.ecse321.ridesharerpassenger.places";
-    public static final String DAYS  = "ca.mcgill.ecse321.ridesharerpassenger.days";
+    public static final String DAYS = "ca.mcgill.ecse321.ridesharerpassenger.days";
     public static final String TIMES = "ca.mcgill.ecse321.ridesharerpassenger.times";
     public static final String NUMSEATS = "ca.mcgill.ecse321.ridesharerpassenger.numSeats";
 
@@ -47,41 +47,47 @@ public class ListPreviousRides extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_list_previous_rides);
 
+        // Get the username passed to this page
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
+        //Get TripIDs passed from PreviousTrips
         if (getIntent().hasExtra(TRIPS)) {
             trips = getIntent().getStringArrayListExtra(TRIPS);
         } else {
-            throw new IllegalArgumentException("cannot find extras " + TRIPS);
+            throw new IllegalArgumentException("Activity cannot find extras " + TRIPS);
         }
 
+        //Get Places passed from PreviousTrips
         if (getIntent().hasExtra(PLACES)) {
             places = getIntent().getStringArrayListExtra(PLACES);
         } else {
-            throw new IllegalArgumentException("cannot find extras " + PLACES);
+            throw new IllegalArgumentException("Activity cannot find extras " + PLACES);
         }
 
+        //Get Days passed from PreviousTrips
         if (getIntent().hasExtra(DAYS)) {
             days = getIntent().getStringArrayListExtra(DAYS);
         } else {
-            throw new IllegalArgumentException("cannot find extras "+ DAYS);
+            throw new IllegalArgumentException("Activity cannot find extras " + DAYS);
         }
 
+        //Get Times passed from PreviousTrips
         if (getIntent().hasExtra(TIMES)) {
             times = getIntent().getStringArrayListExtra(TIMES);
         } else {
-            throw new IllegalArgumentException("cannot find extras "+ TIMES);
+            throw new IllegalArgumentException("Activity cannot find extras " + TIMES);
         }
 
+        //Get NumSeats passed from PreviousTrips
         if (getIntent().hasExtra(NUMSEATS)) {
             numSeats = getIntent().getStringArrayListExtra(NUMSEATS);
         } else {
-            throw new IllegalArgumentException("cannot find extras " + NUMSEATS);
+            throw new IllegalArgumentException("Activity cannot find extras " + NUMSEATS);
         }
-
-        System.out.println("ListPreviousRides:");
-        System.out.println(places);
-        System.out.println(days);
-        System.out.println(times);
-        System.out.println(numSeats);
 
 
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -96,15 +102,6 @@ public class ListPreviousRides extends AppCompatActivity {
                 return trips.size();
             }
 
-        // Get the username passed to this page
-        if (getIntent().hasExtra(MainMenu.USERNAME)) {
-            username = getIntent().getStringExtra(MainMenu.USERNAME);
-        } else {
-            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
-        }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public Object getItem(int position) {
                 return null;
