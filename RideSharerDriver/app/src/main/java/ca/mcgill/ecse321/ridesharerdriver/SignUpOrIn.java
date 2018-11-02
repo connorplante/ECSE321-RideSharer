@@ -94,7 +94,8 @@ public class SignUpOrIn extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
                 if(responseString.equals("true")){
-                    viewMainMenu();
+                    username = ta.getText().toString();
+                    viewMainMenu(username);
                 }else{
                     error += "Incorrect username or password";
 

@@ -77,6 +77,8 @@ public class SignInOrUp extends AppCompatActivity {
         final TextView ta = (TextView) findViewById(R.id.editText);
         final TextView tb = (TextView) findViewById(R.id.editText2);
 
+        username = ta.getText().toString();
+
         if(ta.equals("") || tb.equals("")){
             error = "Please enter all fields!";
             refreshErrorMessage();
