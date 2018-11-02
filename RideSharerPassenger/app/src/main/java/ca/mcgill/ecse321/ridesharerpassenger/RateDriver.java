@@ -2,17 +2,12 @@ package ca.mcgill.ecse321.ridesharerpassenger;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-//import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RatingBar;
-//import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -22,37 +17,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
 
 public class RateDriver extends AppCompatActivity {
 
     String error = "";
+    String driveruser;
     public RatingBar ratingBar;
     public TextView driverName;
     public Button submitButton;
+
+    public static final String DRIVER = "ca.mcgill.ecse321.ridesharerpassenger.driver";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_driver);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        if (getIntent().hasExtra(DRIVER)) {
+            driveruser = getIntent().getStringExtra(DRIVER);
+        } else {
+            throw new IllegalArgumentException("cannot find extras " + DRIVER);
+        }
 
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         driverName = (TextView) findViewById(R.id.driverName);
         submitButton = (Button) findViewById(R.id.buttonRating);
-        driverName.setText("user1");
+        driveruser = driveruser.replaceAll("[^A-Za-z]+", "");
+        driverName.setText(driveruser);
     }
 
     @Override
