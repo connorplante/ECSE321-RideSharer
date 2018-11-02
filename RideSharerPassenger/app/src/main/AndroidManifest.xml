@@ -99,7 +99,7 @@
             android:parentActivityName=".PreviousTrips">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ca.mcgill.ecse321.ridesharerpassenger.PreviousTrips" />
+                android:value="ca.mcgill.ecse321.ridesharerpassenger.ListPreviousRides" />
         </activity>
     </application>
 
