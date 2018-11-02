@@ -87,7 +87,6 @@ public class ChangePassword extends AppCompatActivity {
             tvError.setVisibility(View.VISIBLE);
         }
     }
-<<<<<<< HEAD
 
     public void changePassword(View v){
         error = "";
@@ -143,7 +142,4 @@ public class ChangePassword extends AppCompatActivity {
         });
     }
 
-
-=======
->>>>>>> f9ef446399592ca134cee6a694d1463e92f12701
 }
