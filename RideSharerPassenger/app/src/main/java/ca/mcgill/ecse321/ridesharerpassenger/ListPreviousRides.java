@@ -57,36 +57,26 @@ public class ListPreviousRides extends AppCompatActivity {
         //Get TripIDs passed from PreviousTrips
         if (getIntent().hasExtra(TRIPS)) {
             trips = getIntent().getStringArrayListExtra(TRIPS);
-        } else {
-            throw new IllegalArgumentException("Activity cannot find extras " + TRIPS);
         }
 
         //Get Places passed from PreviousTrips
         if (getIntent().hasExtra(PLACES)) {
             places = getIntent().getStringArrayListExtra(PLACES);
-        } else {
-            throw new IllegalArgumentException("Activity cannot find extras " + PLACES);
         }
 
         //Get Days passed from PreviousTrips
         if (getIntent().hasExtra(DAYS)) {
             days = getIntent().getStringArrayListExtra(DAYS);
-        } else {
-            throw new IllegalArgumentException("Activity cannot find extras " + DAYS);
         }
 
         //Get Times passed from PreviousTrips
         if (getIntent().hasExtra(TIMES)) {
             times = getIntent().getStringArrayListExtra(TIMES);
-        } else {
-            throw new IllegalArgumentException("Activity cannot find extras " + TIMES);
         }
 
         //Get NumSeats passed from PreviousTrips
         if (getIntent().hasExtra(NUMSEATS)) {
             numSeats = getIntent().getStringArrayListExtra(NUMSEATS);
-        } else {
-            throw new IllegalArgumentException("Activity cannot find extras " + NUMSEATS);
         }
 
 
