@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,13 +29,10 @@ public class RateDriver extends AppCompatActivity {
 
     public static final String DRIVER = "ca.mcgill.ecse321.ridesharerpassenger.driver";
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rate_driver);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         // Get the username passed to this page
         if (getIntent().hasExtra(MainMenu.USERNAME)) {
@@ -45,14 +41,6 @@ public class RateDriver extends AppCompatActivity {
             throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         if (getIntent().hasExtra(DRIVER)) {
             driveruser = getIntent().getStringExtra(DRIVER);
         } else {
@@ -106,8 +94,8 @@ public class RateDriver extends AppCompatActivity {
                     @Override
                     public void onFinish() {
                         refreshErrorMessage();
-                        viewPreviousTrips();
                         driver.setText("");
+                        viewPreviousTrips();
                     }
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject

@@ -2,10 +2,7 @@ package ca.mcgill.ecse321.ridesharerpassenger;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +28,6 @@ public class PreviousTrips extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_previous_trips);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
         // Get the username passed to this page
         if (getIntent().hasExtra(MainMenu.USERNAME)) {
@@ -40,15 +35,6 @@ public class PreviousTrips extends AppCompatActivity {
         } else {
             throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
         }
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 
     @Override
@@ -94,7 +80,7 @@ public class PreviousTrips extends AppCompatActivity {
 
     public void selectCompletedTrips(View v){
         error = "";
-        final String driverUsername = "donya";
+        final String driverUsername = username;
 
         String url = "/Trip/completedTrips?username="+driverUsername;
         System.out.print("\n Url :"+ url);
@@ -102,8 +88,7 @@ public class PreviousTrips extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response){
-                System.out.println("\n success!");
-                System.out.println("\n response:" + response.toString());
+
                 ArrayList<String> trips = new ArrayList<String>();
                 ArrayList<String> places = new ArrayList<String>();
                 ArrayList<String> days = new ArrayList<String>();
@@ -111,17 +96,8 @@ public class PreviousTrips extends AppCompatActivity {
                 ArrayList<String> numSeats = new ArrayList<String>();
 
                 String s = response.toString();
-                System.out.print("s is " + s);
-                /*for(int i = 0; i < response.length(); i++) {
-                    try {
-                        s += response.get(i).toString();
-                    } catch (Exception e) {
-                        System.out.println("here");
-                    }
-                }*/
 
                 s = s.replaceAll("\\[", "");
-                System.out.println("s is now " + s);
                 s = s.replaceAll("\\]", ",");
                 String[] str= s.split("\"");
 
@@ -160,7 +136,7 @@ public class PreviousTrips extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-
+                refreshErrorMessage();
             }
 
             @Override
@@ -185,8 +161,6 @@ public class PreviousTrips extends AppCompatActivity {
         b.putStringArrayList(ListPreviousRides.DAYS, days);
         b.putStringArrayList(ListPreviousRides.TIMES, times);
         b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
-        System.out.println("=======================================");
-
         intent.putExtras(b);
         startActivity(intent);
     }
