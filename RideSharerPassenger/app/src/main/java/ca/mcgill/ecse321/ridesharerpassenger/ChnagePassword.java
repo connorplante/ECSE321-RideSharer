@@ -86,7 +86,6 @@ public class ChnagePassword extends AppCompatActivity {
             tvError.setVisibility(View.VISIBLE);
         }
     }
-<<<<<<< HEAD
     public void changePassword(View v){
         error = "";
         final TextView ta = (TextView) findViewById(R.id.cpOldPass);
@@ -135,13 +134,9 @@ public class ChnagePassword extends AppCompatActivity {
                     refreshErrorMessage();
                 }
 
-
-
             }
 
         });
     }
 
-=======
->>>>>>> f9ef446399592ca134cee6a694d1463e92f12701
 }

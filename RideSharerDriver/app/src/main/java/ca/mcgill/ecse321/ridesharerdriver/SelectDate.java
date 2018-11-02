@@ -69,6 +69,7 @@ public class SelectDate extends AppCompatActivity {
 
     public void switchViewSelectUsername(View v){
         Intent intent = new Intent(this, SelectUsername.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 }
