@@ -211,7 +211,6 @@ public class ConfirmBooking extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 String a = "";
                 String b = "";
-                String username = "";
                 String id = "";
                 try {
                     a = response.get(0).toString();
