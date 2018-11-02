@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.ridesharerdriver;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import com.loopj.android.http.RequestParams;
 public class UpdateTripFields extends AppCompatActivity implements TimePickerFragment.OnCompleteListener, DatePickerFragment.OnCompleteListener {
 
     String error = "";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,12 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onUpButtonPressed() {
+        Intent intent = new Intent(this, CreateTrip.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
     }
 
     private void refreshErrorMessage() {
@@ -125,7 +133,7 @@ public class UpdateTripFields extends AppCompatActivity implements TimePickerFra
         String oldEnd = tv1.getText().toString();
         String newEnd = tv2.getText().toString();
 
-        HttpUtils.post("/Trip/updateEnd?oldStart=" + oldEnd + "&newStart=" + newEnd + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.post("/Trip/updateEnd?oldEnd=" + oldEnd + "&newEnd=" + newEnd + "&tripID=" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
 
         });
     }

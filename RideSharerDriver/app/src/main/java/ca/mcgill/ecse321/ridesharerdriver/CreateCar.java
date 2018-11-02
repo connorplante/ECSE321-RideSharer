@@ -94,7 +94,6 @@ public class CreateCar extends AppCompatActivity {
         final TextView tc = (TextView) findViewById(R.id.year);
         final TextView td = (TextView) findViewById(R.id.numSeats);
         final TextView te = (TextView) findViewById(R.id.licensePlate);
-        final String user = username;
 
         String make = ta.getText().toString();
         make = make.replaceAll("[^0-9A-Za-z]", "");
@@ -107,9 +106,10 @@ public class CreateCar extends AppCompatActivity {
         String licencePlate = te.getText().toString();
         licencePlate = licencePlate.replaceAll("[^0-9A-Za-z]", "");
 
+
         HttpUtils.post("Car/createCar?make=" + make + "&model=" + model +
                 "&year=" + year + "&numSeats=" + numSeats + "&licencePlate=" +
-                licencePlate + "&username=" + user, new RequestParams(), new JsonHttpResponseHandler() {
+                licencePlate + "&username=" + username, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
                 refreshErrorMessage();
@@ -136,6 +136,7 @@ public class CreateCar extends AppCompatActivity {
 
     public void viewManageCars() {
         Intent intent = new Intent(this, ManageCar.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 }

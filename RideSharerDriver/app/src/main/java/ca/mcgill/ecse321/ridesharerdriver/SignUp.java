@@ -92,7 +92,7 @@ public class SignUp extends AppCompatActivity {
             return;
         }
 
-        if(!(tf.getText().toString().equals("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}"))){
+        if(!(tf.getText().toString().matches("\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}"))){
             error = "Please enter a valid phone number";
             refreshErrorMessage();
             return;

@@ -388,7 +388,7 @@ public class ManageTrips extends AppCompatActivity {
 
     public void findDriversTripsUpdate(View v) {
         error = "";
-        String url = "/Trip/scheduledTripsOfDriver?username=donya";
+        String url = "/Trip/scheduledTripsOfDriver?username=" + username;
 
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
