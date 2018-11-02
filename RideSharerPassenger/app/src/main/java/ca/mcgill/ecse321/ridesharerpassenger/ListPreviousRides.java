@@ -110,7 +110,6 @@ public class ListPreviousRides extends AppCompatActivity {
                 TextView timeView = (TextView) view.findViewById(R.id.textView8);
                 TextView dateView = (TextView) view.findViewById(R.id.textView9);
                 TextView numSeatsView = (TextView) view.findViewById(R.id.textView10);
-                //TextView rateDriver = (TextView) view.findViewById(R.id.textView11);
 
                 if (trips.size() == 0 || places.size() == 0) {
                     tripIdView.setText("");
@@ -118,7 +117,6 @@ public class ListPreviousRides extends AppCompatActivity {
                     dateView.setText("");
                     timeView.setText("");
                     numSeatsView.setText("");
-                    //rateDriver.setText("");
                     return view;
                 }
 
@@ -127,7 +125,6 @@ public class ListPreviousRides extends AppCompatActivity {
                 dateView.setText("Date: " + days.get(position));
                 timeView.setText("Time: " + times.get(position));
                 numSeatsView.setText("Num Seats: " + numSeats.get(position));
-                //rateDriver.setText("Rate your driver");
 
                 return view;
 
@@ -146,16 +143,11 @@ public class ListPreviousRides extends AppCompatActivity {
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("\n success!");
-                System.out.println("\n response:" + response.toString());
-                //ArrayList<String> driver = new ArrayList<String>();
 
                 String s = response.toString();
-                System.out.print("s is " + s);
 
                 s = s.replaceAll("\\[", "");
                 s = s.replaceAll("\\]", ",");
-                System.out.println("s is now " + s);
 
                 viewRateDriver(s);
                 }
@@ -212,7 +204,6 @@ public class ListPreviousRides extends AppCompatActivity {
         Bundle b = new Bundle();
         b.putStringArrayList(ListPreviousRides.TRIPS, trips);
         b.putString(RateDriver.DRIVER, driver);
-        System.out.println("=======================================");
 
         intent.putExtras(b);
         startActivity(intent);
