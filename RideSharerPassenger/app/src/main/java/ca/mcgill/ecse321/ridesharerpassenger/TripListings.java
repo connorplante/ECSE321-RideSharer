@@ -19,10 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-
 import cz.msebera.android.httpclient.Header;
-
-
 
 public class TripListings extends AppCompatActivity {
 
@@ -64,7 +61,6 @@ public class TripListings extends AppCompatActivity {
         Intent intent = new Intent(this, MainMenu.class);
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
-
     }
 
     @Override
@@ -148,15 +144,11 @@ public class TripListings extends AppCompatActivity {
         final String start = tStart.getText().toString();
         final String end = tEnd.getText().toString();
 
-        System.out.println("Url: " + url);
-
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
+
                 ArrayList<Integer> tripIds = new ArrayList<>();
 
                 // add trip ids from response to the array list
@@ -167,10 +159,6 @@ public class TripListings extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
-                System.out.println("ArrayList: " + tripIds.toString());
-                System.out.println("start: " + start);
-                System.out.println("end: " + end);
 
                 // call next view to display trips
                 getTripsInfo(tripIds, start, end);
@@ -213,13 +201,9 @@ public class TripListings extends AppCompatActivity {
             }
         }
         String url = "/Trip/tripInfo?" + "tripIds=" + tripIdList + "&start=" + start + "&end=" + end;
-        System.out.println(url);
         HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                System.out.println("Success!!!");
-                System.out.println("Response: ");
-                System.out.println(response.toString());
 
                 // add trip ids from response to the array list
                 ArrayList<ArrayList<String>> stopsLists = new ArrayList<ArrayList<String>>();
@@ -252,13 +236,6 @@ public class TripListings extends AppCompatActivity {
                     stopsLists.add(stopList);
                 }
 
-                System.out.println("response in arraylist of arraylists:");
-                System.out.println(dates);
-                System.out.println(prices);
-                System.out.println(status);
-                System.out.println(numSeats);
-                System.out.println(stopsLists);
-
                 viewFoundTrips(tripIds, start, end, prices, dates, numSeats, status, stopsLists);
 
             }
@@ -276,8 +253,6 @@ public class TripListings extends AppCompatActivity {
                 refreshErrorMessage();
             }
         });
-
-
     }
 
     public void viewFoundTrips(ArrayList<Integer> tripIds, String start, String end, ArrayList<String> prices,
@@ -298,11 +273,8 @@ public class TripListings extends AppCompatActivity {
         b.putString(ShowTripListings.START, start);
         b.putString(ShowTripListings.END, end);
 
-        System.out.println("=======================================");
-
         intent.putExtras(b);
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

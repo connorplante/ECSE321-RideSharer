@@ -27,7 +27,6 @@ public class UpdateTrip extends AppCompatActivity {
     ArrayList<String> dates;
     ArrayList<ArrayList<String>> stopsLists;
 
-
     public static final String tripIDs = "ca.mcgill.ecse321.ridesharerdriver.tripIDs";
     public static final String START = "ca.mcgill.ecse321.ridesharerdriver.start";
     public static final String END = "ca.mcgill.ecse321.ridesharerdriver.end";
@@ -66,12 +65,6 @@ public class UpdateTrip extends AppCompatActivity {
             throw new IllegalArgumentException("Activity cannot find  extras " + tripIDs);
         }
 
-        // Get the tripIDs passed to this page from TripListings
-
-
-        // Get the tripIDs passed to this page from TripListings
-
-
         if (getIntent().hasExtra(PRICES)) {
             prices = getIntent().getStringArrayListExtra(PRICES);
         } else {
@@ -107,53 +100,44 @@ public class UpdateTrip extends AppCompatActivity {
             stopsLists.add(stops);
         }
 
-
-
         ListView listView = (ListView) findViewById(R.id.listView);
         UpdateTrip.CustomAdapter customAdapter = new UpdateTrip.CustomAdapter();
         listView.setAdapter(customAdapter);
-
-
     }
 
     class CustomAdapter extends BaseAdapter {
+
         @Override
         public int getCount() {
             return tripIds.size();
         }
+
         @Override
         public Object getItem(int i) {
             return null;
         }
+
         @Override
         public long getItemId(int i){
             return 0;
         }
+
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup){
-
 
             convertView = getLayoutInflater().inflate(R.layout.custom_update_trip, null);
 
             TextView textView_id = (TextView)convertView.findViewById(R.id.textView_updateID);
             TextView textView_date = (TextView)convertView.findViewById(R.id.textView_updateDate);
             TextView textView_time = (TextView)convertView.findViewById(R.id.textView_updateTime);
-            TextView textView_start = (TextView)convertView.findViewById(R.id.textView_updateStart);
-            TextView textView_end = (TextView)convertView.findViewById(R.id.textView_updateEnd);
-
-
-
 
             textView_id.setText(tripIds.get(position).toString());
             textView_date.setText(dates.get(position));
-
             textView_time.setText(status.get(position));
 
             return convertView;
         }
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -183,7 +167,6 @@ public class UpdateTrip extends AppCompatActivity {
         }
     }
 
-
     private void refreshErrorMessage() {
         // set the error message
         TextView tvError = (TextView) findViewById(R.id.error);
@@ -194,9 +177,7 @@ public class UpdateTrip extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 
     public void switchViewUpdateTripFields(View v){
         Intent intent = new Intent(this, UpdateTripFields.class);
@@ -205,5 +186,4 @@ public class UpdateTrip extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

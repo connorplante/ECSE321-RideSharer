@@ -40,8 +40,6 @@ public class SelectRoutePrices extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -70,20 +68,6 @@ public class SelectRoutePrices extends AppCompatActivity {
         }
     }
 
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//        tvError.setVisibility(View.GONE);
-//
-////        if (error == null || error != "i") {
-////            tvError.setVisibility(View.GONE);
-////        } else {
-////            tvError.setVisibility(View.VISIBLE);
-////        }
-//
-//    }
-
     public void switchViewCreateFinalTrip(View v){
         final TextView stops = (TextView) findViewById(R.id.editText5);
         final TextView prices = (TextView) findViewById(R.id.editText7);
@@ -105,17 +89,15 @@ public class SelectRoutePrices extends AppCompatActivity {
             urlStops += str2 + finalPrices[j];
         }
 
-
-        Intent intent6 = new Intent(this, CreateFinalTrip.class);
+        Intent intent = new Intent(this, CreateFinalTrip.class);
 
         Bundle extras = getIntent().getExtras();
-        intent6.putExtras(extras);
-        intent6.putExtra("ROUTES",stops2);
-        intent6.putExtra("PRICES",prices2);
-        intent6.putExtra("URLROUTES", urlStops);
-        intent6.putExtra("URLPRICES", urlPrices);
-        intent6.putExtra(MainMenu.USERNAME, username);
-        startActivity(intent6);
+        intent.putExtras(extras);
+        intent.putExtra("ROUTES",stops2);
+        intent.putExtra("PRICES",prices2);
+        intent.putExtra("URLROUTES", urlStops);
+        intent.putExtra("URLPRICES", urlPrices);
+        intent.putExtra(MainMenu.USERNAME, username);
+        startActivity(intent);
     }
-
 }

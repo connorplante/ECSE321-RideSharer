@@ -86,7 +86,6 @@ public class ManageProfile extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void viewChangePassword(View v){
@@ -120,7 +119,6 @@ public class ManageProfile extends AppCompatActivity {
                 }
 
                 viewUpdateInfo(firstName, lastName, email, phone);
-
             }
 
         });
@@ -143,5 +141,4 @@ public class ManageProfile extends AppCompatActivity {
         intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
-
 }

@@ -78,7 +78,5 @@ public class UpdateCar extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

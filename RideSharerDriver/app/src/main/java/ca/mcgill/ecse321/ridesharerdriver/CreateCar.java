@@ -78,7 +78,5 @@ public class CreateCar extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
-
 }

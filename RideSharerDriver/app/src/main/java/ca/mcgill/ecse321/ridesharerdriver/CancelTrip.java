@@ -134,8 +134,6 @@ public class CancelTrip extends AppCompatActivity {
             TextView textView_id = (TextView)convertView.findViewById(R.id.textView_id);
             TextView textView_date = (TextView)convertView.findViewById(R.id.textView_date);
             TextView textView_time = (TextView)convertView.findViewById(R.id.textView_time);
-            TextView textView_start = (TextView)convertView.findViewById(R.id.textView_start);
-            TextView textView_end = (TextView)convertView.findViewById(R.id.textView_end);
 
             textView_id.setText(tripIds.get(position).toString());
             textView_date.setText(dates.get(position));
@@ -184,17 +182,13 @@ public class CancelTrip extends AppCompatActivity {
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
-
     }
 
     public void cancelTrip(View v) {
 
         final TextView tripID = (TextView) v.findViewById(R.id.textView_id);
-
         HttpUtils.post("/Trip/cancelTrip?tripID=" + tripID.getText().toString(), new RequestParams(), new JsonHttpResponseHandler(){
 
         });
-
     }
-
 }
