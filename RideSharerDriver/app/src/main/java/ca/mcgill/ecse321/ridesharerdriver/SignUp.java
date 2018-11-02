@@ -17,6 +17,7 @@ import cz.msebera.android.httpclient.*;
 public class SignUp extends AppCompatActivity {
 
     String error = "i";
+    String username = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class SignUp extends AppCompatActivity {
 
     public void viewMainMenu(){
         Intent intent = new Intent(this, MainMenu.class);
+        intent.putExtra(MainMenu.USERNAME, username);
         startActivity(intent);
     }
 

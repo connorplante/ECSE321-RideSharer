@@ -2,6 +2,7 @@ package ca.mcgill.ecse321.ridesharerpassenger;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -40,8 +41,18 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
     private LatLng defaultLoc;
     public static final String STOPS = "ca.mcgill.ecse321.ridesharerpassenger.Stops";
     private static final int LOCATION_REQUEST = 500;
+    String username = "";
 
     ArrayList<String> stops;
+    String error = "";
+    ArrayList<Integer> tripIds;
+    ArrayList<String> prices;
+    ArrayList<String> numSeats;
+    ArrayList<String> status;
+    ArrayList<String> dates;
+    ArrayList<ArrayList<String>> stopsLists;
+    String start;
+    String end;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,68 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        if (getIntent().hasExtra(MainMenu.USERNAME)) {
+            username = getIntent().getStringExtra(MainMenu.USERNAME);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + MainMenu.USERNAME);
+        }
+
+        // Get the tripIDs passed to this page from TripListings
+        if (getIntent().hasExtra(ShowTripListings.tripIDs)) {
+            tripIds = getIntent().getIntegerArrayListExtra(ShowTripListings.tripIDs);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.tripIDs);
+        }
+
+        // Get the tripIDs passed to this page from TripListings
+        if (getIntent().hasExtra(ShowTripListings.START)) {
+            start = getIntent().getStringExtra(ShowTripListings.START);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.START);
+        }
+
+        // Get the tripIDs passed to this page from TripListings
+        if (getIntent().hasExtra(ShowTripListings.END)) {
+            end = getIntent().getStringExtra(ShowTripListings.END);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.END);
+        }
+
+        if (getIntent().hasExtra(ShowTripListings.PRICES)) {
+            prices = getIntent().getStringArrayListExtra(ShowTripListings.PRICES);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.PRICES);
+        }
+
+        if (getIntent().hasExtra(ShowTripListings.NUMSEATS)) {
+            numSeats = getIntent().getStringArrayListExtra(ShowTripListings.NUMSEATS);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.NUMSEATS);
+        }
+
+        if (getIntent().hasExtra(ShowTripListings.DATES)) {
+            dates = getIntent().getStringArrayListExtra(ShowTripListings.DATES);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.DATES);
+        }
+
+        if (getIntent().hasExtra(ShowTripListings.STATUS)) {
+            status = getIntent().getStringArrayListExtra(ShowTripListings.STATUS);
+        } else {
+            throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.STATUS);
+        }
+
+        stopsLists = new ArrayList<ArrayList<String>>();
+        for (int i = 0; i < dates.size(); i++) {
+            ArrayList<String> stops = new ArrayList<String>();
+            if (getIntent().hasExtra(ShowTripListings.STOPSLISTS + i)) {
+                stops = getIntent().getStringArrayListExtra(ShowTripListings.STOPSLISTS + i);
+            } else {
+                throw new IllegalArgumentException("Activity cannot find  extras " + ShowTripListings.STOPSLISTS);
+            }
+            stopsLists.add(stops);
+        }
 
         if (getIntent().hasExtra(STOPS)) {
             stops = getIntent().getStringArrayListExtra(STOPS);
@@ -88,6 +161,28 @@ public class GoogleMapsActivity extends FragmentActivity implements OnMapReadyCa
         }
         mMap.setMyLocationEnabled(true);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        System.out.println("==== ON BACK PRESSED ====");
+
+        Intent intent = new Intent(this, ShowTripListings.class);
+        intent.putExtra(MainMenu.USERNAME, username);
+        Bundle b = new Bundle();
+        b.putStringArrayList(GoogleMapsActivity.STOPS, stops);
+        b.putIntegerArrayList(ShowTripListings.tripIDs, tripIds);
+        b.putStringArrayList(ShowTripListings.DATES, dates);
+        b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
+        b.putStringArrayList(ShowTripListings.STATUS, status);
+        b.putStringArrayList(ShowTripListings.PRICES, prices);
+        for (int j = 0; j < stopsLists.size(); j++) {
+            b.putStringArrayList(ShowTripListings.STOPSLISTS + j, stopsLists.get(j));
+        }
+        b.putString(ShowTripListings.START, start);
+        b.putString(ShowTripListings.END, end);
+        intent.putExtras(b);
+        startActivity(intent);
     }
 
     private String getRequestUrl(ArrayList<String> stops) {
