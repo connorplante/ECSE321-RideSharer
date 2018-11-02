@@ -75,9 +75,9 @@ public class UserTest {
         assertEquals(email, reUser.getEmail());
         assertEquals(firstName, reUser.getFirstName());
         assertEquals(lastName, reUser.getLastName());
-        assertEquals(2, reUser.getRole());
+        assertEquals(0, reUser.getRole());
     }
-
+}
 //     @Test
 //     public void createPassengerTest() throws Exception {
 //         //  Arrange 
@@ -271,7 +271,7 @@ public class UserTest {
 //         assertEquals(newPhone, reUser.getPhone());
 //     }
 
-}/         assertEquals(newFirst, reUser.getFirstName());
+// }/         assertEquals(newFirst, reUser.getFirstName());
 //         assertEquals(newLast, reUser.getLastName());
 //         assertEquals(newEmail, reUser.getEmail());
 //         assertEquals(newPhone, reUser.getPhone());
