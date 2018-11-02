@@ -9,6 +9,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.Header;
 
 public class PreviousTrips extends AppCompatActivity {
 
@@ -67,9 +79,115 @@ public class PreviousTrips extends AppCompatActivity {
         }
     }
 
-    public void viewListPreviousRides(View v){
+    private void refreshErrorMessage() {
+        // set the error message
+        TextView tvError = (TextView) findViewById(R.id.error);
+        tvError.setText(error);
+
+        if (error == null || error.length() == 0) {
+            tvError.setVisibility(View.GONE);
+        } else {
+            tvError.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    public void selectCompletedTrips(View v){
+        error = "";
+        final String driverUsername = "donya";
+
+        String url = "/Trip/completedTrips?username="+driverUsername;
+        System.out.print("\n Url :"+ url);
+        HttpUtils.post(url, new RequestParams(), new JsonHttpResponseHandler(){
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response){
+                System.out.println("\n success!");
+                System.out.println("\n response:" + response.toString());
+                ArrayList<String> trips = new ArrayList<String>();
+                ArrayList<String> places = new ArrayList<String>();
+                ArrayList<String> days = new ArrayList<String>();
+                ArrayList<String> times = new ArrayList<String>();
+                ArrayList<String> numSeats = new ArrayList<String>();
+
+                String s = response.toString();
+                System.out.print("s is " + s);
+                /*for(int i = 0; i < response.length(); i++) {
+                    try {
+                        s += response.get(i).toString();
+                    } catch (Exception e) {
+                        System.out.println("here");
+                    }
+                }*/
+
+                s = s.replaceAll("\\[", "");
+                System.out.println("s is now " + s);
+                s = s.replaceAll("\\]", ",");
+                String[] str= s.split("\"");
+
+
+                ArrayList<String> strings = new ArrayList<String>();
+
+                for(int i = 1; i < str.length; i += 2){
+                    strings.add(str[i]);
+                }
+
+                for(int j = 0; j < strings.size(); j++){
+                    try {
+                        if (j % 5 == 0) {
+                            trips.add(strings.get(j));
+                        }
+                        if (j % 5 == 1) {
+                            places.add(strings.get(j));
+                        }
+                        if (j % 5 == 2) {
+                            days.add(strings.get(j));
+                        }
+                        if (j % 5 == 3) {
+                            times.add(strings.get(j));
+                        }
+                        if (j % 5 == 4) {
+                            numSeats.add(strings.get(j));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                viewListPreviousRides(trips, places, days, times, numSeats);
+
+            }
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                refreshErrorMessage();
+            }
+        });
+
+    }
+
+    public void viewListPreviousRides(ArrayList<String> trips, ArrayList<String> places, ArrayList<String> days, ArrayList<String> times, ArrayList<String> numSeats){
         Intent intent = new Intent(this, ListPreviousRides.class);
         intent.putExtra(MainMenu.USERNAME, username);
+        Bundle b = new Bundle();
+        b.putStringArrayList(ListPreviousRides.TRIPS, trips);
+        b.putStringArrayList(ListPreviousRides.PLACES, places);
+        b.putStringArrayList(ListPreviousRides.DAYS, days);
+        b.putStringArrayList(ListPreviousRides.TIMES, times);
+        b.putStringArrayList(ShowTripListings.NUMSEATS, numSeats);
+        System.out.println("=======================================");
+
+        intent.putExtras(b);
         startActivity(intent);
     }
 

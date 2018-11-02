@@ -42,4 +42,12 @@
     <string name="title_activity_update_trip_fields">UpdateTripFields</string>
     <string name="title_activity_finish_create_trip">FinishCreateTrip</string>
 
+    <string name="make">Make</string>
+    <string name="model">Model</string>
+    <string name="year">Year</string>
+    <string name="numSeats">Number of seats</string>
+    <string name="licensePlate">License plate (no space)</string>
+    <string name="Submit">Submit</string>
+    <string name="title_activity_rate_passenger">RatePassenger</string>
+    <string name="loadUser">Load Passengers</string>
 </resources>

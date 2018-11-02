@@ -11,6 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+
 public class CreateCar extends AppCompatActivity {
 
     String error = "";
@@ -37,7 +45,6 @@ public class CreateCar extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -73,10 +80,52 @@ public class CreateCar extends AppCompatActivity {
         TextView tvError = (TextView) findViewById(R.id.error);
         tvError.setText(error);
 
-        if (error == null || error.length() == 0) {
+        if (error == null || error == "i") {
             tvError.setVisibility(View.GONE);
         } else {
             tvError.setVisibility(View.VISIBLE);
         }
     }
+
+    public void createCar(View v) {
+        error = "";
+        final TextView ta = (TextView) findViewById(R.id.make);
+        final TextView tb = (TextView) findViewById(R.id.model);
+        final TextView tc = (TextView) findViewById(R.id.year);
+        final TextView td = (TextView) findViewById(R.id.numSeats);
+        final TextView te = (TextView) findViewById(R.id.licensePlate);
+        final String user = "user1"; //TODO: Find user that is logged in
+
+        HttpUtils.post("Car/createCar?make=" + ta.getText().toString() + "&model=" + tb.getText().toString() +
+                "&year=" + tc.getText().toString() + "&numSeats=" + td.getText().toString() + "&licencePlate=" +
+                te.getText().toString() + "&username=" + user, new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onFinish() {
+                refreshErrorMessage();
+                viewManageCars();
+                ta.setText("");
+                tb.setText("");
+                tc.setText("");
+                td.setText("");
+                te.setText("");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                try {
+                    error += errorResponse.get("message").toString();
+                } catch (JSONException e) {
+                    error += e.getMessage();
+                }
+                refreshErrorMessage();
+            }
+        });
+
+    }
+
+    public void viewManageCars() {
+        Intent intent = new Intent(this, ManageCar.class);
+        startActivity(intent);
+    }
 }
+
