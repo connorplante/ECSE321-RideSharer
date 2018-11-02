@@ -148,6 +148,16 @@ public class ManageTrips extends AppCompatActivity {
             viewConfirmBooking(tripIDs, usernames, dates, routes, requestIDs);
             }
 
+            @Override
+            public void onFailure(int i, Header[] headers, Throwable throwable, JSONObject jsonObject){
+                ArrayList<String> tripIDs = new ArrayList<String>();
+                ArrayList<String> usernames = new ArrayList<String>();
+                ArrayList<String> dates = new ArrayList<String>();
+                ArrayList<String> routes = new ArrayList<String>();
+                ArrayList<String> requestIDs = new ArrayList<String>();
+                viewConfirmBooking(tripIDs, usernames, dates, routes, requestIDs);
+            }
+
         });
     }
 

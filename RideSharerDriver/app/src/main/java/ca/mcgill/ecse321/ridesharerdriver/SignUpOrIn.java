@@ -81,9 +81,8 @@ public class SignUpOrIn extends AppCompatActivity {
         error = "";
         final TextView ta = (TextView) findViewById(R.id.editText);
         final TextView tb = (TextView) findViewById(R.id.editText2);
-        username = ta.getText().toString();
 
-        if (ta.equals("") || tb.equals("")) {
+        if(ta.equals("") || tb.equals("")){
             error = "Please enter all fields!";
             refreshErrorMessage();
             return;
@@ -92,25 +91,13 @@ public class SignUpOrIn extends AppCompatActivity {
                 "&password=" + tb.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
 
-                Boolean b = false;
-
-                try {
-                    String s = response.get(0).toString();
-                    b = Boolean.parseBoolean(s);
-                } catch (Exception e) {
-
-                }
-
-                if (b) {
-                    ta.setText("");
-                    tb.setText("");
+                if(responseString.equals("true")){
                     viewMainMenu();
-                    refreshErrorMessage();
+                }else{
+                    error += "Incorrect username or password";
 
-                } else {
-                    error = "Old password is incorrect";
                     refreshErrorMessage();
                 }
             }
