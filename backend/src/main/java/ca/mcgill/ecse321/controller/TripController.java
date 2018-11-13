@@ -461,6 +461,35 @@ public class TripController {
         query2.executeUpdate();
         session.getTransaction().commit();
         session.close();
+
+        //Update the number of rides of all passengers that were on this trip upon booking the trip 
+        session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        String passengersOnTrip = "SELECT FK_UserID, Price FROM PassengerTrips WHERE FK_TripID = :TRIPID";
+        SQLQuery query3 = session.createSQLQuery(passengersOnTrip);
+
+        query3.setParameter("TRIPID", tripID);
+        List<Object[]> passengersOnTripList = query3.list();
+
+        ArrayList<String> passengersOnTripIDs = new ArrayList<String>();
+
+        //put all ids returned from query into the arraylist
+
+        for(Object[] pID: passengersOnTripList){
+            passengersOnTripIDs.add(pID[0].toString());
+        }
+
+        for(String passenger: passengersOnTripIDs){
+            session = HibernateUtil.getSession();
+            session.beginTransaction();
+            String updateNumTrips = "UPDATE Users SET numRides = numRides + 1 WHERE UserID =:USERID";
+            SQLQuery query4 = session.createSQLQuery(updateNumTrips);
+            query4.setParameter("USERID", passenger);
+            query4.executeUpdate();
+            session.getTransaction().commit();
+            session.close();
+        }
 	    
         return ret;
 

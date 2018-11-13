@@ -129,17 +129,17 @@ public class PassengerController {
             session1.getTransaction().commit();
             session1.close();
         }
-
+        //TAKING THIS PART OUT AND MOVING IT TO THE COMPLETE TRIP 
         //Open new session, update the number of rides for a Passenger upon booking the trip
-        Session session3 = HibernateUtil.getSession();
-        session3.beginTransaction();
-        String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
-        SQLQuery query2 = session3.createSQLQuery(string1);
-        query2.setParameter("rides", passenger.getNumRides()+1);
-        query2.setParameter("id", passenger.getUserID());
-        query2.executeUpdate();
-        session3.getTransaction().commit();
-        session3.close();
+        // Session session3 = HibernateUtil.getSession();
+        // session3.beginTransaction();
+        // String string1 = "UPDATE Users SET numRides= :rides WHERE UserID = :id";
+        // SQLQuery query2 = session3.createSQLQuery(string1);
+        // query2.setParameter("rides", passenger.getNumRides()+1);
+        // query2.setParameter("id", passenger.getUserID());
+        // query2.executeUpdate();
+        // session3.getTransaction().commit();
+        // session3.close();
         
 
         // message.setText("Hi! \n\nDriver " + trip.getDriver().getUsername() + " has confirmed your booking on " + tripID
