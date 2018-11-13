@@ -497,4 +497,82 @@ public class UserController {
         return returning;
 
     }
+    @RequestMapping("/displayActiveDrivers")
+    public ArrayList<ArrayList<String>> displayActiveDrivers() throws InvalidInputException {
+        
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        String string = "SELECT UserID, FirstName, LastName FROM Users WHERE Status = 1 and Role = 2";
+        SQLQuery query = session.createSQLQuery(string);
+        
+        List<Object[]> queryDrivers = query.list();
+        
+        ArrayList<ArrayList<String>> outerDrivers = new ArrayList<ArrayList<String>>();
+
+        for (Object[] driver: queryDrivers){ 
+            ArrayList<String> innerDrivers = new ArrayList<String>();
+            for (int i = 0; i < 3; i++){
+                innerDrivers.add(driver[i].toString());   
+            }
+            outerDrivers.add(innerDrivers);
+        }
+        session.close();
+
+        if(outerDrivers.size() == 0){
+            error = error + "No drivers are active";
+            errorStringList.add(error);
+        }
+        
+        if(error != ""){
+            outerDrivers.add(errorStringList);
+            return outerDrivers;
+        }
+    
+        return outerDrivers;
+
+    }
+
+    @RequestMapping("/displayActivePassengers")
+    public ArrayList<ArrayList<String>> displayActivePassengers() throws InvalidInputException {
+        
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        String string = "SELECT UserID, FirstName, LastName FROM Users WHERE Status = 1 and Role = 1";
+        SQLQuery query = session.createSQLQuery(string);
+        
+        List<Object[]> queryPassengers = query.list();
+        
+        ArrayList<ArrayList<String>> outerPassengers = new ArrayList<ArrayList<String>>();
+
+        for (Object[] passenger: queryPassengers){ 
+            ArrayList<String> innerPassengers = new ArrayList<String>();
+            for (int i = 0; i < 3; i++){
+                innerPassengers.add(passenger[i].toString());   
+            }
+            outerPassengers.add(innerPassengers);
+        }
+        session.close();
+
+        if(outerPassengers.size() == 0){
+            error = error + "No passengers are active";
+            errorStringList.add(error);
+        }
+        
+        if(error != ""){
+            outerPassengers.add(errorStringList);
+            return outerPassengers;
+        }
+    
+        return outerPassengers;
+
+    }
+
 }
