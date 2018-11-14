@@ -7,6 +7,7 @@ import org.hibernate.SQLQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import ca.mcgill.ecse321.HibernateUtil;
 import ca.mcgill.ecse321.model.Admin;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.sql.Date;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/User")
 public class UserController {
