@@ -20,6 +20,7 @@ import javax.mail.internet.*;
 import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
+import java.sql.Date;
 
 @RestController
 @RequestMapping("/User")
@@ -574,5 +575,123 @@ public class UserController {
         return outerPassengers;
 
     }
+
+    @RequestMapping("/displayFilteredDrivers")
+    public ArrayList<ArrayList<String>> displayFilteredDrivers(@RequestParam(value="startDate") Date startDate, @RequestParam(value="endDate") Date endDate) throws InvalidInputException {
+
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        ArrayList<ArrayList<String>> outerDrivers = new ArrayList<ArrayList<String>>();
+        
+        
+        String string = "SELECT DISTINCT FK_UserID FROM Trips WHERE Date >= :start and Date <= :end";
+        SQLQuery query = session.createSQLQuery(string);
+        query.setParameter("start", startDate);
+        query.setParameter("end", endDate);
+
+        List<Integer> driverIDs = query.list(); 
+       // driverIDs.toArray(new Integer[driverIDs.size()]);
+        String query1 = "SELECT UserID, FirstName, LastName FROM Users WHERE UserID = :id";
+        
+        //int i = 0;
+        for(Integer driver : driverIDs){
+            SQLQuery aQuery = session.createSQLQuery(query1);
+            aQuery.setParameter("id", driver);
+          //  i++;
+            ArrayList<String> innerDriver = new ArrayList<String>();
+            List<Object[]> oneQuery = aQuery.list();
+            for(Object[] info : oneQuery){
+                for (int j= 0; j< 3; j++){
+                    innerDriver.add(info[j].toString());   
+                }
+            }
+            outerDrivers.add(innerDriver);
+        }
+        session.close();
+
+        if(outerDrivers.size() == 0){
+            error = error + "No drivers are active at this time";
+            errorStringList.add(error);
+        }
+        
+        if(error != ""){
+            outerDrivers.add(errorStringList);
+            return outerDrivers;
+        }
+    
+        return outerDrivers;
+
+
+
+    }
+
+    @RequestMapping("/displayFilteredPassengers")
+    public ArrayList<ArrayList<String>> displayFilteredPassengers(@RequestParam(value="startDate") Date startDate, @RequestParam(value="endDate") Date endDate) throws InvalidInputException {
+
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        ArrayList<ArrayList<String>> outerPassengers = new ArrayList<ArrayList<String>>();
+
+        String string = "SELECT TripID FROM Trips WHERE Date >= :start and Date <= :end";
+        SQLQuery query = session.createSQLQuery(string);
+        query.setParameter("start", startDate);
+        query.setParameter("end", endDate);
+
+        List<Integer> tripIDs = query.list(); 
+
+        String query1 = "SELECT DISTINCT FK_UserID FROM PassengerTrips WHERE FK_TripID = :id";
+        String query2 = "SELECT UserID, FirstName, LastName FROM Users WHERE UserID = :id";
+        
+
+        for(Integer trip: tripIDs){
+            SQLQuery aQuery = session.createSQLQuery(query1);
+            aQuery.setParameter("id", trip);
+            List<Integer> passengersOnTrip = aQuery.list(); 
+            for(Integer passenger: passengersOnTrip){
+                SQLQuery aQuery1 = session.createSQLQuery(query2);
+                aQuery1.setParameter("id", passenger);
+                ArrayList<String> innerPassenger = new ArrayList<String>();
+                List<Object[]> oneQuery = aQuery1.list();
+                for(Object[] info : oneQuery){
+                    for (int j= 0; j< 3; j++){
+                        innerPassenger.add(info[j].toString());   
+                    }
+                }
+                outerPassengers.add(innerPassenger);
+            }
+        }
+
+        for (int i = 0; i < outerPassengers.size(); i++) {
+            // Loop over all following elements.
+            for (int x = i + 1; x < outerPassengers.size(); x++) {
+                // If two elements equal, there is a duplicate.
+                if (outerPassengers.get(i).get(0) == outerPassengers.get(x).get(0)) {
+                    outerPassengers.set(x, null);
+                }
+            }
+        }
+
+        if(outerPassengers.size() == 0){
+            error = error + "No passengers are active at this time";
+            errorStringList.add(error);
+        }
+        
+        if(error != ""){
+            outerPassengers.add(errorStringList);
+            return outerPassengers;
+        }
+    
+        return outerPassengers;
+
+    }
+
 
 }
