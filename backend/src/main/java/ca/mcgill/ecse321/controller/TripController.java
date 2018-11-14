@@ -15,7 +15,9 @@ import java.text.SimpleDateFormat;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.model.Trip.Status;
 import ca.mcgill.ecse321.controller.InvalidInputException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/Trip")
 @SuppressWarnings( {"deprecation", "rawtypes", "unchecked"} )
@@ -1253,22 +1255,6 @@ public class TripController {
         }
 
         ArrayList<Object[]> rankings = new ArrayList<Object[]>();
-
-        // for(Object[] t : withinDates){
-        //     for(int i = 0; i < rankings.size(); i++){
-        //         if(rankings.get(i)[0].toString().equals(t[0].toString()) && rankings.get(i)[1].toString().equals(t[1].toString())){
-        //             rankings.get(i)[2] = (Integer)(rankings.get(i)[2]) + 1;
-        //             break;
-        //         }else if(i == rankings.size() - 1){
-        //             Integer counter = new Integer(1);
-        //             Object[] newTrip = {t[0], t[1], counter};
-        //             rankings.add(newTrip);
-        //         }else{
-        //             continue;
-        //         }
-        //     }
-        // }
-
 
         for(int i = 0; i < withinDates.size(); i++){
             if(i == 0){
