@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.model.Trip.Status;
@@ -1278,17 +1279,64 @@ public class TripController {
             }
         }
         
-        for(int k = 1; k < rankings.size(); k++){
-            for(int l = 0; l < rankings.size() - k; l++){
-                if((Integer)rankings.get(l)[2] < (Integer)rankings.get(l + 1)[2]){
-                    Object[] o = rankings.get(l);
-                    rankings.set(l, rankings.get(l + 1));
-                    rankings.set(l + 1, o);
-                }
-            }
+        // for(int k = 1; k < rankings.size(); k++){
+        //     for(int l = 0; l < rankings.size() - k; l++){
+        //         if((Integer)rankings.get(l)[2] < (Integer)rankings.get(l + 1)[2]){
+        //             Object[] o = rankings.get(l);
+        //             rankings.set(l, rankings.get(l + 1));
+        //             rankings.set(l + 1, o);
+        //         }
+        //     }
 
-        }
+        // }
+
+        sort(rankings, 0, rankings.size() - 1);
+        Collections.reverse(rankings);
 
         return rankings;
+    }
+    int partition(ArrayList<Object[]> trips, int low, int high) { 
+        Object[] pivot = trips.get(high);  
+        int i = (low-1); // index of smaller element 
+        for (int j=low; j<high; j++) { 
+            // If current element is smaller than or 
+            // equal to pivot 
+            if ((Integer)trips.get(j)[2] <= (Integer)pivot[2]) 
+            { 
+                i++; 
+  
+                // swap arr[i] and arr[j] 
+                Object[] temp = trips.get(i); 
+                trips.set(i, trips.get(j)); 
+                trips.set(j, temp);
+            } 
+        } 
+  
+        // swap arr[i+1] and arr[high] (or pivot) 
+        Object[] temp = trips.get(i + 1); 
+        trips.set(i + 1, trips.get(high));
+        trips.set(high, temp);
+  
+        return i+1; 
+    } 
+  
+  
+    /* The main function that implements QuickSort() 
+      arr[] --> Array to be sorted, 
+      low  --> Starting index, 
+      high  --> Ending index */
+    void sort(ArrayList<Object[]> trips, int low, int high) 
+    { 
+        if (low < high) 
+        { 
+            /* pi is partitioning index, arr[pi] is  
+              now at right place */
+            int pi = partition(trips, low, high); 
+  
+            // Recursively sort elements before 
+            // partition and after partition 
+            sort(trips, low, pi-1); 
+            sort(trips, pi+1, high); 
+        } 
     }
 }
