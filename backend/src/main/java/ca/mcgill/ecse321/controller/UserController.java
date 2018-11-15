@@ -509,7 +509,7 @@ public class UserController {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        String string = "SELECT UserID, FirstName, LastName FROM Users WHERE Status = 1 and Role = 2";
+        String string = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE Status = 1 and Role = 2";
         SQLQuery query = session.createSQLQuery(string);
         
         List<Object[]> queryDrivers = query.list();
@@ -518,7 +518,7 @@ public class UserController {
 
         for (Object[] driver: queryDrivers){ 
             ArrayList<String> innerDrivers = new ArrayList<String>();
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < 4; i++){
                 innerDrivers.add(driver[i].toString());   
             }
             outerDrivers.add(innerDrivers);
@@ -548,7 +548,7 @@ public class UserController {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        String string = "SELECT UserID, FirstName, LastName FROM Users WHERE Status = 1 and Role = 1";
+        String string = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE Status = 1 and Role = 1";
         SQLQuery query = session.createSQLQuery(string);
         
         List<Object[]> queryPassengers = query.list();
@@ -557,7 +557,7 @@ public class UserController {
 
         for (Object[] passenger: queryPassengers){ 
             ArrayList<String> innerPassengers = new ArrayList<String>();
-            for (int i = 0; i < 3; i++){
+            for (int i = 0; i < 4; i++){
                 innerPassengers.add(passenger[i].toString());   
             }
             outerPassengers.add(innerPassengers);
@@ -597,7 +597,7 @@ public class UserController {
 
         List<Integer> driverIDs = query.list(); 
        // driverIDs.toArray(new Integer[driverIDs.size()]);
-        String query1 = "SELECT UserID, FirstName, LastName FROM Users WHERE UserID = :id";
+        String query1 = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE UserID = :id";
         
         //int i = 0;
         for(Integer driver : driverIDs){
@@ -607,7 +607,7 @@ public class UserController {
             ArrayList<String> innerDriver = new ArrayList<String>();
             List<Object[]> oneQuery = aQuery.list();
             for(Object[] info : oneQuery){
-                for (int j= 0; j< 3; j++){
+                for (int j= 0; j< 4; j++){
                     innerDriver.add(info[j].toString());   
                 }
             }
@@ -650,7 +650,7 @@ public class UserController {
         List<Integer> tripIDs = query.list(); 
 
         String query1 = "SELECT DISTINCT FK_UserID FROM PassengerTrips WHERE FK_TripID = :id";
-        String query2 = "SELECT UserID, FirstName, LastName FROM Users WHERE UserID = :id";
+        String query2 = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE UserID = :id";
         
 
         for(Integer trip: tripIDs){
@@ -663,7 +663,7 @@ public class UserController {
                 ArrayList<String> innerPassenger = new ArrayList<String>();
                 List<Object[]> oneQuery = aQuery1.list();
                 for(Object[] info : oneQuery){
-                    for (int j= 0; j< 3; j++){
+                    for (int j= 0; j< 4; j++){
                         innerPassenger.add(info[j].toString());   
                     }
                 }
