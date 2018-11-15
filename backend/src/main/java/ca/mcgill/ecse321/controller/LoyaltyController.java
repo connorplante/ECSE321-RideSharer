@@ -118,7 +118,7 @@ public class LoyaltyController{
      * @return ArrayList<ArrayList<String>> of sorted drivers based on numRides, based on a certain time frame 
      */
     @RequestMapping("/loyalDriversTimeFrame")
-    public ArrayList<ArrayList<String>> mostLoyalDriversTimeFrame(@RequestParam(value="startDate") String start, @RequestParam(value="endDate") String end, @RequestParam(value="totalEntries") int totalEntries) throws InvalidInputException{
+    public ArrayList<ArrayList<String>> mostLoyalDriversTimeFrame(@RequestParam(value="startDate") String start, @RequestParam(value="endDate") String end) throws InvalidInputException{
         
         //initialize error strings 
         String error = "";
@@ -142,11 +142,11 @@ public class LoyaltyController{
             return outerLoyalDriversTimeList;
         }
 
-        String mostLoyalDriversTimeFrame = "SELECT FK_UserID, COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY COUNT(FK_UserID) DESC LIMIT :NUM";
+        String mostLoyalDriversTimeFrame = "SELECT FK_UserID, COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY COUNT(FK_UserID) DESC";
         SQLQuery query2 = session.createSQLQuery(mostLoyalDriversTimeFrame);
         query2.setParameter("START", start);
         query2.setParameter("END", end);
-        query2.setParameter("NUM", totalEntries);
+        
 
         List<Object[]> objectLoyalDriversTime = query2.list();
 
@@ -201,7 +201,7 @@ public class LoyaltyController{
      * @return ArrayList<ArrayList<String>> of sorted passengers based on numRides, based on a certain time frame 
      */
     @RequestMapping("/loyalPassengersTimeFrame")
-    public ArrayList<ArrayList<String>> mostLoyalPassengersTimeFrame(@RequestParam(value="startDate") String start, @RequestParam(value="endDate") String end, @RequestParam(value="totalEntries") int totalEntries) throws InvalidInputException{
+    public ArrayList<ArrayList<String>> mostLoyalPassengersTimeFrame(@RequestParam(value="startDate") String start, @RequestParam(value="endDate") String end) throws InvalidInputException{
 
         //initialize error strings 
         String error = "";
