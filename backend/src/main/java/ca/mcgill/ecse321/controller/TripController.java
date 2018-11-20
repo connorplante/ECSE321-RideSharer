@@ -1417,4 +1417,55 @@ public class TripController {
 
         return table;
     }
+
+    @RequestMapping("/displayFilteredRoutes")
+    public ArrayList<ArrayList<String>> displayFilteredRoutes(@RequestParam(value="startDate") Date startDate, @RequestParam(value="endDate") Date endDate) throws InvalidInputException {
+
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+
+        String tripQuery = "SELECT TripID, FK_UserID, Date, Status, Start FROM Trips WHERE Status = 0 and Date >= :start and Date <= :end";
+        SQLQuery query1 = session.createSQLQuery(tripQuery);
+        query1.setParameter("start", startDate);
+        query1.setParameter("end", endDate);
+
+        List<Object[]> trips = query1.list();
+
+        for (Object[] trip : trips) {
+            ArrayList<String> indTrip = new ArrayList<String>();
+            for (int i = 0; i < 5; i++) {
+                indTrip.add(trip[i].toString());
+            }
+            int tripID = (int) trip[0];
+            String legQuery = "SELECT End from Legs WHERE FK_TripID = :id";
+            SQLQuery query2 = session.createSQLQuery(legQuery);
+            query2.setParameter("id", tripID);
+
+            List<String> stops = query2.list();
+
+            for (String stop : stops) {
+                indTrip.add(stop);
+            }
+            table.add(indTrip);
+        }
+
+        session.close();
+
+        if (table.size() == 0) {
+            error += "No routes in this timeframe are active";
+            errorStringList.add(error);
+        }
+
+        if (error != "") {
+            table.add(errorStringList);
+            return table;
+        }
+
+        return table;
+    }
 }
