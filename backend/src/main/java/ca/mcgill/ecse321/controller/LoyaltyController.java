@@ -124,6 +124,9 @@ public class LoyaltyController{
         String error = "";
         ArrayList<String> errorStringList = new ArrayList<String>();
 
+        start = start.replace("-", "");
+        end = end.replace("-", "");
+
         //initialize return list 
         ArrayList<ArrayList<String>> outerLoyalDriversTimeList = new ArrayList<ArrayList<String>>();
         
@@ -207,6 +210,10 @@ public class LoyaltyController{
         String error = "";
         ArrayList<String> errorStringList = new ArrayList<String>();
 
+        start = start.replace("-", "");
+        end = end.replace("-", "");
+        
+
          //initialize return list 
         ArrayList<ArrayList<String>> outerLoyalPassengersTimeList = new ArrayList<ArrayList<String>>();
         
@@ -240,7 +247,7 @@ public class LoyaltyController{
         }
         int passengerCounter = 0;
         for (String passengerID: loyalPassengersTimeIDs){
-
+            
             ArrayList<String> passengerTripIDs = new ArrayList<String>();
 
             String loyalPassengerTripsQuery = "SELECT FK_TripID, Price FROM PassengerTrips WHERE FK_UserID =:userID";
@@ -272,7 +279,7 @@ public class LoyaltyController{
                     int newTotalInt = currentTotal - 1;
                     String newTotal = Integer.toString(newTotalInt);
                     loyalPassengersTimeTotal.set(passengerCounter, newTotal);
-                    passengerCounter++;
+                    
                     continue;
                 }
                 
