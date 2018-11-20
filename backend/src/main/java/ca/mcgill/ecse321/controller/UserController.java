@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.controller;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.omg.CORBA.DynAnyPackage.Invalid;
 import org.hibernate.SQLQuery;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -327,19 +328,21 @@ public class UserController {
         session.getTransaction().commit();
         session.close();
         return user.toString();
-    } 
-
+    }
+    
     /**
-     * Updates user rating
+     * Updates driver or passenger rating for a trip
      * Returns true if update was successful
      * Returns false it failed
      * 
      * @param username
      * @param rating
+     * @param TripID
      * @return Boolean
      */
     @RequestMapping("/updateRating")
-    public Boolean updateRating (@RequestParam(value="username") String username, @RequestParam(value="rating") int rating) { //username or passenger object
+    public Boolean updateRating (@RequestParam(value="username") String username, @RequestParam(value="rating") int rating,
+                                @RequestParam(value="tripID") int tripID) { //username or passenger object
 
         Session session = HibernateUtil.getSession();
         Boolean ret;
@@ -355,13 +358,35 @@ public class UserController {
             return false;
         }
 
-        //only drivers and passengers have ratings, so if user is admin return false
+        //this method is to rate drivers or passengers
         if(user.getRole() == 3){
             return false;
         }
 
-        if (rating <= 5 && rating >= 0) {
+        if(user.getRole() == 2) {
+            String query = "UPDATE Trips SET Rating=:rating WHERE TripID=:tripID";
+            SQLQuery queryRating = session.createSQLQuery(query);
+            queryRating.setParameter("rating", rating);
+            queryRating.setParameter("tripID", tripID);
+            queryRating.executeUpdate();
 
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+        }
+        
+        if(user.getRole() == 1) {
+            String query = "UPDATE PassengerTrips SET Rating=:rating WHERE PassengerTripID=:tripID";
+            SQLQuery queryRating = session.createSQLQuery(query);
+            queryRating.setParameter("rating", rating);
+            queryRating.setParameter("tripID", tripID);
+            queryRating.executeUpdate();
+
+            session.saveOrUpdate(user);
+            session.getTransaction().commit();
+
+        }
+
+        if (rating <= 5 && rating >= 0) {
             double pastAvgRating = user.getRating();
             double newAvgRating;
             int numRides = user.getNumRides();
@@ -694,6 +719,250 @@ public class UserController {
         return outerPassengers;
 
     }
+//driver role=2
+    @RequestMapping("/TopDrivers")
+    public ArrayList<ArrayList<String>> displayTopRatedDrivers() throws InvalidInputException {
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
 
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
 
+        String query = "SELECT UserID, Username, FirstName, LastName, Rating FROM Users WHERE Role = 2 ORDER BY Rating DESC";
+        SQLQuery aQuery = session.createSQLQuery(query);
+        List<Object[]> drivers = aQuery.list();
+
+        session.getTransaction().commit();
+ 
+        ArrayList<ArrayList<String>> outerTopDrivers = new ArrayList<ArrayList<String>>();
+
+        for (Object[] driver: drivers){ //add individual passenger lists to return list with needed information
+            ArrayList<String> innerTopDrivers = new ArrayList<String>();
+            for (int i = 0; i < 5; i++){ //adjust accordingly
+                innerTopDrivers.add(driver[i].toString());   
+            }
+            outerTopDrivers.add(innerTopDrivers);
+        }
+
+        session.close();
+        
+        if(outerTopDrivers.size() == 0){
+            error = error + "No drivers have a rating in the system";
+            errorStringList.add(error);
+        }
+        //if the error message is not empty, return the error in the outer array list 
+        if(error != ""){
+            outerTopDrivers.add(errorStringList);
+            return outerTopDrivers;
+        }
+        return outerTopDrivers;
+    }
+
+    @RequestMapping("/TopPassengers")
+    public ArrayList<ArrayList<String>> displayTopRatedPassengers() throws InvalidInputException {
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        String query = "SELECT UserID, Username, FirstName, LastName, Rating FROM Users WHERE Role = 1 ORDER BY Rating DESC";
+        SQLQuery aQuery = session.createSQLQuery(query);
+        List<Object[]> passengers = aQuery.list();
+
+        session.getTransaction().commit();
+        ArrayList<ArrayList<String>> outerTopPassengers = new ArrayList<ArrayList<String>>();
+
+        for (Object[] passenger: passengers){ //add individual passenger lists to return list with needed information
+            ArrayList<String> innerTopPassengers = new ArrayList<String>();
+            for (int i = 0; i < 5; i++){ //adjust accordingly
+                innerTopPassengers.add(passenger[i].toString());   
+            }
+            outerTopPassengers.add(innerTopPassengers);
+        }
+
+        session.close();
+        
+        if(outerTopPassengers.size() == 0){
+            error = error + "No passengers have a rating in the system";
+            errorStringList.add(error);
+        }
+        //if the error message is not empty, return the error in the outer array list 
+        if(error != ""){
+            outerTopPassengers.add(errorStringList);
+            return outerTopPassengers;
+        }
+
+        return outerTopPassengers;
+        
+    }
+//driver role=2
+    @RequestMapping("/TopDriversTimeFrame")
+    public ArrayList<ArrayList<String>> displayTopRatedDriversTimeFrame(@RequestParam(value="startDate") String start, 
+                                                                @RequestParam(value="endDate") String end) throws InvalidInputException {
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+        ArrayList<ArrayList<String>> outerTopDrivers = new ArrayList<ArrayList<String>>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        if(Integer.parseInt(start) > Integer.parseInt(end)){
+
+            error = error + "The end date must come after the start date. ";
+            errorStringList.add(error);
+            outerTopDrivers.add(errorStringList);
+
+        }
+        //if the dates inputted were not valid
+        if(error != ""){
+            return outerTopDrivers;
+        }
+        String queryTimeFrame = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 'Completed' GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+        SQLQuery query2 = session.createSQLQuery(queryTimeFrame);
+        query2.setParameter("START", start);
+        query2.setParameter("END", end);
+        
+
+        List<Object[]> objectTopRatedDriversTime = query2.list();
+
+        //if there were not results for the inputted dates return error message 
+        if(objectTopRatedDriversTime.size() == 0){
+            error = error + "There were no drivers with completed trips in this time frame";
+            errorStringList.add(error);
+            outerTopDrivers.add(errorStringList);
+            return outerTopDrivers;
+        }
+
+        ArrayList<String> topRatedDriversTimeTotal = new ArrayList<String>();
+        ArrayList<String> topRatedDriversTimeRating = new ArrayList<String>();
+        ArrayList<String> topRatedDriversTimeIDs = new ArrayList<String>();
+
+        //fill in array lists from query with users that have completed trips in that time frame
+        for (Object[] driver: objectTopRatedDriversTime){
+            topRatedDriversTimeIDs.add(driver[0].toString());
+            topRatedDriversTimeRating.add(driver[1].toString());
+            topRatedDriversTimeTotal.add(driver[2].toString());
+        }
+
+        int counter = 0;
+        //add to the outer array list an array list of each driver including its numRides for this time frame 
+        for (String user_ID : topRatedDriversTimeIDs){
+            
+            ArrayList<String> innerDriverTime = new ArrayList<String>();
+
+            String topRatedDriverQuery = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE UserID =:userID";
+            SQLQuery query = session.createSQLQuery(topRatedDriverQuery);
+            query.setParameter("userID", user_ID);
+
+            List<Object[]> objectTopRatedDriver = query.list();
+
+            for(Object[] infoDriver: objectTopRatedDriver){
+                for(int i = 0; i < 4; i++){
+                    innerDriverTime.add(infoDriver[i].toString());
+                }
+                innerDriverTime.add(topRatedDriversTimeRating.get(counter));
+                outerTopDrivers.add(innerDriverTime);
+                counter++;
+            }
+
+        }
+        session.close();
+
+        return outerTopDrivers;
+    }
+
+    @RequestMapping("/TopPassengersTimeFrame")
+    public ArrayList<ArrayList<String>> displayTopRatedPassengersTimeFrame(@RequestParam(value="startDate") String start, 
+                                                                @RequestParam(value="endDate") String end) throws InvalidInputException {
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+        ArrayList<ArrayList<String>> outerTopPassengers = new ArrayList<ArrayList<String>>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+        
+        if(Integer.parseInt(start) > Integer.parseInt(end)){
+
+            error = error + "The end date must come after the start date. ";
+            errorStringList.add(error);
+            outerTopPassengers.add(errorStringList);
+
+        }
+        //if the dates inputted were not valid
+        if(error != ""){
+            return outerTopPassengers;
+        }
+        String queryTimeFrame = "SELECT TripID FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 ";
+        SQLQuery query2 = session.createSQLQuery(queryTimeFrame);
+        query2.setParameter("START", start);
+        query2.setParameter("END", end);
+        
+
+        List<Integer> objectTripIDsTime = query2.list();
+
+        //if there were not results for the inputted dates return error message 
+        if(objectTripIDsTime.size() == 0){
+            error = error + "There were no completed trips in this time frame";
+            errorStringList.add(error);
+            outerTopPassengers.add(errorStringList);
+            return outerTopPassengers;
+        }
+
+        //find the passengers and their rating for the specified time frame
+        String queryPassengers = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM PassengerTrips WHERE FK_TripID IN (";
+        String queryPassengersEnd = ") GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+         
+        //list the TripIDs for the query
+        for(Integer trip: objectTripIDsTime) {
+            queryPassengers += trip.toString();
+            queryPassengers += ", ";
+        }
+
+        if (queryPassengers.endsWith(", ")) {
+            queryPassengers = queryPassengers.substring(0, queryPassengers.length() - 2);
+        }
+
+        queryPassengers += queryPassengersEnd;
+        SQLQuery query3 = session.createSQLQuery(queryPassengers);
+
+        List<Object[]> objectTopRatedPassengersTime = query3.list();
+
+        ArrayList<String> topRatedPassengersTimeTotal = new ArrayList<String>();
+        ArrayList<String> topRatedPassengersTimeRating = new ArrayList<String>();
+        ArrayList<String> topRatedPassengersTimeIDs = new ArrayList<String>();
+
+        //fill in array lists from query with users that have completed trips in that time frame
+        for (Object[] passenger: objectTopRatedPassengersTime){
+            topRatedPassengersTimeIDs.add(passenger[0].toString());
+            topRatedPassengersTimeRating.add(passenger[1].toString());
+            topRatedPassengersTimeTotal.add(passenger[2].toString());
+        }
+
+        int counter = 0;
+        //add to the outer array list an array list of each driver including its numRides for this time frame 
+        for (String user_ID : topRatedPassengersTimeIDs){
+            
+            ArrayList<String> innerPassengerTime = new ArrayList<String>();
+
+            String topRatedPassengerQuery = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE UserID =:userID";
+            SQLQuery query = session.createSQLQuery(topRatedPassengerQuery);
+            query.setParameter("userID", user_ID);
+
+            List<Object[]> objectTopRatedPassenger = query.list();
+
+            for(Object[] infoPassenger: objectTopRatedPassenger){
+                for(int i = 0; i < 4; i++){
+                    innerPassengerTime.add(infoPassenger[i].toString());
+                }
+                innerPassengerTime.add(topRatedPassengersTimeRating.get(counter));
+                outerTopPassengers.add(innerPassengerTime);
+                counter++;
+            }
+
+        }
+        session.close();
+
+        return outerTopPassengers;
+    }
 }
