@@ -52,6 +52,7 @@ CREATE TABLE `PassengerTrips` (
   `FK_TripID` int(11) DEFAULT NULL,
   `FK_UserID` int(11) DEFAULT NULL,
   `Price` int(11) DEFAULT NULL,
+  `Rating` int(11) DEFAULT NULL,
   PRIMARY KEY (`PassengerTripID`),
   UNIQUE KEY `PassengerTripID_UNIQUE` (`PassengerTripID`)
 );
@@ -64,6 +65,7 @@ CREATE TABLE `Trips` (
   `Start` varchar(45) DEFAULT NULL,
   `End` varchar(45) DEFAULT NULL,
   `Status` varchar(45) DEFAULT 'Scheduled',
+  `Rating` int(11) DEFAULT NULL,
   `FK_UserID` int(11) DEFAULT NULL,
   `FK_CarID` int(11) DEFAULT NULL,
   PRIMARY KEY (`TripID`),

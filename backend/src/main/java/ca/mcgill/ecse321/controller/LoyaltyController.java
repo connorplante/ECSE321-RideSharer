@@ -4,6 +4,7 @@ import ca.mcgill.ecse321.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import ca.mcgill.ecse321.model.Car;
 import ca.mcgill.ecse321.model.Driver;
 import ca.mcgill.ecse321.model.User;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/Loyalty")
 public class LoyaltyController{
@@ -279,7 +280,6 @@ public class LoyaltyController{
                     int newTotalInt = currentTotal - 1;
                     String newTotal = Integer.toString(newTotalInt);
                     loyalPassengersTimeTotal.set(passengerCounter, newTotal);
-                    
                     continue;
                 }
                 

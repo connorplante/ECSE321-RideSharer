@@ -10,11 +10,15 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.model.Trip.Status;
 import ca.mcgill.ecse321.controller.InvalidInputException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/Trip")
 @SuppressWarnings( {"deprecation", "rawtypes", "unchecked"} )
@@ -1229,5 +1233,240 @@ public class TripController {
             retList.add(ret);
         }
         return retList;
+    }
+
+    @RequestMapping("/mostPopularTrip")
+    public ArrayList<Object[]> getMostPopularTrip(@RequestParam("start") String startDate, @RequestParam("end") String endDate) {
+
+        java.util.Date low = null;
+        java.util.Date high = null;
+        
+        try{
+            low = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+            high = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
+        }catch(Exception e){
+            //dates.add("Incorrect date format");
+            //return dates;
+        }
+
+        // Get trip start, end, and date
+        String queryCompleteTrips = "SELECT Start, End, Date FROM Trips WHERE Status=2";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on trips
+        SQLQuery completeTrips = session.createSQLQuery(queryCompleteTrips);
+        
+        // Trips are stored as such in the array:
+        // completeTrips[0] | completeTrips[1] | completeTrips[2]
+        // Start  | End    | Date
+        List<Object[]> trips = completeTrips.list();
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+        ArrayList<Object[]> withinDates = new ArrayList<Object[]>();
+        
+        for(Object[] trip : trips){
+            String tripDate = trip[2].toString().substring(0, 10);
+            java.util.Date thisDate = null;
+            System.out.println(tripDate);
+            try{
+                thisDate = new SimpleDateFormat("yyyy-MM-dd").parse(tripDate);
+            }catch(Exception e){
+
+            }
+            if(thisDate.before(high) && thisDate.after(low)){
+                Object[] toAdd = {trip[0], trip[1]};
+                withinDates.add(toAdd);
+            }
+        }
+
+        ArrayList<Object[]> rankings = new ArrayList<Object[]>();
+
+        for(int i = 0; i < withinDates.size(); i++){
+            if(i == 0){
+                Integer in = new Integer(1);
+                Object[] o = {withinDates.get(0)[0].toString(), withinDates.get(0)[1].toString(), in};
+                rankings.add(o);
+                continue;
+            }
+            for(int j = 0; j < rankings.size(); j++){
+                if(rankings.get(j)[0].toString().equals(withinDates.get(i)[0].toString()) && rankings.get(j)[1].toString().equals(withinDates.get(i)[1].toString())){
+                    rankings.get(j)[2] = (Integer)rankings.get(j)[2] + 1;
+                    break;
+                }else if(j == rankings.size() - 1){
+                    Integer in = new Integer(1);
+                    Object[] o = {withinDates.get(i)[0].toString(), withinDates.get(i)[1].toString(), in};
+                    rankings.add(o);
+                    break;
+                }else{
+                    continue;
+                }
+            }
+        }
+        
+        // for(int k = 1; k < rankings.size(); k++){
+        //     for(int l = 0; l < rankings.size() - k; l++){
+        //         if((Integer)rankings.get(l)[2] < (Integer)rankings.get(l + 1)[2]){
+        //             Object[] o = rankings.get(l);
+        //             rankings.set(l, rankings.get(l + 1));
+        //             rankings.set(l + 1, o);
+        //         }
+        //     }
+
+        // }
+
+        sort(rankings, 0, rankings.size() - 1);
+        Collections.reverse(rankings);
+
+        return rankings;
+    }
+    int partition(ArrayList<Object[]> trips, int low, int high) { 
+        Object[] pivot = trips.get(high);  
+        int i = (low-1); // index of smaller element 
+        for (int j=low; j<high; j++) { 
+            // If current element is smaller than or 
+            // equal to pivot 
+            if ((Integer)trips.get(j)[2] <= (Integer)pivot[2]) 
+            { 
+                i++; 
+  
+                // swap arr[i] and arr[j] 
+                Object[] temp = trips.get(i); 
+                trips.set(i, trips.get(j)); 
+                trips.set(j, temp);
+            } 
+        } 
+  
+        // swap arr[i+1] and arr[high] (or pivot) 
+        Object[] temp = trips.get(i + 1); 
+        trips.set(i + 1, trips.get(high));
+        trips.set(high, temp);
+  
+        return i+1; 
+    } 
+  
+  
+    /* The main function that implements QuickSort() 
+      arr[] --> Array to be sorted, 
+      low  --> Starting index, 
+      high  --> Ending index */
+    void sort(ArrayList<Object[]> trips, int low, int high) 
+    { 
+        if (low < high) 
+        { 
+            /* pi is partitioning index, arr[pi] is  
+              now at right place */
+            int pi = partition(trips, low, high); 
+  
+            // Recursively sort elements before 
+            // partition and after partition 
+            sort(trips, low, pi-1); 
+            sort(trips, pi+1, high); 
+        } 
+    }
+
+    @RequestMapping("/displayActiveRoutes")
+    public ArrayList<ArrayList<String>> displayActiveRoutes() throws InvalidInputException {
+
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+
+        String tripQuery = "SELECT TripID, FK_UserID, Date, Status, Start FROM Trips WHERE Status = 0";
+        SQLQuery query1 = session.createSQLQuery(tripQuery);
+
+        List<Object[]> trips = query1.list();
+
+        for (Object[] trip : trips) {
+            ArrayList<String> indTrip = new ArrayList<String>();
+            for (int i = 0; i < 5; i++) {
+                indTrip.add(trip[i].toString());
+            }
+            int tripID = (int) trip[0];
+            String legQuery = "SELECT End from Legs WHERE FK_TripID = :id";
+            SQLQuery query2 = session.createSQLQuery(legQuery);
+            query2.setParameter("id", tripID);
+
+            List<String> stops = query2.list();
+
+            for (String stop : stops) {
+                indTrip.add(stop);
+            }
+            table.add(indTrip);
+        }
+
+        session.close();
+
+        if (table.size() == 0) {
+            error += "No routes are active";
+            errorStringList.add(error);
+        }
+
+        if (error != "") {
+            table.add(errorStringList);
+            return table;
+        }
+
+        return table;
+    }
+
+    @RequestMapping("/displayFilteredRoutes")
+    public ArrayList<ArrayList<String>> displayFilteredRoutes(@RequestParam(value="startDate") Date startDate, @RequestParam(value="endDate") Date endDate) throws InvalidInputException {
+
+        String error = "";
+        ArrayList<String> errorStringList = new ArrayList<String>();
+
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        ArrayList<ArrayList<String>> table = new ArrayList<ArrayList<String>>();
+
+        String tripQuery = "SELECT TripID, FK_UserID, Date, Status, Start FROM Trips WHERE Status = 0 and Date >= :start and Date <= :end";
+        SQLQuery query1 = session.createSQLQuery(tripQuery);
+        query1.setParameter("start", startDate);
+        query1.setParameter("end", endDate);
+
+        List<Object[]> trips = query1.list();
+
+        for (Object[] trip : trips) {
+            ArrayList<String> indTrip = new ArrayList<String>();
+            for (int i = 0; i < 5; i++) {
+                indTrip.add(trip[i].toString());
+            }
+            int tripID = (int) trip[0];
+            String legQuery = "SELECT End from Legs WHERE FK_TripID = :id";
+            SQLQuery query2 = session.createSQLQuery(legQuery);
+            query2.setParameter("id", tripID);
+
+            List<String> stops = query2.list();
+
+            for (String stop : stops) {
+                indTrip.add(stop);
+            }
+            table.add(indTrip);
+        }
+
+        session.close();
+
+        if (table.size() == 0) {
+            error += "No routes in this timeframe are active";
+            errorStringList.add(error);
+        }
+
+        if (error != "") {
+            table.add(errorStringList);
+            return table;
+        }
+
+        return table;
     }
 }
