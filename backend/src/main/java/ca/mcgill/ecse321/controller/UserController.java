@@ -19,6 +19,8 @@ import ca.mcgill.ecse321.model.User;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import com.mysql.cj.x.protobuf.MysqlxDatatypes.Array;
+
 import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
@@ -965,4 +967,5 @@ public class UserController {
 
         return outerTopPassengers;
     }
+
 }

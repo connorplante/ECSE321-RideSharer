@@ -273,7 +273,6 @@ public class LoyaltyController{
                     int newTotalInt = currentTotal - 1;
                     String newTotal = Integer.toString(newTotalInt);
                     loyalPassengersTimeTotal.set(passengerCounter, newTotal);
-                    passengerCounter++;
                     continue;
                 }
                 
