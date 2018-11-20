@@ -1242,8 +1242,8 @@ public class TripController {
         java.util.Date high = null;
         
         try{
-            low = new SimpleDateFormat("dd/MM/yyyy").parse(startDate);
-            high = new SimpleDateFormat("dd/MM/yyyy").parse(endDate);
+            low = new SimpleDateFormat("yyyy-MM-dd").parse(startDate);
+            high = new SimpleDateFormat("yyyy-MM-dd").parse(endDate);
         }catch(Exception e){
             //dates.add("Incorrect date format");
             //return dates;
@@ -1271,14 +1271,15 @@ public class TripController {
         ArrayList<Object[]> withinDates = new ArrayList<Object[]>();
         
         for(Object[] trip : trips){
-            String tripDate = trip[2].toString().substring(0, 10).replaceAll("-", "/");
+            String tripDate = trip[2].toString().substring(0, 10);
             java.util.Date thisDate = null;
+            System.out.println(tripDate);
             try{
-                thisDate = new SimpleDateFormat("dd/MM/yyyy").parse(tripDate);
+                thisDate = new SimpleDateFormat("yyyy-MM-dd").parse(tripDate);
             }catch(Exception e){
 
             }
-            if(thisDate.after(high) || thisDate.before(low)){
+            if(thisDate.before(high) && thisDate.after(low)){
                 Object[] toAdd = {trip[0], trip[1]};
                 withinDates.add(toAdd);
             }
