@@ -808,6 +808,14 @@ public class UserController {
 
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
+
+        if (!start.matches("\\d{4}-\\d{2}-\\d{2}") || !end.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            error = error + "The dates must be in YYYY-MM-DD format. ";
+            errorStringList.add(error);
+            outerTopDrivers.add(errorStringList);
+        }
+        start = start.replace("-", "");
+        end = end.replace("-", "");
         
         if(Integer.parseInt(start) > Integer.parseInt(end)){
 
@@ -820,7 +828,7 @@ public class UserController {
         if(error != ""){
             return outerTopDrivers;
         }
-        String queryTimeFrame = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 'Completed' GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+        String queryTimeFrame = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
         SQLQuery query2 = session.createSQLQuery(queryTimeFrame);
         query2.setParameter("START", start);
         query2.setParameter("END", end);
@@ -884,6 +892,14 @@ public class UserController {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
         
+        if (!start.matches("\\d{4}-\\d{2}-\\d{2}") || !end.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            error = error + "The dates must be in YYYY-MM-DD format. ";
+            errorStringList.add(error);
+            outerTopPassengers.add(errorStringList);
+        }
+        start = start.replace("-", "");
+        end = end.replace("-", "");
+
         if(Integer.parseInt(start) > Integer.parseInt(end)){
 
             error = error + "The end date must come after the start date. ";
@@ -895,6 +911,7 @@ public class UserController {
         if(error != ""){
             return outerTopPassengers;
         }
+
         String queryTimeFrame = "SELECT TripID FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 ";
         SQLQuery query2 = session.createSQLQuery(queryTimeFrame);
         query2.setParameter("START", start);
