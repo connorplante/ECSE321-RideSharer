@@ -163,7 +163,7 @@ public class UserTest {
     public void updateRatingTest() {
         String username = "f1";
         //  Act
-        boolean flag = tUserController.updateRating(username, 4);
+        boolean flag = tUserController.updateRating(username, 4, 1);
         User reUser = tUserController.getUserByUsername(username);
 
         //  Assert
