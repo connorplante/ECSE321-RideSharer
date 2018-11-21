@@ -176,14 +176,14 @@ public class LoyaltyController{
             
             ArrayList<String> innerDriverTime = new ArrayList<String>();
 
-            String loyalDriverQuery = "SELECT UserID, Username, FirstName, LastName, Rating FROM Users WHERE UserID =:userID";
+            String loyalDriverQuery = "SELECT UserID, Username FROM Users WHERE UserID =:userID";
             SQLQuery query = session.createSQLQuery(loyalDriverQuery);
             query.setParameter("userID", user_ID);
 
             List<Object[]> objectLoyalDriver = query.list();
 
             for(Object[] infoDriver: objectLoyalDriver){
-                for(int i = 0; i < 5; i++){
+                for(int i = 0; i < 2; i++){
                     innerDriverTime.add(infoDriver[i].toString());
                 }
                 innerDriverTime.add(loyalDriversTimeTotal.get(counter));
@@ -311,14 +311,14 @@ public class LoyaltyController{
             
             ArrayList<String> innerPassengerTime = new ArrayList<String>();
 
-            String loyalPassengerQuery = "SELECT UserID, Username, FirstName, LastName, Rating FROM Users WHERE UserID =:userID";
+            String loyalPassengerQuery = "SELECT UserID, Username FROM Users WHERE UserID =:userID";
             SQLQuery query = session.createSQLQuery(loyalPassengerQuery);
             query.setParameter("userID", user_ID);
 
             List<Object[]> objectLoyalPassenger = query.list();
 
             for(Object[] infoPassenger: objectLoyalPassenger){
-                for(int i = 0; i < 5; i++){
+                for(int i = 0; i < 2; i++){
                     innerPassengerTime.add(infoPassenger[i].toString());
                 }
                 if(Integer.parseInt(loyalPassengersTimeTotal.get(counter)) > 0){
