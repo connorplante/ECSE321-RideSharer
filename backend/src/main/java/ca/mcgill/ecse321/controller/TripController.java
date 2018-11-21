@@ -1325,6 +1325,72 @@ public class TripController {
 
         return rankings;
     }
+	
+    @RequestMapping("/mostPopularTripAll")
+    public ArrayList<Object[]> getMostPopularTripAll() {
+
+
+        // Get trip start, end, and date
+        String queryCompleteTrips = "SELECT Start, End, Date FROM Trips WHERE Status=2";
+
+        // Begin Session
+        Session session = HibernateUtil.getSession();
+        session.beginTransaction();
+
+        // Make query on trips
+        SQLQuery completeTrips = session.createSQLQuery(queryCompleteTrips);
+        
+        // Trips are stored as such in the array:
+        // completeTrips[0] | completeTrips[1] | completeTrips[2]
+        // Start  | End    | Date
+        List<Object[]> withinDates = completeTrips.list();
+
+        // Close the session
+        session.getTransaction().commit();
+        session.close();
+
+
+        ArrayList<Object[]> rankings = new ArrayList<Object[]>();
+
+        for(int i = 0; i < withinDates.size(); i++){
+            if(i == 0){
+                Integer in = new Integer(1);
+                Object[] o = {withinDates.get(0)[0].toString(), withinDates.get(0)[1].toString(), in};
+                rankings.add(o);
+                continue;
+            }
+            for(int j = 0; j < rankings.size(); j++){
+                if(rankings.get(j)[0].toString().equals(withinDates.get(i)[0].toString()) && rankings.get(j)[1].toString().equals(withinDates.get(i)[1].toString())){
+                    rankings.get(j)[2] = (Integer)rankings.get(j)[2] + 1;
+                    break;
+                }else if(j == rankings.size() - 1){
+                    Integer in = new Integer(1);
+                    Object[] o = {withinDates.get(i)[0].toString(), withinDates.get(i)[1].toString(), in};
+                    rankings.add(o);
+                    break;
+                }else{
+                    continue;
+                }
+            }
+        }
+        
+        // for(int k = 1; k < rankings.size(); k++){
+        //     for(int l = 0; l < rankings.size() - k; l++){
+        //         if((Integer)rankings.get(l)[2] < (Integer)rankings.get(l + 1)[2]){
+        //             Object[] o = rankings.get(l);
+        //             rankings.set(l, rankings.get(l + 1));
+        //             rankings.set(l + 1, o);
+        //         }
+        //     }
+
+        // }
+
+        sort(rankings, 0, rankings.size() - 1);
+        Collections.reverse(rankings);
+
+        return rankings;
+    }	
+	
     int partition(ArrayList<Object[]> trips, int low, int high) { 
         Object[] pivot = trips.get(high);  
         int i = (low-1); // index of smaller element 
