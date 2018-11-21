@@ -730,7 +730,7 @@ public class UserController {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        String query = "SELECT UserID, Username, FirstName, LastName, Rating FROM Users WHERE Role = 2 ORDER BY Rating DESC";
+        String query = "SELECT UserID, Username, Rating FROM Users WHERE Role = 2 ORDER BY Rating DESC";
         SQLQuery aQuery = session.createSQLQuery(query);
         List<Object[]> drivers = aQuery.list();
 
@@ -740,7 +740,7 @@ public class UserController {
 
         for (Object[] driver: drivers){ //add individual passenger lists to return list with needed information
             ArrayList<String> innerTopDrivers = new ArrayList<String>();
-            for (int i = 0; i < 5; i++){ //adjust accordingly
+            for (int i = 0; i < 3; i++){ //adjust accordingly
                 innerTopDrivers.add(driver[i].toString());   
             }
             outerTopDrivers.add(innerTopDrivers);
@@ -768,7 +768,7 @@ public class UserController {
         Session session = HibernateUtil.getSession();
         session.beginTransaction();
 
-        String query = "SELECT UserID, Username, FirstName, LastName, Rating FROM Users WHERE Role = 1 ORDER BY Rating DESC";
+        String query = "SELECT UserID, Username, Rating FROM Users WHERE Role = 1 ORDER BY Rating DESC";
         SQLQuery aQuery = session.createSQLQuery(query);
         List<Object[]> passengers = aQuery.list();
 
@@ -777,7 +777,7 @@ public class UserController {
 
         for (Object[] passenger: passengers){ //add individual passenger lists to return list with needed information
             ArrayList<String> innerTopPassengers = new ArrayList<String>();
-            for (int i = 0; i < 5; i++){ //adjust accordingly
+            for (int i = 0; i < 3; i++){ //adjust accordingly
                 innerTopPassengers.add(passenger[i].toString());   
             }
             outerTopPassengers.add(innerTopPassengers);
@@ -861,14 +861,14 @@ public class UserController {
             
             ArrayList<String> innerDriverTime = new ArrayList<String>();
 
-            String topRatedDriverQuery = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE UserID =:userID";
+            String topRatedDriverQuery = "SELECT UserID, Username FROM Users WHERE UserID =:userID";
             SQLQuery query = session.createSQLQuery(topRatedDriverQuery);
             query.setParameter("userID", user_ID);
 
             List<Object[]> objectTopRatedDriver = query.list();
 
             for(Object[] infoDriver: objectTopRatedDriver){
-                for(int i = 0; i < 4; i++){
+                for(int i = 0; i < 2; i++){
                     innerDriverTime.add(infoDriver[i].toString());
                 }
                 innerDriverTime.add(topRatedDriversTimeRating.get(counter));
@@ -964,14 +964,14 @@ public class UserController {
             
             ArrayList<String> innerPassengerTime = new ArrayList<String>();
 
-            String topRatedPassengerQuery = "SELECT UserID, Username, FirstName, LastName FROM Users WHERE UserID =:userID";
+            String topRatedPassengerQuery = "SELECT UserID, Username FROM Users WHERE UserID =:userID";
             SQLQuery query = session.createSQLQuery(topRatedPassengerQuery);
             query.setParameter("userID", user_ID);
 
             List<Object[]> objectTopRatedPassenger = query.list();
 
             for(Object[] infoPassenger: objectTopRatedPassenger){
-                for(int i = 0; i < 4; i++){
+                for(int i = 0; i < 2; i++){
                     innerPassengerTime.add(infoPassenger[i].toString());
                 }
                 innerPassengerTime.add(topRatedPassengersTimeRating.get(counter));
