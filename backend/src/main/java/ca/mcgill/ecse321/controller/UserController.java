@@ -347,25 +347,38 @@ public class UserController {
                                 @RequestParam(value="tripID") int tripID) { //username or passenger object
 
         Session session = HibernateUtil.getSession();
-        Boolean ret;
+        Boolean ret = false;
         session.beginTransaction();
         User user;
         
         //Find user by username in database
         try {
-            user = getUserByUsername(username);
+            user=(User) session.byNaturalId( User.class ).using( "username", username).load();
+            System.out.println("This is the username:" + user.getFirstName());
         } catch(Exception e) {
             session.getTransaction().rollback();
             session.close();
             return false;
         }
+        System.out.println("Hello this is user role: "+ user.getRole());
 
+        String query5 = "SELECT Role FROM Users WHERE Username=:username";
+            SQLQuery queryRole = session.createSQLQuery(query5);
+            queryRole.setParameter("username", username);
+
+            List<Integer> role = queryRole.list();
+
+            
+            
         //this method is to rate drivers or passengers
-        if(user.getRole() == 3){
+        if(role.get(0) == 3){
             return false;
         }
 
-        if(user.getRole() == 2) {
+
+        if(role.get(0) == 2) {
+            System.out.println("Hello this is user role: "+ user.getRole());
+
             String query = "UPDATE Trips SET Ratings=:rating WHERE TripID=:tripID";
             SQLQuery queryRating = session.createSQLQuery(query);
             queryRating.setParameter("rating", rating);
@@ -376,9 +389,12 @@ public class UserController {
             session.getTransaction().commit();
         }
         
-        if(user.getRole() == 1) {
+
+        if(role.get(0) == 1) {
+
             String query = "UPDATE PassengerTrips SET Ratings=:rating WHERE PassengerTripID=:tripID";
             SQLQuery queryRating = session.createSQLQuery(query);
+            
             queryRating.setParameter("rating", rating);
             queryRating.setParameter("tripID", tripID);
             queryRating.executeUpdate();
@@ -387,45 +403,39 @@ public class UserController {
             session.getTransaction().commit();
 
         }
+        session.close();
+        Session session2 = HibernateUtil.getSession();
+    
+        session2.beginTransaction();
+
 
         if (rating <= 5 && rating >= 0) {
             double pastAvgRating = user.getRating();
-            double newAvgRating;
+            double newAvgRating = rating;
             int numRides = user.getNumRides();
+            System.out.println("");
 
             //if it is the user's first ride, set this rating to global rating
-            if(pastAvgRating == 0 || numRides == 0) {
-                user.setRating(rating);
-                user.setNumRides(++numRides);
-                newAvgRating = rating;
+           
+                String query = "UPDATE Users SET Rating=:rating WHERE Username=:userID";
+                SQLQuery queryRating = session2.createSQLQuery(query);
+            
+                queryRating.setParameter("rating", rating);
+                queryRating.setParameter("userID", username);
+                queryRating.executeUpdate();
+                
+               
+                session2.getTransaction().commit();
+            
+                
+                
                 ret = true;
-            } else { //update the average rating considering past ratings and number of rides
-                newAvgRating = (pastAvgRating*numRides + rating)/(++numRides);
-                user.setRating(newAvgRating);
-                user.setNumRides(numRides);
-                try { 
-                    session.saveOrUpdate(user);
-                } catch(Exception e) {
-                    session.getTransaction().rollback();
-                    session.close();
-                    return false;
-                }
-                ret = true;
-                System.out.println(newAvgRating);
             }   
-        } else {
-            ret = false;
-        }
+        
 
         //save and close the session
-        try {
-            session.getTransaction().commit();
-        } catch(Exception e) {
-            session.getTransaction().rollback();
-            session.close();
-            return false;
-        }
-        session.close();
+        
+        session2.close();
         return ret;
     }
 
