@@ -366,7 +366,7 @@ public class UserController {
         }
 
         if(user.getRole() == 2) {
-            String query = "UPDATE Trips SET Rating=:rating WHERE TripID=:tripID";
+            String query = "UPDATE Trips SET Ratings=:rating WHERE TripID=:tripID";
             SQLQuery queryRating = session.createSQLQuery(query);
             queryRating.setParameter("rating", rating);
             queryRating.setParameter("tripID", tripID);
@@ -377,7 +377,7 @@ public class UserController {
         }
         
         if(user.getRole() == 1) {
-            String query = "UPDATE PassengerTrips SET Rating=:rating WHERE PassengerTripID=:tripID";
+            String query = "UPDATE PassengerTrips SET Ratings=:rating WHERE PassengerTripID=:tripID";
             SQLQuery queryRating = session.createSQLQuery(query);
             queryRating.setParameter("rating", rating);
             queryRating.setParameter("tripID", tripID);
