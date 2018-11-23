@@ -697,28 +697,39 @@ public class UserController {
                 outerPassengers.add(innerPassenger);
             }
         }
-
+        //List<Integer> removals = new List<Integer>();
+        
         for (int i = 0; i < outerPassengers.size(); i++) {
             // Loop over all following elements.
             for (int x = i + 1; x < outerPassengers.size(); x++) {
                 // If two elements equal, there is a duplicate.
-                if (outerPassengers.get(i).get(0) == outerPassengers.get(x).get(0)) {
-                    outerPassengers.set(x, null);
+               
+                if (outerPassengers.get(i).get(0).equals( outerPassengers.get(x).get(0))) {
+                    
+                    outerPassengers.get(x).set(0, "-1");
                 }
             }
         }
 
-        if(outerPassengers.size() == 0){
+        ArrayList<ArrayList<String>> outerPassengers1 = new ArrayList<ArrayList<String>>();
+        for(ArrayList<String> element: outerPassengers ){
+            if(!element.get(0).equals("-1")){
+                outerPassengers1.add(element);
+            }
+
+            }
+        
+        if(outerPassengers1.size() == 0){
             error = error + "No passengers are active at this time";
             errorStringList.add(error);
         }
         
         if(error != ""){
-            outerPassengers.add(errorStringList);
-            return outerPassengers;
+            outerPassengers1.add(errorStringList);
+            return outerPassengers1;
         }
     
-        return outerPassengers;
+        return outerPassengers1;
 
     }
 //driver role=2
@@ -828,11 +839,13 @@ public class UserController {
         if(error != ""){
             return outerTopDrivers;
         }
-        String queryTimeFrame = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+        String queryTimeFrame = "SELECT FK_UserID, avg(Ratings), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY avg(Ratings) DESC";
         SQLQuery query2 = session.createSQLQuery(queryTimeFrame);
         query2.setParameter("START", start);
         query2.setParameter("END", end);
         
+        //DONYA ADDS
+        System.out.println("=============" + query2.toString() + "=================");
 
         List<Object[]> objectTopRatedDriversTime = query2.list();
 
@@ -929,8 +942,8 @@ public class UserController {
         }
 
         //find the passengers and their rating for the specified time frame
-        String queryPassengers = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM PassengerTrips WHERE FK_TripID IN (";
-        String queryPassengersEnd = ") GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+        String queryPassengers = "SELECT FK_UserID, avg(Ratings), COUNT(FK_UserID) AS 'totalNumTrips' FROM PassengerTrips WHERE FK_TripID IN (";
+        String queryPassengersEnd = ") GROUP BY FK_UserID ORDER BY avg(Ratings) DESC";
          
         //list the TripIDs for the query
         for(Integer trip: objectTripIDsTime) {
