@@ -377,7 +377,7 @@ public class UserController {
         }
         
         if(user.getRole() == 1) {
-            String query = "UPDATE PassengerTrips SET Rating=:rating WHERE PassengerTripID=:tripID";
+            String query = "UPDATE PassengerTrips SET Ratings=:rating WHERE PassengerTripID=:tripID";
             SQLQuery queryRating = session.createSQLQuery(query);
             queryRating.setParameter("rating", rating);
             queryRating.setParameter("tripID", tripID);
@@ -828,7 +828,7 @@ public class UserController {
         if(error != ""){
             return outerTopDrivers;
         }
-        String queryTimeFrame = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+        String queryTimeFrame = "SELECT FK_UserID, avg(Ratings), COUNT(FK_UserID) AS 'totalNumTrips' FROM Trips WHERE Date >= :START AND Date <= :END AND Status = 2 GROUP BY FK_UserID ORDER BY avg(Ratings) DESC";
         SQLQuery query2 = session.createSQLQuery(queryTimeFrame);
         query2.setParameter("START", start);
         query2.setParameter("END", end);
@@ -929,8 +929,8 @@ public class UserController {
         }
 
         //find the passengers and their rating for the specified time frame
-        String queryPassengers = "SELECT FK_UserID, avg(Rating), COUNT(FK_UserID) AS 'totalNumTrips' FROM PassengerTrips WHERE FK_TripID IN (";
-        String queryPassengersEnd = ") GROUP BY FK_UserID ORDER BY avg(Rating) DESC";
+        String queryPassengers = "SELECT FK_UserID, avg(Ratings), COUNT(FK_UserID) AS 'totalNumTrips' FROM PassengerTrips WHERE FK_TripID IN (";
+        String queryPassengersEnd = ") GROUP BY FK_UserID ORDER BY avg(Ratings) DESC";
          
         //list the TripIDs for the query
         for(Integer trip: objectTripIDsTime) {
